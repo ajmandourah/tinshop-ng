@@ -19,6 +19,9 @@ name: TinShop
 debug:
   # Display more information when connecting to nfs share
   nfs: false
+  # Remove middleware security for retrieving index
+  # DO NOT use in production (only for dev purpose)
+  noSecurity: true
 
 # All sources where we should look for games
 # If this section is commented out, then the directory "games" will be looked at

@@ -40,6 +40,7 @@ Here is the list of all main features so far:
 - [X] Serve from several mounted directories
 - [X] Serve from several network directories (Using NFS)
 - [X] Display a webpage for forbidden devices
+- [X] Auto-refresh configuration on file change
 
 # Dev or build from source
 
@@ -56,6 +57,10 @@ Wanting to generate all possible os binaries (macOS, linux, windows) with all ar
 Here is the command `goreleaser release --snapshot --skip-publish --rm-dist`.
 
 Dead simple, thanks to Golang!
+
+## Changing the structure of an interface?
+
+If you change an interface (or add a new one), do not forget to execute `./update_mocks.sh` to generate up-to-date mocks for tests.
 
 # Roadmap
 

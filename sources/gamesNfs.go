@@ -1,4 +1,4 @@
-package main
+package sources
 
 import (
 	"fmt"
@@ -8,22 +8,23 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/dblk/tinshop/config"
+	collection "github.com/dblk/tinshop/gamescollection"
+	"github.com/dblk/tinshop/repository"
+	"github.com/dblk/tinshop/utils"
 	"github.com/vmware/go-nfs-client/nfs"
 	"github.com/vmware/go-nfs-client/nfs/rpc"
 	"github.com/vmware/go-nfs-client/nfs/util"
 )
 
-var nfsShares []string
-var debugNfs bool
-
-func loadGamesNfsShares() {
-	for _, share := range nfsShares {
+func loadGamesNfsShares(shares []string) {
+	for _, share := range shares {
 		loadGamesNfs(share)
 	}
 }
 
 func loadGamesNfs(share string) {
-	if debugNfs {
+	if config.GetConfig().DebugNfs() {
 		util.DefaultLogger.SetDebug(true)
 	}
 
@@ -46,15 +47,15 @@ func loadGamesNfs(share string) {
 	nfsGames := lookIntoNfsDirectory(v, share, ".")
 
 	mount.Close()
-	gameFiles = append(gameFiles, nfsGames...)
+	AddFiles(nfsGames)
 
 	// Add all files
 	if len(nfsGames) > 0 {
-		AddNewGames(nfsGames)
+		collection.AddNewGames(nfsGames)
 	}
 }
 
-func nfsConnect(host string, target string) (*nfs.Mount, *nfs.Target) {
+func nfsConnect(host, target string) (*nfs.Mount, *nfs.Target) {
 	mount, err := nfs.DialMount(host)
 	if err != nil {
 		log.Fatalf("unable to dial MOUNT service: %v", err)
@@ -69,7 +70,7 @@ func nfsConnect(host string, target string) (*nfs.Mount, *nfs.Target) {
 	return mount, v
 }
 
-func lookIntoNfsDirectory(v *nfs.Target, share string, path string) []FileDesc {
+func lookIntoNfsDirectory(v *nfs.Target, share, path string) []repository.FileDesc {
 	// Retrieve all directories
 	log.Printf("Retrieving all files in directory ('%s')...\n", path)
 
@@ -79,7 +80,7 @@ func lookIntoNfsDirectory(v *nfs.Target, share string, path string) []FileDesc {
 		return nil
 	}
 
-	var newGameFiles []FileDesc
+	var newGameFiles []repository.FileDesc
 
 	for _, dir := range dirs {
 		if dir.FileName != "." && dir.FileName != ".." {
@@ -95,16 +96,16 @@ func lookIntoNfsDirectory(v *nfs.Target, share string, path string) []FileDesc {
 			} else {
 				nfsRootPath := share
 				if path != "." {
-					nfsRootPath = nfsRootPath + path
+					nfsRootPath += path
 				}
 
-				newFile := FileDesc{size: dir.Size(), path: nfsRootPath + "/" + dir.FileName}
-				names := ExtractGameId(dir.FileName)
+				newFile := repository.FileDesc{Size: dir.Size(), Path: nfsRootPath + "/" + dir.FileName}
+				names := utils.ExtractGameID(dir.FileName)
 
-				if names.ShortId != "" {
-					newFile.url = names.ShortId
-					newFile.gameInfo = names.FullId
-					newFile.hostType = NFSShare
+				if names.ShortID() != "" {
+					newFile.GameID = names.ShortID()
+					newFile.GameInfo = names.FullID()
+					newFile.HostType = repository.NFSShare
 					newGameFiles = append(newGameFiles, newFile)
 				} else {
 					log.Println("Ignoring file because parsing failed", dir.FileName)
@@ -117,7 +118,7 @@ func lookIntoNfsDirectory(v *nfs.Target, share string, path string) []FileDesc {
 }
 
 func downloadNfsFile(w http.ResponseWriter, r *http.Request, share string) {
-	if debugNfs {
+	if config.GetConfig().DebugNfs() {
 		util.DefaultLogger.SetDebug(true)
 	}
 
@@ -147,7 +148,7 @@ func downloadNfsFile(w http.ResponseWriter, r *http.Request, share string) {
 	// Stats file
 	fsInfo, _, err := v.Lookup(name)
 	if err != nil {
-		log.Fatalf("lookup error: %s", err.Error())
+		log.Fatalf("lookup error: %s", err.Error()) //nolint:gocritic
 	}
 
 	byteRange := strings.Split(strings.Replace(strings.Join(r.Header["Range"], ""), "bytes=", "", -1), "-")
