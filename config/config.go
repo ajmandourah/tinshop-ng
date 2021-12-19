@@ -5,10 +5,10 @@ import (
 	"log"
 	"net"
 	"os"
-	"reflect"
 	"strconv"
 
 	"github.com/dblk/tinshop/repository"
+	"github.com/dblk/tinshop/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -18,7 +18,13 @@ type debug struct {
 	NoSecurity bool
 }
 
-type config struct {
+type security struct {
+	Whitelist []string `mapstructure:"whitelist"`
+	Backlist  []string `mapstructure:"backlist"`
+}
+
+// File holds all config information
+type File struct {
 	rootShop         string
 	ShopHost         string             `mapstructure:"host"`
 	ShopProtocol     string             `mapstructure:"protocol"`
@@ -26,10 +32,11 @@ type config struct {
 	Debug            debug              `mapstructure:"debug"`
 	AllSources       repository.Sources `mapstructure:"sources"`
 	Name             string             `mapstructure:"name"`
+	Security         security           `mapstructure:"security"`
 	shopTemplateData repository.ShopTemplate
 }
 
-var serverConfig config
+var serverConfig File
 var allHooks []func(repository.Sources)
 
 // LoadConfig handles viper under the hood
@@ -38,7 +45,6 @@ func LoadConfig() {
 	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath(".")      // optionally look for config in the working directory
 	viper.SetDefault("sources.directories", "./games")
-	viper.SetDefault("sources.nfs", "") // FIXME: Hack for issue viper
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -61,10 +67,6 @@ func LoadConfig() {
 
 func configChange() {
 	serverConfig = loadAndCompute()
-	// FIXME: Hack if nfs array become empty
-	if reflect.TypeOf(viper.AllSettings()["sources"].(map[string]interface{})["nfs"]).String() == "string" {
-		serverConfig.AllSources.Nfs = make([]string, 0)
-	}
 
 	// Call all hooks
 	for _, hook := range allHooks {
@@ -77,7 +79,8 @@ func GetConfig() repository.Config {
 	return &serverConfig
 }
 
-func loadAndCompute() config {
+func loadAndCompute() File {
+	serverConfig = File{}
 	err := viper.Unmarshal(&serverConfig)
 
 	if err != nil {
@@ -135,43 +138,96 @@ func HookOnSource(f func(repository.Sources)) {
 	allHooks = append(allHooks, f)
 }
 
-func (cfg *config) SetRootShop(root string) {
+// SetRootShop allow to change the root url of the shop
+func (cfg *File) SetRootShop(root string) {
 	cfg.rootShop = root
 }
 
-func (cfg *config) RootShop() string {
+// RootShop returns the RootShop url
+func (cfg *File) RootShop() string {
 	return cfg.rootShop
 }
-func (cfg *config) Protocol() string {
+
+// Protocol returns the protocol scheme (http or https)
+func (cfg *File) Protocol() string {
 	return cfg.ShopProtocol
 }
-func (cfg *config) Host() string {
+
+// Host returns the host of the shop
+func (cfg *File) Host() string {
 	return cfg.ShopHost
 }
-func (cfg *config) Port() int {
+
+// Port returns the port number for outside access
+func (cfg *File) Port() int {
 	return cfg.ShopPort
 }
-func (cfg *config) DebugNfs() bool {
+
+// DebugNfs tells if we should display additional log for nfs
+func (cfg *File) DebugNfs() bool {
 	return cfg.Debug.Nfs
 }
-func (cfg *config) DebugNoSecurity() bool {
+
+// DebugNoSecurity returns if we should disable security or not
+func (cfg *File) DebugNoSecurity() bool {
 	return cfg.Debug.NoSecurity
 }
-func (cfg *config) Directories() []string {
+
+// Directories returns the list of directories sources
+func (cfg *File) Directories() []string {
 	return cfg.AllSources.Directories
 }
-func (cfg *config) NfsShares() []string {
+
+// NfsShares returns the list of nfs sources
+func (cfg *File) NfsShares() []string {
 	return cfg.AllSources.Nfs
 }
-func (cfg *config) Sources() repository.Sources {
+
+// Sources returns all available sources
+func (cfg *File) Sources() repository.Sources {
 	return cfg.AllSources
 }
-func (cfg *config) ShopTemplateData() repository.ShopTemplate {
+
+// ShopTemplateData returns the data needed to render template
+func (cfg *File) ShopTemplateData() repository.ShopTemplate {
 	return cfg.shopTemplateData
 }
-func (cfg *config) SetShopTemplateData(data repository.ShopTemplate) {
+
+// SetShopTemplateData sets the data for template
+func (cfg *File) SetShopTemplateData(data repository.ShopTemplate) {
 	cfg.shopTemplateData = data
 }
-func (cfg *config) ShopTitle() string {
+
+// ShopTitle returns the name of the shop
+func (cfg *File) ShopTitle() string {
 	return cfg.Name
+}
+
+// IsBlacklisted tells if the uid is blacklisted or not
+func (cfg *File) IsBlacklisted(uid string) bool {
+	if len(cfg.Security.Whitelist) != 0 {
+		return !cfg.isInWhiteList(uid)
+	}
+	return cfg.isInBlackList(uid)
+}
+
+// IsWhitelisted tells if the uid is whitelisted or not
+func (cfg *File) IsWhitelisted(uid string) bool {
+	if len(cfg.Security.Whitelist) == 0 {
+		return !cfg.isInBlackList(uid)
+	}
+	return cfg.isInWhiteList(uid)
+}
+
+func (cfg *File) isInBlackList(uid string) bool {
+	idxBlackList := utils.Search(len(cfg.Security.Backlist), func(index int) bool {
+		return cfg.Security.Backlist[index] == uid
+	})
+	return idxBlackList != -1
+}
+func (cfg *File) isInWhiteList(uid string) bool {
+	idxWhiteList := utils.Search(len(cfg.Security.Whitelist), func(index int) bool {
+		return cfg.Security.Whitelist[index] == uid
+	})
+	return idxWhiteList != -1
 }

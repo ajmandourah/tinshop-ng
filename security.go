@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/dblk/tinshop/config"
 )
@@ -22,6 +23,14 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 		}
 
 		if r.RequestURI == "/" {
+			// Check for blacklist/whitelist
+			var uid = strings.Join(headers["Uid"], "")
+			if config.GetConfig().IsBlacklisted(uid) {
+				log.Println("[Security] Blacklisted switch detected...", uid)
+				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				return
+			}
+
 			// No User-Agent for tinfoil app
 			if headers["User-Agent"] != nil {
 				log.Println("[Security] User-Agent detected...")

@@ -34,3 +34,16 @@ sources:
   # NFS Shares [optional]
   nfs:
     - host:sharePath/to/game/files
+
+# All security information will be stored here
+security:
+  # List of switch uid to whitelist
+  # If enabled then only switch in this area will be listed
+  # You can find the uid of a switch in the log upon access
+  whitelist:
+    - TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+  # List of switch uid to blacklist
+  # Block access to all switch present in this list
+  # You can find the uid of a switch in the log upon access
+  backlist:
+    - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS

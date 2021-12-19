@@ -6,7 +6,7 @@
     Your own personal shop right into tinfoil!
 </p>
 
-[![Actions Status](https://github.com/dblk/tinshop/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/dblk/tinshop/actions)
+[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?event=release)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/dblk/tinshop.svg)](https://github.com/dblk/tinshop)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/dblk/tinshop/v0.0.1)
 [![GoReportCard example](https://goreportcard.com/badge/github.com/dblk/tinshop)](https://goreportcard.com/report/github.com/dblk/tinshop)
@@ -41,6 +41,7 @@ Here is the list of all main features so far:
 - [X] Serve from several network directories (Using NFS)
 - [X] Display a webpage for forbidden devices
 - [X] Auto-refresh configuration on file change
+- [X] Add the possibility to whitelist or blacklist a switch
 
 # Dev or build from source
 
@@ -97,9 +98,7 @@ Use a reverse proxy (like [traefik](https://github.com/traefik/traefik), [caddy]
 TinShop **does not** implement basic auth by itself.  
 You should configure it inside your reverse proxy.
 
-For other type of protection, you can whitelist (__*__) your own switch and this will do the trick.
-
-__*__ Feature not yet implemented!
+For other type of protection, you can whitelist your own switch and this will do the trick.
 
 ## I have tons of missing title displayed in `tinfoil`, what should I do?
 

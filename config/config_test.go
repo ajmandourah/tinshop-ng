@@ -128,4 +128,76 @@ var _ = Describe("Config", func() {
 			})
 		})
 	})
+	Context("Security for Blacklist/Whitelist tests", func() {
+		var myConfig = config.File{}
+
+		Describe("Blacklist tests", func() { //nolint:dupl
+			It("With empty blacklist", func() {
+				Expect(myConfig.IsBlacklisted("me")).To(BeFalse())
+				Expect(myConfig.IsWhitelisted("me")).To(BeTrue())
+			})
+			It("With a blacklist", func() {
+				var blacklist = make([]string, 0)
+				blacklist = append(blacklist, "me")
+
+				myConfig.Security.Backlist = blacklist
+				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
+				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
+			})
+			It("With a blacklist on other person", func() {
+				var blacklist = make([]string, 0)
+				blacklist = append(blacklist, "someoneElse")
+
+				myConfig.Security.Backlist = blacklist
+				Expect(myConfig.IsBlacklisted("me")).To(BeFalse())
+				Expect(myConfig.IsWhitelisted("me")).To(BeTrue())
+			})
+		})
+		Describe("Whitelist tests", func() { //nolint:dupl
+			It("With empty whitelist", func() {
+				Expect(myConfig.IsWhitelisted("me")).To(BeTrue())
+				Expect(myConfig.IsBlacklisted("me")).To(BeFalse())
+			})
+			It("With a whitelist", func() {
+				var whitelist = make([]string, 0)
+				whitelist = append(whitelist, "me")
+
+				myConfig.Security.Whitelist = whitelist
+				Expect(myConfig.IsWhitelisted("me")).To(BeTrue())
+				Expect(myConfig.IsBlacklisted("me")).To(BeFalse())
+			})
+			It("With a whitelist for someone else", func() {
+				var whitelist = make([]string, 0)
+				whitelist = append(whitelist, "someoneElse")
+
+				myConfig.Security.Whitelist = whitelist
+				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
+				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
+			})
+		})
+		Describe("Mix of blacklist/whitelist", func() {
+			It("With a blacklist and someone else in whitelist", func() {
+				var blacklist = make([]string, 0)
+				blacklist = append(blacklist, "me")
+				var whitelist = make([]string, 0)
+				whitelist = append(whitelist, "someoneElse")
+
+				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Whitelist = whitelist
+				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
+				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
+			})
+			It("With a blacklist another person and someone else in whitelist", func() {
+				var blacklist = make([]string, 0)
+				blacklist = append(blacklist, "anotherPerson")
+				var whitelist = make([]string, 0)
+				whitelist = append(whitelist, "someoneElse")
+
+				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Whitelist = whitelist
+				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
+				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
+			})
+		})
+	})
 })

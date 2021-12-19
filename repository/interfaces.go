@@ -29,6 +29,9 @@ type Config interface {
 	ShopTitle() string
 	ShopTemplateData() ShopTemplate
 	SetShopTemplateData(ShopTemplate)
+
+	IsBlacklisted(string) bool
+	IsWhitelisted(string) bool
 }
 
 // ShopTemplate contains all variables used for shop template

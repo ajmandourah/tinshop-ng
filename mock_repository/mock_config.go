@@ -90,6 +90,34 @@ func (mr *MockConfigMockRecorder) Host() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Host", reflect.TypeOf((*MockConfig)(nil).Host))
 }
 
+// IsBlacklisted mocks base method.
+func (m *MockConfig) IsBlacklisted(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsBlacklisted", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsBlacklisted indicates an expected call of IsBlacklisted.
+func (mr *MockConfigMockRecorder) IsBlacklisted(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBlacklisted", reflect.TypeOf((*MockConfig)(nil).IsBlacklisted), arg0)
+}
+
+// IsWhitelisted mocks base method.
+func (m *MockConfig) IsWhitelisted(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsWhitelisted", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsWhitelisted indicates an expected call of IsWhitelisted.
+func (mr *MockConfigMockRecorder) IsWhitelisted(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsWhitelisted", reflect.TypeOf((*MockConfig)(nil).IsWhitelisted), arg0)
+}
+
 // NfsShares mocks base method.
 func (m *MockConfig) NfsShares() []string {
 	m.ctrl.T.Helper()
