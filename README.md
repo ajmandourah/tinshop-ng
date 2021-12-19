@@ -42,6 +42,7 @@ Here is the list of all main features so far:
 - [X] Display a webpage for forbidden devices
 - [X] Auto-refresh configuration on file change
 - [X] Add the possibility to whitelist or blacklist a switch
+- [X] Add the possibility to ban theme
 
 # Dev or build from source
 

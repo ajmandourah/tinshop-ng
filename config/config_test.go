@@ -200,4 +200,24 @@ var _ = Describe("Config", func() {
 			})
 		})
 	})
+	Context("Security for theme", func() {
+		var myConfig = config.File{}
+		Describe("IsBannedTheme", func() {
+			It("should not be banned if empty config", func() {
+				Expect(myConfig.IsBannedTheme("myTheme")).To(BeFalse())
+			})
+			It("should not be banned if no corresponding config", func() {
+				var bannedThemes = make([]string, 0)
+				bannedThemes = append(bannedThemes, "banned")
+				myConfig.Security.BannedTheme = bannedThemes
+				Expect(myConfig.IsBannedTheme("myTheme")).To(BeFalse())
+			})
+			It("should not be banned if no corresponding config", func() {
+				var bannedThemes = make([]string, 0)
+				bannedThemes = append(bannedThemes, "myTheme")
+				myConfig.Security.BannedTheme = bannedThemes
+				Expect(myConfig.IsBannedTheme("myTheme")).To(BeTrue())
+			})
+		})
+	})
 })

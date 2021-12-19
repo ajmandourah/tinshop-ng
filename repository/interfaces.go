@@ -32,6 +32,7 @@ type Config interface {
 
 	IsBlacklisted(string) bool
 	IsWhitelisted(string) bool
+	IsBannedTheme(string) bool
 }
 
 // ShopTemplate contains all variables used for shop template

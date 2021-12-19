@@ -19,8 +19,9 @@ type debug struct {
 }
 
 type security struct {
-	Whitelist []string `mapstructure:"whitelist"`
-	Backlist  []string `mapstructure:"backlist"`
+	Whitelist   []string `mapstructure:"whitelist"`
+	Backlist    []string `mapstructure:"backlist"`
+	BannedTheme []string `mapstructure:"bannedTheme"`
 }
 
 // File holds all config information
@@ -230,4 +231,14 @@ func (cfg *File) isInWhiteList(uid string) bool {
 		return cfg.Security.Whitelist[index] == uid
 	})
 	return idxWhiteList != -1
+}
+
+// IsBannedTheme tells if the theme is banned or not
+func (cfg *File) IsBannedTheme(theme string) bool {
+	fmt.Println(theme)
+	fmt.Println(cfg.Security.BannedTheme)
+	idxBannedTheme := utils.Search(len(cfg.Security.BannedTheme), func(index int) bool {
+		return cfg.Security.BannedTheme[index] == theme
+	})
+	return idxBannedTheme != -1
 }

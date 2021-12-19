@@ -37,6 +37,11 @@ sources:
 
 # All security information will be stored here
 security:
+  # List of theme to be banned with security
+  # Be aware that this should be string (do not forget quotes)
+  # You can find the theme of a switch in the log upon access
+  bannedTheme:
+    - "0000000000000000000000000000000000000000000000000000000000000000"
   # List of switch uid to whitelist
   # If enabled then only switch in this area will be listed
   # You can find the uid of a switch in the log upon access

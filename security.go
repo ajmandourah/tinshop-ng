@@ -31,6 +31,14 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
+			// Check for banned theme
+			var theme = strings.Join(headers["Theme"], "")
+			if config.GetConfig().IsBannedTheme(theme) {
+				log.Println("[Security] Banned theme detected...", uid, theme)
+				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				return
+			}
+
 			// No User-Agent for tinfoil app
 			if headers["User-Agent"] != nil {
 				log.Println("[Security] User-Agent detected...")

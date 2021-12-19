@@ -90,6 +90,20 @@ func (mr *MockConfigMockRecorder) Host() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Host", reflect.TypeOf((*MockConfig)(nil).Host))
 }
 
+// IsBannedTheme mocks base method.
+func (m *MockConfig) IsBannedTheme(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsBannedTheme", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsBannedTheme indicates an expected call of IsBannedTheme.
+func (mr *MockConfigMockRecorder) IsBannedTheme(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsBannedTheme", reflect.TypeOf((*MockConfig)(nil).IsBannedTheme), arg0)
+}
+
 // IsBlacklisted mocks base method.
 func (m *MockConfig) IsBlacklisted(arg0 string) bool {
 	m.ctrl.T.Helper()
