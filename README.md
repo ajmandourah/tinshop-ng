@@ -8,7 +8,7 @@
 
 [![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?event=release)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/dblk/tinshop.svg)](https://github.com/dblk/tinshop)
-[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/dblk/tinshop/v0.0.1)
+[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/dblk/tinshop/v0.0.3)
 [![GoReportCard example](https://goreportcard.com/badge/github.com/dblk/tinshop)](https://goreportcard.com/report/github.com/dblk/tinshop)
 [![GitHub release](https://img.shields.io/github/release/dblk/tinshop.svg)](https://GitHub.com/dblk/tinshop/releases/)
 
@@ -43,6 +43,7 @@ Here is the list of all main features so far:
 - [X] Auto-refresh configuration on file change
 - [X] Add the possibility to whitelist or blacklist a switch
 - [X] Add the possibility to ban theme
+- [X] You can specify custom titledb to be merged with official one
 
 # Dev or build from source
 

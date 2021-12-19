@@ -77,8 +77,8 @@ func initServer() {
 	collection.Load()
 
 	// Loading config
-	config.HookOnSource(collection.Reset)
-	config.HookOnSource(sources.Load)
+	config.AddHook(collection.OnConfigUpdate)
+	config.AddHook(sources.OnConfigUpdate)
 	config.LoadConfig()
 }
 

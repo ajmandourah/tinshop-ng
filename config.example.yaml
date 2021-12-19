@@ -52,3 +52,15 @@ security:
   # You can find the uid of a switch in the log upon access
   backlist:
     - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS
+
+# This section describe all custom title db to show up properly in tinfoil
+customTitledb:
+  # Id of the entry
+  "060000BADDAD0000":
+    id: "050000BADDAD0000"
+    name: "Tinfoil"
+    region: "US"
+    releaseDate: 20180801
+    description: "Nintendo Switch Title Manager"
+    size: 14000000
+    iconUrl: ""

@@ -27,18 +27,19 @@ type security struct {
 // File holds all config information
 type File struct {
 	rootShop         string
-	ShopHost         string             `mapstructure:"host"`
-	ShopProtocol     string             `mapstructure:"protocol"`
-	ShopPort         int                `mapstructure:"port"`
-	Debug            debug              `mapstructure:"debug"`
-	AllSources       repository.Sources `mapstructure:"sources"`
-	Name             string             `mapstructure:"name"`
-	Security         security           `mapstructure:"security"`
+	ShopHost         string                              `mapstructure:"host"`
+	ShopProtocol     string                              `mapstructure:"protocol"`
+	ShopPort         int                                 `mapstructure:"port"`
+	Debug            debug                               `mapstructure:"debug"`
+	AllSources       repository.Sources                  `mapstructure:"sources"`
+	Name             string                              `mapstructure:"name"`
+	Security         security                            `mapstructure:"security"`
+	CustomTitleDB    map[string]repository.CustomDBEntry `mapstructure:"customTitledb"`
 	shopTemplateData repository.ShopTemplate
 }
 
 var serverConfig File
-var allHooks []func(repository.Sources)
+var allHooks []func(repository.Config)
 
 // LoadConfig handles viper under the hood
 func LoadConfig() {
@@ -71,7 +72,7 @@ func configChange() {
 
 	// Call all hooks
 	for _, hook := range allHooks {
-		hook(serverConfig.AllSources)
+		hook(&serverConfig)
 	}
 }
 
@@ -134,8 +135,8 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 	return config
 }
 
-// HookOnSource Add hook function on change sources
-func HookOnSource(f func(repository.Sources)) {
+// AddHook Add hook function on change config
+func AddHook(f func(repository.Config)) {
 	allHooks = append(allHooks, f)
 }
 
@@ -177,6 +178,11 @@ func (cfg *File) DebugNoSecurity() bool {
 // Directories returns the list of directories sources
 func (cfg *File) Directories() []string {
 	return cfg.AllSources.Directories
+}
+
+// CustomDB returns the list of custom title db
+func (cfg *File) CustomDB() map[string]repository.CustomDBEntry {
+	return cfg.CustomTitleDB
 }
 
 // NfsShares returns the list of nfs sources
@@ -235,10 +241,13 @@ func (cfg *File) isInWhiteList(uid string) bool {
 
 // IsBannedTheme tells if the theme is banned or not
 func (cfg *File) IsBannedTheme(theme string) bool {
-	fmt.Println(theme)
-	fmt.Println(cfg.Security.BannedTheme)
 	idxBannedTheme := utils.Search(len(cfg.Security.BannedTheme), func(index int) bool {
 		return cfg.Security.BannedTheme[index] == theme
 	})
 	return idxBannedTheme != -1
+}
+
+// BannedTheme returns all banned theme
+func (cfg *File) BannedTheme() []string {
+	return cfg.Security.BannedTheme
 }

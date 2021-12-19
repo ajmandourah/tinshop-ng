@@ -33,6 +33,9 @@ type Config interface {
 	IsBlacklisted(string) bool
 	IsWhitelisted(string) bool
 	IsBannedTheme(string) bool
+	BannedTheme() []string
+
+	CustomDB() map[string]CustomDBEntry
 }
 
 // ShopTemplate contains all variables used for shop template
@@ -61,7 +64,19 @@ type FileDesc struct {
 
 // GameType structure
 type GameType struct {
-	Success string                            `json:"success"`
-	Titledb map[string]map[string]interface{} `json:"titledb"`
-	Files   []interface{}                     `json:"files"`
+	Success        string                 `json:"success"`
+	Titledb        map[string]interface{} `json:"titledb"`
+	Files          []interface{}          `json:"files"`
+	ThemeBlackList []string               `json:"themeBlackList,omitempty"`
+}
+
+// CustomDBEntry describe the various fields for entries
+type CustomDBEntry struct {
+	ID          string `mapstructure:"id" json:"id"`
+	Name        string `mapstructure:"name" json:"name"`
+	Region      string `mapstructure:"region" json:"region"`
+	Size        int    `mapstructure:"size" json:"size"`
+	ReleaseDate int    `mapstructure:"releaseDate" json:"releaseDate"`
+	Description string `mapstructure:"description" json:"description"`
+	IconURL     string `mapstructure:"iconUrl" json:"iconUrl"`
 }

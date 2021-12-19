@@ -10,12 +10,12 @@ import (
 
 var gameFiles []repository.FileDesc
 
-// Load from all sources
-func Load(src repository.Sources) {
+// OnConfigUpdate from all sources
+func OnConfigUpdate(cfg repository.Config) {
 	log.Println("Sources loading...")
 	gameFiles = make([]repository.FileDesc, 0)
-	loadGamesDirectories(src.Directories, len(src.Nfs) == 0)
-	loadGamesNfsShares(src.Nfs)
+	loadGamesDirectories(cfg.Directories(), len(cfg.NfsShares()) == 0)
+	loadGamesNfsShares(cfg.NfsShares())
 }
 
 // GetFiles returns all games files in various sources
