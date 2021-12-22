@@ -1,5 +1,6 @@
 # This is an example .goreleaser.yml file with some sane defaults.
 # Make sure to check the documentation at http://goreleaser.com
+project_name: tinshop
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -13,7 +14,7 @@ builds:
       - darwin
 archives:
   - replacements:
-      darwin: Darwin
+      darwin: macOS
       linux: Linux
       windows: Windows
       386: i386
@@ -25,6 +26,15 @@ checksum:
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
 changelog:
+  groups:
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: Others
+      order: 999
   sort: asc
   filters:
     exclude:
