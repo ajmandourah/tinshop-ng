@@ -1,3 +1,8 @@
+// @title tinshop Config
+
+// @BasePath /config/
+
+// Package config provides everything related to configuration
 package config
 
 import (
@@ -7,8 +12,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/dblk/tinshop/repository"
-	"github.com/dblk/tinshop/utils"
+	"github.com/DblK/tinshop/repository"
+	"github.com/DblK/tinshop/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -40,6 +45,7 @@ type File struct {
 
 var serverConfig File
 var allHooks []func(repository.Config)
+var beforeAllHooks []func(repository.Config)
 
 // LoadConfig handles viper under the hood
 func LoadConfig() {
@@ -68,6 +74,11 @@ func LoadConfig() {
 }
 
 func configChange() {
+	// Call all before hooks
+	for _, hook := range beforeAllHooks {
+		hook(&serverConfig)
+	}
+
 	serverConfig = loadAndCompute()
 
 	// Call all hooks
@@ -138,6 +149,11 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 // AddHook Add hook function on change config
 func AddHook(f func(repository.Config)) {
 	allHooks = append(allHooks, f)
+}
+
+// AddBeforeHook Add hook function before on change config
+func AddBeforeHook(f func(repository.Config)) {
+	beforeAllHooks = append(beforeAllHooks, f)
 }
 
 // SetRootShop allow to change the root url of the shop

@@ -1,11 +1,16 @@
+// @title tinshop Sources
+
+// @BasePath /sources/
+
+// Package sources provides management of various sources
 package sources
 
 import (
 	"log"
 	"net/http"
 
-	"github.com/dblk/tinshop/repository"
-	"github.com/dblk/tinshop/utils"
+	"github.com/DblK/tinshop/repository"
+	"github.com/DblK/tinshop/utils"
 )
 
 var gameFiles []repository.FileDesc
@@ -14,8 +19,14 @@ var gameFiles []repository.FileDesc
 func OnConfigUpdate(cfg repository.Config) {
 	log.Println("Sources loading...")
 	gameFiles = make([]repository.FileDesc, 0)
+	watcherDirectories = newWatcher()
 	loadGamesDirectories(cfg.Directories(), len(cfg.NfsShares()) == 0)
 	loadGamesNfsShares(cfg.NfsShares())
+}
+
+// BeforeConfigUpdate from all sources
+func BeforeConfigUpdate(cfg repository.Config) {
+	removeGamesWatcherDirectories()
 }
 
 // GetFiles returns all games files in various sources

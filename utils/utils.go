@@ -1,11 +1,16 @@
+// @title tinshop Utils
+
+// @BasePath /utils/
+
+// Package utils provides some cross used information
 package utils
 
 import (
 	"regexp"
 	"strings"
 
-	"github.com/dblk/tinshop/gameid"
-	"github.com/dblk/tinshop/repository"
+	"github.com/DblK/tinshop/gameid"
+	"github.com/DblK/tinshop/repository"
 )
 
 // ExtractGameID from fileName the id of game and version
@@ -29,4 +34,22 @@ func Search(length int, f func(index int) bool) int {
 		}
 	}
 	return -1
+}
+
+func RemoveFileDesc(s []repository.FileDesc, index int) []repository.FileDesc {
+	if len(s) < index+1 || index < 0 {
+		return s
+	}
+	ret := make([]repository.FileDesc, 0)
+	ret = append(ret, s[:index]...)
+	return append(ret, s[index+1:]...)
+}
+
+func RemoveGameFile(s []repository.GameFileType, index int) []repository.GameFileType {
+	if len(s) < index+1 || index < 0 {
+		return s
+	}
+	ret := make([]repository.GameFileType, 0)
+	ret = append(ret, s[:index]...)
+	return append(ret, s[index+1:]...)
 }

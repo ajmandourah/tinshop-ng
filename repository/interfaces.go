@@ -1,4 +1,13 @@
+// @title tinshop Utils
+
+// @BasePath /repository/
+
+// Package repository holds all interfaces and shared struct
 package repository
+
+import (
+	"gopkg.in/fsnotify.v1"
+)
 
 // GameID interface
 type GameID interface {
@@ -66,8 +75,13 @@ type FileDesc struct {
 type GameType struct {
 	Success        string                 `json:"success"`
 	Titledb        map[string]interface{} `json:"titledb"`
-	Files          []interface{}          `json:"files"`
+	Files          []GameFileType         `json:"files"`
 	ThemeBlackList []string               `json:"themeBlackList,omitempty"`
+}
+
+type GameFileType struct {
+	Size int64  `json:"size"`
+	URL  string `json:"url"`
 }
 
 // CustomDBEntry describe the various fields for entries
@@ -79,4 +93,8 @@ type CustomDBEntry struct {
 	ReleaseDate int    `mapstructure:"releaseDate" json:"releaseDate"`
 	Description string `mapstructure:"description" json:"description"`
 	IconURL     string `mapstructure:"iconUrl" json:"iconUrl"`
+}
+
+type WatcherDirectory struct {
+	Watcher *fsnotify.Watcher
 }

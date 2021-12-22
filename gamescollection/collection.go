@@ -1,3 +1,8 @@
+// @title tinshop Games Collection
+
+// @BasePath /gamescollection/
+
+// Package gamescollection provides and stores all information about collection
 package gamescollection
 
 import (
@@ -8,9 +13,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/dblk/tinshop/config"
-	"github.com/dblk/tinshop/repository"
-	"github.com/dblk/tinshop/utils"
+	"github.com/DblK/tinshop/config"
+	"github.com/DblK/tinshop/repository"
+	"github.com/DblK/tinshop/utils"
 )
 
 var library map[string]map[string]interface{}
@@ -21,7 +26,7 @@ var games repository.GameType
 func Load() {
 	loadTitlesLibrary()
 
-	initGamesCollection()
+	ResetGamesCollection()
 }
 
 func loadTitlesLibrary() {
@@ -58,17 +63,18 @@ func loadTitlesLibrary() {
 	}
 }
 
-func initGamesCollection() {
+// ResetGamesCollection reset the game collection
+func ResetGamesCollection() {
 	// Build games object
 	games.Success = "Welcome to your own shop!"
 	games.Titledb = make(map[string]interface{})
-	games.Files = make([]interface{}, 0)
+	games.Files = make([]repository.GameFileType, 0)
 	games.ThemeBlackList = nil
 }
 
 // OnConfigUpdate the collection of files
 func OnConfigUpdate(cfg repository.Config) {
-	initGamesCollection()
+	ResetGamesCollection()
 
 	// Create merged library
 	mergedLibrary = make(map[string]interface{})
@@ -118,6 +124,24 @@ func Games() repository.GameType {
 	return games
 }
 
+// RemoveGame remove ID from the collection
+func RemoveGame(ID string) {
+	gameID := strings.ToUpper(ID)
+	log.Println("Removing game", gameID)
+
+	// Remove from Files entry
+	idx := utils.Search(len(games.Files), func(index int) bool {
+		return strings.Contains(games.Files[index].URL, gameID)
+	})
+
+	if idx != -1 {
+		games.Files = utils.RemoveGameFile(games.Files, idx)
+	}
+
+	// Remove from titledb entry
+	delete(games.Titledb, gameID)
+}
+
 // CountGames return the number of games in collection
 func CountGames() int {
 	var uniqueGames int
@@ -138,12 +162,13 @@ func CountGames() int {
 // AddNewGames increase the games available in the shop
 func AddNewGames(newGames []repository.FileDesc) {
 	log.Println("Add new games...")
-	var gameList = make([]interface{}, 0)
+	var gameList = make([]repository.GameFileType, 0)
 
 	for _, file := range newGames {
-		game := make(map[string]interface{})
-		game["url"] = config.GetConfig().RootShop() + "/games/" + file.GameID + "#" + file.GameInfo
-		game["size"] = file.Size
+		game := repository.GameFileType{
+			URL:  config.GetConfig().RootShop() + "/games/" + file.GameID + "#" + file.GameInfo,
+			Size: file.Size,
+		}
 		gameList = append(gameList, game)
 
 		if HasGameIDInLibrary(file.GameID) {

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dblk/tinshop/config"
+	"github.com/DblK/tinshop/config"
 )
 
 // Middleware to ensure not forged query and real tinfoil client

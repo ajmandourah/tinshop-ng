@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/dblk/tinshop/gameid"
+	"github.com/DblK/tinshop/gameid"
 )
 
 var _ = Describe("Gameid", func() {

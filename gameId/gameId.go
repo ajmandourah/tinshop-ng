@@ -1,7 +1,12 @@
+// @title tinshop Game ID
+
+// @BasePath /gameid/
+
+// Package gameid provides a way to store individual game information
 package gameid
 
 import (
-	"github.com/dblk/tinshop/repository"
+	"github.com/DblK/tinshop/repository"
 )
 
 type gameID struct {

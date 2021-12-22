@@ -1,4 +1,4 @@
-module github.com/dblk/tinshop
+module github.com/DblK/tinshop
 
 go 1.17
 
@@ -11,6 +11,7 @@ require (
 	github.com/onsi/gomega v1.10.1
 	github.com/spf13/viper v1.10.1
 	github.com/vmware/go-nfs-client v0.0.0-20190605212624-d43b92724c1b
+	gopkg.in/fsnotify.v1 v1.4.7
 )
 
 require (

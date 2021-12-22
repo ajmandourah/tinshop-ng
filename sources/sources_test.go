@@ -4,8 +4,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/dblk/tinshop/repository"
-	"github.com/dblk/tinshop/sources"
+	"github.com/DblK/tinshop/repository"
+	"github.com/DblK/tinshop/sources"
 )
 
 var _ = Describe("Sources", func() {

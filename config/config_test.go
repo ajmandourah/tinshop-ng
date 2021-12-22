@@ -5,8 +5,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/dblk/tinshop/config"
-	"github.com/dblk/tinshop/mock_repository"
+	"github.com/DblK/tinshop/config"
+	"github.com/DblK/tinshop/mock_repository"
 )
 
 var _ = Describe("Config", func() {
@@ -218,6 +218,78 @@ var _ = Describe("Config", func() {
 				myConfig.Security.BannedTheme = bannedThemes
 				Expect(myConfig.IsBannedTheme("myTheme")).To(BeTrue())
 			})
+		})
+	})
+	Describe("Protocol", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.Protocol()).To(BeEmpty())
+		})
+		It("Test with a value", func() {
+			myConfig.ShopProtocol = "https"
+			Expect(myConfig.Protocol()).To(Equal("https"))
+		})
+	})
+	Describe("Host", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.Host()).To(BeEmpty())
+		})
+		It("Test with a value", func() {
+			myConfig.ShopHost = "tinshop.example.com"
+			Expect(myConfig.Host()).To(Equal("tinshop.example.com"))
+		})
+	})
+	Describe("Port", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.Port()).To(Equal(0))
+		})
+		It("Test with a value", func() {
+			myConfig.ShopPort = 12345
+			Expect(myConfig.Port()).To(Equal(12345))
+		})
+	})
+	Describe("ShopTitle", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.ShopTitle()).To(BeEmpty())
+		})
+		It("Test with a value", func() {
+			myConfig.Name = "Tinshop"
+			Expect(myConfig.ShopTitle()).To(Equal("Tinshop"))
+		})
+	})
+	Describe("DebugNfs", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.DebugNfs()).To(BeFalse())
+		})
+		It("Test with a value", func() {
+			myConfig.Debug.Nfs = true
+			Expect(myConfig.DebugNfs()).To(BeTrue())
+		})
+	})
+	Describe("DebugNoSecurity", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.DebugNoSecurity()).To(BeFalse())
+		})
+		It("Test with a value", func() {
+			myConfig.Debug.NoSecurity = true
+			Expect(myConfig.DebugNoSecurity()).To(BeTrue())
+		})
+	})
+	Describe("BannedTheme", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.BannedTheme()).To(HaveLen(0))
+		})
+		It("Test with a value", func() {
+			myConfig.Security.BannedTheme = make([]string, 0)
+			myConfig.Security.BannedTheme = append(myConfig.Security.BannedTheme, "Banned")
+			Expect(myConfig.BannedTheme()).To(HaveLen(1))
+			Expect(myConfig.BannedTheme()[0]).To(Equal("Banned"))
 		})
 	})
 })
