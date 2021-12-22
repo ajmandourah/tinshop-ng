@@ -22,6 +22,13 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ${{ steps.vars.outputs.go_version }}
+      - name: Compile the source
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          version: latest
+          args: build --rm-dist --skip-validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
