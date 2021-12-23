@@ -187,4 +187,30 @@ var _ = Describe("Utils", func() {
 
 		})
 	})
+	Describe("IsValidFilter", func() {
+		It("Test multi", func() {
+			Expect(utils.IsValidFilter("multi")).To(BeTrue())
+		})
+		It("Test multi (multi case)", func() {
+			Expect(utils.IsValidFilter("muLtI")).To(BeTrue())
+		})
+		It("Test world", func() {
+			Expect(utils.IsValidFilter("world")).To(BeTrue())
+		})
+		It("Test fr (lowercase)", func() {
+			Expect(utils.IsValidFilter("fr")).To(BeTrue())
+		})
+		It("Test FR (uppercase)", func() {
+			Expect(utils.IsValidFilter("FR")).To(BeTrue())
+		})
+		It("Test FR (multi case)", func() {
+			Expect(utils.IsValidFilter("fR")).To(BeTrue())
+		})
+		It("Test GG (Not existing country)", func() {
+			Expect(utils.IsValidFilter("GG")).To(BeFalse())
+		})
+		It("Test superpath (Not valid entry)", func() {
+			Expect(utils.IsValidFilter("superpath")).To(BeFalse())
+		})
+	})
 })

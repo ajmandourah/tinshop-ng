@@ -49,10 +49,10 @@ func (mr *MockConfigMockRecorder) BannedTheme() *gomock.Call {
 }
 
 // CustomDB mocks base method.
-func (m *MockConfig) CustomDB() map[string]repository.CustomDBEntry {
+func (m *MockConfig) CustomDB() map[string]repository.TitleDBEntry {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CustomDB")
-	ret0, _ := ret[0].(map[string]repository.CustomDBEntry)
+	ret0, _ := ret[0].(map[string]repository.TitleDBEntry)
 	return ret0
 }
 

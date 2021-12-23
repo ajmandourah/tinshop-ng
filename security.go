@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/DblK/tinshop/config"
+	"github.com/DblK/tinshop/utils"
 )
 
 // Middleware to ensure not forged query and real tinfoil client
@@ -22,7 +23,7 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		if r.RequestURI == "/" {
+		if r.RequestURI == "/" || utils.IsValidFilter(r.RequestURI[1:]) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
 			if config.GetConfig().IsBlacklisted(uid) {

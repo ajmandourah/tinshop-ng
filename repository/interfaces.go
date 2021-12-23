@@ -44,7 +44,7 @@ type Config interface {
 	IsBannedTheme(string) bool
 	BannedTheme() []string
 
-	CustomDB() map[string]CustomDBEntry
+	CustomDB() map[string]TitleDBEntry
 }
 
 // ShopTemplate contains all variables used for shop template
@@ -73,10 +73,10 @@ type FileDesc struct {
 
 // GameType structure
 type GameType struct {
-	Success        string                 `json:"success"`
-	Titledb        map[string]interface{} `json:"titledb"`
-	Files          []GameFileType         `json:"files"`
-	ThemeBlackList []string               `json:"themeBlackList,omitempty"`
+	Success        string                  `json:"success"`
+	Titledb        map[string]TitleDBEntry `json:"titledb"`
+	Files          []GameFileType          `json:"files"`
+	ThemeBlackList []string                `json:"themeBlackList,omitempty"`
 }
 
 type GameFileType struct {
@@ -84,15 +84,30 @@ type GameFileType struct {
 	URL  string `json:"url"`
 }
 
-// CustomDBEntry describe the various fields for entries
-type CustomDBEntry struct {
-	ID          string `mapstructure:"id" json:"id"`
-	Name        string `mapstructure:"name" json:"name"`
-	Region      string `mapstructure:"region" json:"region"`
-	Size        int    `mapstructure:"size" json:"size"`
-	ReleaseDate int    `mapstructure:"releaseDate" json:"releaseDate"`
-	Description string `mapstructure:"description" json:"description"`
-	IconURL     string `mapstructure:"iconUrl" json:"iconUrl"`
+// TitleDBEntry describe the various fields for entries
+type TitleDBEntry struct {
+	ID              string   `mapstructure:"id" json:"id"`
+	RightsID        string   `mapstructure:"rightsId" json:"rightsId,omitempty"`
+	Name            string   `mapstructure:"name" json:"name,omitempty"`
+	Version         uint     `mapstructure:"version" json:"version,omitempty"`
+	Key             string   `mapstructure:"key" json:"key,omitempty"`
+	IsDemo          bool     `mapstructure:"isDemo" json:"isDemo,omitempty"`
+	Region          string   `mapstructure:"region" json:"region,omitempty"`
+	Regions         []string `mapstructure:"regions" json:"regions,omitempty"`
+	ReleaseDate     int      `mapstructure:"releaseDate" json:"releaseDate,omitempty"`
+	NsuID           uint64   `mapstructure:"nsuId" json:"nsuId,omitempty"`
+	Category        []string `mapstructure:"category" json:"category,omitempty"`
+	RatingContent   []string `mapstructure:"ratingContent" json:"ratingContent,omitempty"`
+	NumberOfPlayers int      `mapstructure:"numberOfPlayers" json:"numberOfPlayers,omitempty"`
+	Publisher       string   `mapstructure:"publisher" json:"publisher,omitempty"`
+	Rating          int      `mapstructure:"rating" json:"rating,omitempty"`
+	IconURL         string   `mapstructure:"iconUrl" json:"iconUrl,omitempty"`
+	BannerURL       string   `mapstructure:"bannerUrl" json:"bannerUrl,omitempty"`
+	Intro           string   `mapstructure:"intro" json:"intro,omitempty"`
+	Description     string   `mapstructure:"description" json:"description,omitempty"`
+	Languages       []string `mapstructure:"languages" json:"languages,omitempty"`
+	Size            int      `mapstructure:"size" json:"size,omitempty"`
+	Rank            int      `mapstructure:"rank" json:"rank,omitempty"`
 }
 
 type WatcherDirectory struct {

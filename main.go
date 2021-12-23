@@ -14,6 +14,7 @@ import (
 	"github.com/DblK/tinshop/config"
 	collection "github.com/DblK/tinshop/gamescollection"
 	"github.com/DblK/tinshop/sources"
+	"github.com/DblK/tinshop/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -26,6 +27,7 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", HomeHandler)
 	r.HandleFunc("/games/{game}", GamesHandler)
+	r.HandleFunc("/{filter}", FilteringHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
 	r.Use(tinfoilMiddleware)
@@ -98,9 +100,8 @@ func notAllowed(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusMethodNotAllowed)
 }
 
-// HomeHandler handles list of games
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	jsonResponse, jsonError := json.Marshal(collection.Games())
+func serveCollection(w http.ResponseWriter, tinfoilCollection interface{}) {
+	jsonResponse, jsonError := json.Marshal(tinfoilCollection)
 
 	if jsonError != nil {
 		log.Println("Unable to encode JSON")
@@ -112,10 +113,27 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(jsonResponse)
 }
 
+// HomeHandler handles list of games
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	serveCollection(w, collection.Games())
+}
+
 // GamesHandler handles downloading games
 func GamesHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	log.Println("Requesting game", vars["game"])
 
 	sources.DownloadGame(vars["game"], w, r)
+}
+
+// FilteringHandler handles filtering games collection
+func FilteringHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	if !utils.IsValidFilter(vars["filter"]) {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+
+	serveCollection(w, collection.Filter(vars["filter"]))
 }

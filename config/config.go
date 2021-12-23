@@ -32,14 +32,14 @@ type security struct {
 // File holds all config information
 type File struct {
 	rootShop         string
-	ShopHost         string                              `mapstructure:"host"`
-	ShopProtocol     string                              `mapstructure:"protocol"`
-	ShopPort         int                                 `mapstructure:"port"`
-	Debug            debug                               `mapstructure:"debug"`
-	AllSources       repository.Sources                  `mapstructure:"sources"`
-	Name             string                              `mapstructure:"name"`
-	Security         security                            `mapstructure:"security"`
-	CustomTitleDB    map[string]repository.CustomDBEntry `mapstructure:"customTitledb"`
+	ShopHost         string                             `mapstructure:"host"`
+	ShopProtocol     string                             `mapstructure:"protocol"`
+	ShopPort         int                                `mapstructure:"port"`
+	Debug            debug                              `mapstructure:"debug"`
+	AllSources       repository.Sources                 `mapstructure:"sources"`
+	Name             string                             `mapstructure:"name"`
+	Security         security                           `mapstructure:"security"`
+	CustomTitleDB    map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
 	shopTemplateData repository.ShopTemplate
 }
 
@@ -197,7 +197,7 @@ func (cfg *File) Directories() []string {
 }
 
 // CustomDB returns the list of custom title db
-func (cfg *File) CustomDB() map[string]repository.CustomDBEntry {
+func (cfg *File) CustomDB() map[string]repository.TitleDBEntry {
 	return cfg.CustomTitleDB
 }
 

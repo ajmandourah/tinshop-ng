@@ -47,6 +47,14 @@ Here is the list of all main features so far:
 - [X] Add the possibility to ban theme
 - [X] You can specify custom titledb to be merged with official one
 - [X] Auto-watch for mounted directories
+- [X] Add filters path for shop
+
+## Filtering
+
+When you setup your shop inside `tinfoil` you can now add the following path:
+- `multi` : Filter only multiplayer games
+- `fr`, `en`, ... : Filter by languages
+- `world` : All games without any filter (equivalent without path)
 
 # Dev or build from source
 
