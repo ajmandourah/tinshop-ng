@@ -28,6 +28,7 @@ func main() {
 	r.HandleFunc("/", HomeHandler)
 	r.HandleFunc("/games/{game}", GamesHandler)
 	r.HandleFunc("/{filter}", FilteringHandler)
+	r.HandleFunc("/{filter}/", FilteringHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
 	r.Use(tinfoilMiddleware)
