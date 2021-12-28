@@ -7,6 +7,7 @@ package gamescollection
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"os"
@@ -222,4 +223,13 @@ func AddNewGames(newGames []repository.FileDesc) {
 	}
 	games.Files = append(games.Files, gameList...)
 	log.Printf("Added %d games in your library\n", len(gameList))
+}
+
+// GetKey return the key from the titledb
+func GetKey(gameID string) (string, error) {
+	var key = Library()[gameID].Key
+	if key == "" {
+		return "", errors.New("TitleDBKey for game " + gameID + " is not found")
+	}
+	return key, nil
 }

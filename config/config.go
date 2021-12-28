@@ -21,12 +21,17 @@ import (
 type debug struct {
 	Nfs        bool
 	NoSecurity bool
+	Ticket     bool
 }
 
 type security struct {
 	Whitelist   []string `mapstructure:"whitelist"`
 	Backlist    []string `mapstructure:"backlist"`
 	BannedTheme []string `mapstructure:"bannedTheme"`
+}
+
+type nsp struct {
+	CheckVerified bool `mapstructure:"checkVerified"`
 }
 
 // File holds all config information
@@ -40,6 +45,7 @@ type File struct {
 	Name             string                             `mapstructure:"name"`
 	Security         security                           `mapstructure:"security"`
 	CustomTitleDB    map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
+	NSP              nsp                                `mapsstructure:"nsp"`
 	shopTemplateData repository.ShopTemplate
 }
 
@@ -181,6 +187,11 @@ func (cfg *File) Port() int {
 	return cfg.ShopPort
 }
 
+// DebugTicket tells if we should display additional log for ticket verification
+func (cfg *File) DebugTicket() bool {
+	return cfg.Debug.Ticket
+}
+
 // DebugNfs tells if we should display additional log for nfs
 func (cfg *File) DebugNfs() bool {
 	return cfg.Debug.Nfs
@@ -224,6 +235,11 @@ func (cfg *File) SetShopTemplateData(data repository.ShopTemplate) {
 // ShopTitle returns the name of the shop
 func (cfg *File) ShopTitle() string {
 	return cfg.Name
+}
+
+// VerifyNSP tells if we need to verify NSP
+func (cfg *File) VerifyNSP() bool {
+	return cfg.NSP.CheckVerified
 }
 
 // IsBlacklisted tells if the uid is blacklisted or not

@@ -168,4 +168,51 @@ var _ = Describe("Collection", func() {
 			Expect(len(filteredGames.Files)).To(Equal(1))
 		})
 	})
+	FDescribe("GetKey", func() {
+		var (
+			myMockConfig *mock_repository.MockConfig
+			ctrl         *gomock.Controller
+		)
+		BeforeEach(func() {
+			ctrl = gomock.NewController(GinkgoT())
+		})
+		JustBeforeEach(func() {
+			myMockConfig = mock_repository.NewMockConfig(ctrl)
+			customDB := make(map[string]repository.TitleDBEntry)
+			custom1 := repository.TitleDBEntry{
+				ID:  "0000000000000001",
+				Key: "My Key",
+			}
+			customDB["0000000000000001"] = custom1
+			custom2 := repository.TitleDBEntry{
+				ID:  "0000000000000002",
+				Key: "",
+			}
+			customDB["0000000000000001"] = custom1
+			customDB["0000000000000002"] = custom2
+
+			myMockConfig.EXPECT().
+				CustomDB().
+				Return(customDB).
+				AnyTimes()
+			myMockConfig.EXPECT().
+				BannedTheme().
+				Return(nil).
+				AnyTimes()
+
+			collection.OnConfigUpdate(myMockConfig)
+		})
+		It("Retrieving existing Key", func() {
+			key, err := collection.GetKey("0000000000000001")
+			Expect(err).To(BeNil())
+			Expect(key).To(Not(BeEmpty()))
+			Expect(key).To(Equal("My Key"))
+		})
+		It("Retrieving not existing Key", func() {
+			key, err := collection.GetKey("0000000000000002")
+			Expect(err).To(Not(BeNil()))
+			Expect(err.Error()).To(Equal("TitleDBKey for game 0000000000000002 is not found"))
+			Expect(key).To(BeEmpty())
+		})
+	})
 })

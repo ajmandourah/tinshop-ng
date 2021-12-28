@@ -270,6 +270,16 @@ var _ = Describe("Config", func() {
 			Expect(myConfig.DebugNfs()).To(BeTrue())
 		})
 	})
+	Describe("VerifyNSP", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.VerifyNSP()).To(BeFalse())
+		})
+		It("Test with a value", func() {
+			myConfig.NSP.CheckVerified = true
+			Expect(myConfig.VerifyNSP()).To(BeTrue())
+		})
+	})
 	Describe("DebugNoSecurity", func() {
 		var myConfig = config.File{}
 		It("Test with empty object", func() {
@@ -278,6 +288,16 @@ var _ = Describe("Config", func() {
 		It("Test with a value", func() {
 			myConfig.Debug.NoSecurity = true
 			Expect(myConfig.DebugNoSecurity()).To(BeTrue())
+		})
+	})
+	Describe("DebugTicket", func() {
+		var myConfig = config.File{}
+		It("Test with empty object", func() {
+			Expect(myConfig.DebugTicket()).To(BeFalse())
+		})
+		It("Test with a value", func() {
+			myConfig.Debug.Ticket = true
+			Expect(myConfig.DebugTicket()).To(BeTrue())
 		})
 	})
 	Describe("BannedTheme", func() {

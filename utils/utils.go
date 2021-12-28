@@ -52,6 +52,7 @@ func Search(length int, f func(index int) bool) int {
 	return -1
 }
 
+// RemoveFileDesc remove a specific index inside a repository.FileDesc
 func RemoveFileDesc(s []repository.FileDesc, index int) []repository.FileDesc {
 	if len(s) < index+1 || index < 0 {
 		return s
@@ -61,6 +62,7 @@ func RemoveFileDesc(s []repository.FileDesc, index int) []repository.FileDesc {
 	return append(ret, s[index+1:]...)
 }
 
+// RemoveGameFile remove a specific index inside a repository.GameFileType
 func RemoveGameFile(s []repository.GameFileType, index int) []repository.GameFileType {
 	if len(s) < index+1 || index < 0 {
 		return s

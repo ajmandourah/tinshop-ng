@@ -90,6 +90,20 @@ func (mr *MockConfigMockRecorder) DebugNoSecurity() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DebugNoSecurity", reflect.TypeOf((*MockConfig)(nil).DebugNoSecurity))
 }
 
+// DebugTicket mocks base method.
+func (m *MockConfig) DebugTicket() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DebugTicket")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// DebugTicket indicates an expected call of DebugTicket.
+func (mr *MockConfigMockRecorder) DebugTicket() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DebugTicket", reflect.TypeOf((*MockConfig)(nil).DebugTicket))
+}
+
 // Directories mocks base method.
 func (m *MockConfig) Directories() []string {
 	m.ctrl.T.Helper()
@@ -280,4 +294,18 @@ func (m *MockConfig) Sources() repository.Sources {
 func (mr *MockConfigMockRecorder) Sources() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Sources", reflect.TypeOf((*MockConfig)(nil).Sources))
+}
+
+// VerifyNSP mocks base method.
+func (m *MockConfig) VerifyNSP() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyNSP")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// VerifyNSP indicates an expected call of VerifyNSP.
+func (mr *MockConfigMockRecorder) VerifyNSP() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyNSP", reflect.TypeOf((*MockConfig)(nil).VerifyNSP))
 }

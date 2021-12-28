@@ -21,7 +21,14 @@ debug:
   nfs: false
   # Remove middleware security for retrieving index
   # DO NOT use in production (only for dev purpose)
-  noSecurity: true
+  noSecurity: false
+  # Display more information about ticket's verification
+  ticket: false
+
+# All actions related to NSP file will be stored here
+nsp:
+  # Tells if tinshop should verify the ticket inside NSP to ensure no issue with install
+  checkVerified: true
 
 # All sources where we should look for games
 # If this section is commented out, then the directory "games" will be looked at

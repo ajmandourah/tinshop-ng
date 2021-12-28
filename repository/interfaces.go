@@ -6,7 +6,7 @@
 package repository
 
 import (
-	"gopkg.in/fsnotify.v1"
+	"net/http"
 )
 
 // GameID interface
@@ -32,6 +32,8 @@ type Config interface {
 
 	DebugNfs() bool
 	DebugNoSecurity() bool
+	DebugTicket() bool
+
 	Sources() Sources
 	Directories() []string
 	NfsShares() []string
@@ -45,6 +47,7 @@ type Config interface {
 	BannedTheme() []string
 
 	CustomDB() map[string]TitleDBEntry
+	VerifyNSP() bool
 }
 
 // ShopTemplate contains all variables used for shop template
@@ -79,6 +82,7 @@ type GameType struct {
 	ThemeBlackList []string                `json:"themeBlackList,omitempty"`
 }
 
+// GameFileType stores the fields needed for game files
 type GameFileType struct {
 	Size int64  `json:"size"`
 	URL  string `json:"url"`
@@ -89,7 +93,7 @@ type TitleDBEntry struct {
 	ID              string   `mapstructure:"id" json:"id"`
 	RightsID        string   `mapstructure:"rightsId" json:"rightsId,omitempty"`
 	Name            string   `mapstructure:"name" json:"name,omitempty"`
-	Version         uint     `mapstructure:"version" json:"version,omitempty"`
+	Version         string   `mapstructure:"version" json:"version,omitempty"`
 	Key             string   `mapstructure:"key" json:"key,omitempty"`
 	IsDemo          bool     `mapstructure:"isDemo" json:"isDemo,omitempty"`
 	Region          string   `mapstructure:"region" json:"region,omitempty"`
@@ -110,6 +114,11 @@ type TitleDBEntry struct {
 	Rank            int      `mapstructure:"rank" json:"rank,omitempty"`
 }
 
-type WatcherDirectory struct {
-	Watcher *fsnotify.Watcher
+// Source describes the common functions for Sources
+type Source interface {
+	Load([]string, bool)
+	Download(http.ResponseWriter, *http.Request, string, string)
+	UnWatchAll()
+	Reset()
+	GetFiles() []FileDesc
 }

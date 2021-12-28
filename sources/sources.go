@@ -10,33 +10,56 @@ import (
 	"net/http"
 
 	"github.com/DblK/tinshop/repository"
+	"github.com/DblK/tinshop/sources/directory"
+	"github.com/DblK/tinshop/sources/nfs"
 	"github.com/DblK/tinshop/utils"
 )
 
-var gameFiles []repository.FileDesc
+// SourceProvider stores all sources available
+type SourceProvider struct {
+	Directory repository.Source
+	NFS       repository.Source
+}
+
+var sourcesProvider SourceProvider
 
 // OnConfigUpdate from all sources
 func OnConfigUpdate(cfg repository.Config) {
 	log.Println("Sources loading...")
-	gameFiles = make([]repository.FileDesc, 0)
-	watcherDirectories = newWatcher()
-	loadGamesDirectories(cfg.Directories(), len(cfg.NfsShares()) == 0)
-	loadGamesNfsShares(cfg.NfsShares())
+
+	// Directories
+	srcDirectories := directory.New()
+	srcDirectories.Reset()
+	srcDirectories.Load(cfg.Directories(), len(cfg.NfsShares()) == 0)
+	sourcesProvider.Directory = srcDirectories
+
+	// NFS
+	srcNFS := nfs.New()
+	srcNFS.Reset()
+	srcNFS.Load(cfg.NfsShares(), false)
+	sourcesProvider.NFS = srcNFS
 }
 
 // BeforeConfigUpdate from all sources
 func BeforeConfigUpdate(cfg repository.Config) {
-	removeGamesWatcherDirectories()
+	if sourcesProvider.Directory != nil {
+		sourcesProvider.Directory.UnWatchAll()
+	}
+	if sourcesProvider.NFS != nil {
+		sourcesProvider.NFS.UnWatchAll()
+	}
 }
 
 // GetFiles returns all games files in various sources
 func GetFiles() []repository.FileDesc {
-	return gameFiles
-}
-
-// AddFiles add files to global sources
-func AddFiles(files []repository.FileDesc) {
-	gameFiles = append(gameFiles, files...)
+	mergedGameFiles := make([]repository.FileDesc, 0)
+	if sourcesProvider.Directory != nil {
+		mergedGameFiles = append(mergedGameFiles, sourcesProvider.Directory.GetFiles()...)
+	}
+	if sourcesProvider.NFS != nil {
+		mergedGameFiles = append(mergedGameFiles, sourcesProvider.NFS.GetFiles()...)
+	}
+	return mergedGameFiles
 }
 
 // DownloadGame method provide the file based on the source storage
@@ -53,9 +76,9 @@ func DownloadGame(gameID string, w http.ResponseWriter, r *http.Request) {
 	log.Println("Retrieving from location '" + GetFiles()[idx].Path + "'")
 	switch GetFiles()[idx].HostType {
 	case repository.LocalFile:
-		downloadLocalFile(w, r, gameID, GetFiles()[idx].Path)
+		sourcesProvider.Directory.Download(w, r, gameID, GetFiles()[idx].Path)
 	case repository.NFSShare:
-		downloadNfsFile(w, r, GetFiles()[idx].Path)
+		sourcesProvider.NFS.Download(w, r, gameID, GetFiles()[idx].Path)
 
 	default:
 		w.WriteHeader(http.StatusNotImplemented)
