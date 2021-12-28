@@ -145,6 +145,9 @@ func computePath(path string, dir *nfs.EntryPlus) string {
 func nspCheck(file repository.FileDesc) (bool, error) {
 	key, err := collection.GetKey(file.GameID)
 	if err != nil {
+		if config.GetConfig().DebugTicket() && err.Error() == "TitleDBKey for game "+file.GameID+" is not found" {
+			log.Println(err)
+		}
 		return false, err
 	}
 
