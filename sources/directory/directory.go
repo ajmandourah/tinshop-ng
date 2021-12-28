@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/DblK/tinshop/repository"
@@ -37,13 +38,15 @@ func (src *directorySource) Download(w http.ResponseWriter, r *http.Request, gam
 	}
 }
 
-func (src *directorySource) Load(directories []string, unique bool) {
+func (src *directorySource) Load(directories []string, uniqueSource bool) {
 	for _, directory := range directories {
 		err := loadGamesDirectory(directory)
 
 		if err != nil {
-			if len(directories) == 1 && err.Error() == "lstat ./games: no such file or directory" && unique {
-				log.Fatal("You must create a folder 'games' and put your games inside or use config.yml to add sources!")
+			if strings.Contains(err.Error(), "no such file or directory") {
+				if len(directories) == 1 && uniqueSource {
+					log.Fatal("You must create a folder 'games' and put your games inside or use config.yaml to add sources!")
+				}
 			} else {
 				log.Println(err)
 			}
