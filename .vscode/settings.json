@@ -57,6 +57,7 @@
         "tmpl",
         "typecheck",
         "unconvert",
+        "unmarshalling",
         "unparam",
         "varcheck",
         "Warnf"

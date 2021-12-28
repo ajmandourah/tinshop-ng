@@ -231,5 +231,5 @@ func GetKey(gameID string) (string, error) {
 	if key == "" {
 		return "", errors.New("TitleDBKey for game " + gameID + " is not found")
 	}
-	return key, nil
+	return string(key), nil
 }

@@ -6,7 +6,10 @@
 package repository
 
 import (
+	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 // GameID interface
@@ -88,13 +91,41 @@ type GameFileType struct {
 	URL  string `json:"url"`
 }
 
+// NInt is a nullable int
+type NInt int
+
+// NString is a nullable string
+type NString string
+
+// UnmarshalJSON handles unmarshalling null string
+func (n *NString) UnmarshalJSON(b []byte) (err error) {
+	if string(b) == "null" {
+		return nil
+	}
+	return json.Unmarshal(b, (*string)(n))
+}
+
+// UnmarshalJSON handles unmarshalling null int
+func (n *NInt) UnmarshalJSON(b []byte) (err error) {
+	if string(b) == "null" {
+		return nil
+	}
+	// Handle bad data in json file
+	if strings.Contains(string(b), "\"") {
+		newNumber, _ := strconv.Atoi(string(b)[1 : len(string(b))-1])
+		bs := []byte(strconv.Itoa(newNumber))
+		return json.Unmarshal(bs, (*int)(n))
+	}
+	return json.Unmarshal(b, (*int)(n))
+}
+
 // TitleDBEntry describe the various fields for entries
 type TitleDBEntry struct {
 	ID              string   `mapstructure:"id" json:"id"`
 	RightsID        string   `mapstructure:"rightsId" json:"rightsId,omitempty"`
 	Name            string   `mapstructure:"name" json:"name,omitempty"`
-	Version         string   `mapstructure:"version" json:"version,omitempty"`
-	Key             string   `mapstructure:"key" json:"key,omitempty"`
+	Version         NInt     `mapstructure:"version" json:"version,omitempty"`
+	Key             NString  `mapstructure:"key" json:"key,omitempty"`
 	IsDemo          bool     `mapstructure:"isDemo" json:"isDemo,omitempty"`
 	Region          string   `mapstructure:"region" json:"region,omitempty"`
 	Regions         []string `mapstructure:"regions" json:"regions,omitempty"`
