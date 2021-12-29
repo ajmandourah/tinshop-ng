@@ -23,7 +23,13 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		if r.RequestURI == "/" || utils.IsValidFilter(r.RequestURI[1:]) {
+		// Remove pending "/" if exists
+		actualPath := r.RequestURI[1:]
+		if r.RequestURI[len(r.RequestURI)-1:] == "/" {
+			actualPath = r.RequestURI[1 : len(r.RequestURI)-1]
+		}
+
+		if r.RequestURI == "/" || utils.IsValidFilter(actualPath) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
 			if config.GetConfig().IsBlacklisted(uid) {

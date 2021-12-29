@@ -191,14 +191,26 @@ var _ = Describe("Utils", func() {
 		It("Test multi", func() {
 			Expect(utils.IsValidFilter("multi")).To(BeTrue())
 		})
+		It("Test multi (with pending slash)", func() {
+			Expect(utils.IsValidFilter("multi/")).To(BeFalse())
+		})
 		It("Test multi (multi case)", func() {
 			Expect(utils.IsValidFilter("muLtI")).To(BeTrue())
+		})
+		It("Test multi (multi case)", func() {
+			Expect(utils.IsValidFilter("muLtI/")).To(BeFalse())
 		})
 		It("Test world", func() {
 			Expect(utils.IsValidFilter("world")).To(BeTrue())
 		})
+		It("Test world (with pending slash)", func() {
+			Expect(utils.IsValidFilter("world/")).To(BeFalse())
+		})
 		It("Test fr (lowercase)", func() {
 			Expect(utils.IsValidFilter("fr")).To(BeTrue())
+		})
+		It("Test fr (lowercase & with pending slash)", func() {
+			Expect(utils.IsValidFilter("fr/")).To(BeFalse())
 		})
 		It("Test FR (uppercase)", func() {
 			Expect(utils.IsValidFilter("FR")).To(BeTrue())
