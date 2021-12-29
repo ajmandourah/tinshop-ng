@@ -23,13 +23,7 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// Remove pending "/" if exists
-		actualPath := r.RequestURI[1:]
-		if r.RequestURI[len(r.RequestURI)-1:] == "/" {
-			actualPath = r.RequestURI[1 : len(r.RequestURI)-1]
-		}
-
-		if r.RequestURI == "/" || utils.IsValidFilter(actualPath) {
+		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
 			if config.GetConfig().IsBlacklisted(uid) {
@@ -68,4 +62,12 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
 		next.ServeHTTP(w, r)
 	})
+}
+
+func cleanPath(path string) string {
+	actualPath := path[1:]
+	if path[len(path)-1:] == "/" {
+		actualPath = path[1 : len(path)-1]
+	}
+	return actualPath
 }
