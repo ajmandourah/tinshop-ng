@@ -6,19 +6,18 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/DblK/tinshop/config"
 	"github.com/DblK/tinshop/utils"
 )
 
-// Middleware to ensure not forged query and real tinfoil client
-func tinfoilMiddleware(next http.Handler) http.Handler {
+// TinfoilMiddleware is a middleware to ensure not forged query and real tinfoil client
+func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 	shopTemplate, _ := template.ParseFS(assetData, "assets/shop.tmpl")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Verify all headers
 		headers := r.Header
 
-		if config.GetConfig().DebugNoSecurity() {
+		if s.Shop.Config.DebugNoSecurity() {
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -26,31 +25,31 @@ func tinfoilMiddleware(next http.Handler) http.Handler {
 		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
-			if config.GetConfig().IsBlacklisted(uid) {
+			if s.Shop.Config.IsBlacklisted(uid) {
 				log.Println("[Security] Blacklisted switch detected...", uid)
-				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
 
 			// Check for banned theme
 			var theme = strings.Join(headers["Theme"], "")
-			if config.GetConfig().IsBannedTheme(theme) {
+			if s.Shop.Config.IsBannedTheme(theme) {
 				log.Println("[Security] Banned theme detected...", uid, theme)
-				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
 
 			// No User-Agent for tinfoil app
 			if headers["User-Agent"] != nil {
 				log.Println("[Security] User-Agent detected...")
-				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
 
 			// Be sure all tinfoil headers are present
 			if headers["Theme"] == nil || headers["Uid"] == nil || headers["Version"] == nil || headers["Language"] == nil || headers["Hauth"] == nil || headers["Uauth"] == nil {
 				log.Println("[Security] Missing some expected headers...")
-				_ = shopTemplate.Execute(w, config.GetConfig().ShopTemplateData())
+				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
 

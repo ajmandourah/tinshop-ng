@@ -21,51 +21,61 @@ type SourceProvider struct {
 	NFS       repository.Source
 }
 
-var sourcesProvider SourceProvider
+type allSources struct {
+	sourcesProvider SourceProvider
+	collection      repository.Collection
+}
+
+// New create a new collection
+func New(collection repository.Collection) repository.Sources {
+	return &allSources{
+		collection: collection,
+	}
+}
 
 // OnConfigUpdate from all sources
-func OnConfigUpdate(cfg repository.Config) {
+func (s *allSources) OnConfigUpdate(cfg repository.Config) {
 	log.Println("Sources loading...")
 
 	// Directories
-	srcDirectories := directory.New()
+	srcDirectories := directory.New(s.collection, cfg)
 	srcDirectories.Reset()
 	srcDirectories.Load(cfg.Directories(), len(cfg.NfsShares()) == 0)
-	sourcesProvider.Directory = srcDirectories
+	s.sourcesProvider.Directory = srcDirectories
 
 	// NFS
-	srcNFS := nfs.New()
+	srcNFS := nfs.New(s.collection, cfg)
 	srcNFS.Reset()
 	srcNFS.Load(cfg.NfsShares(), false)
-	sourcesProvider.NFS = srcNFS
+	s.sourcesProvider.NFS = srcNFS
 }
 
 // BeforeConfigUpdate from all sources
-func BeforeConfigUpdate(cfg repository.Config) {
-	if sourcesProvider.Directory != nil {
-		sourcesProvider.Directory.UnWatchAll()
+func (s *allSources) BeforeConfigUpdate(cfg repository.Config) {
+	if s.sourcesProvider.Directory != nil {
+		s.sourcesProvider.Directory.UnWatchAll()
 	}
-	if sourcesProvider.NFS != nil {
-		sourcesProvider.NFS.UnWatchAll()
+	if s.sourcesProvider.NFS != nil {
+		s.sourcesProvider.NFS.UnWatchAll()
 	}
 }
 
 // GetFiles returns all games files in various sources
-func GetFiles() []repository.FileDesc {
+func (s *allSources) GetFiles() []repository.FileDesc {
 	mergedGameFiles := make([]repository.FileDesc, 0)
-	if sourcesProvider.Directory != nil {
-		mergedGameFiles = append(mergedGameFiles, sourcesProvider.Directory.GetFiles()...)
+	if s.sourcesProvider.Directory != nil {
+		mergedGameFiles = append(mergedGameFiles, s.sourcesProvider.Directory.GetFiles()...)
 	}
-	if sourcesProvider.NFS != nil {
-		mergedGameFiles = append(mergedGameFiles, sourcesProvider.NFS.GetFiles()...)
+	if s.sourcesProvider.NFS != nil {
+		mergedGameFiles = append(mergedGameFiles, s.sourcesProvider.NFS.GetFiles()...)
 	}
 	return mergedGameFiles
 }
 
 // DownloadGame method provide the file based on the source storage
-func DownloadGame(gameID string, w http.ResponseWriter, r *http.Request) {
-	idx := utils.Search(len(GetFiles()), func(index int) bool {
-		return GetFiles()[index].GameID == gameID
+func (s *allSources) DownloadGame(gameID string, w http.ResponseWriter, r *http.Request) {
+	idx := utils.Search(len(s.GetFiles()), func(index int) bool {
+		return s.GetFiles()[index].GameID == gameID
 	})
 
 	if idx == -1 {
@@ -73,15 +83,15 @@ func DownloadGame(gameID string, w http.ResponseWriter, r *http.Request) {
 		log.Printf("Game '%s' not found!", gameID)
 		return
 	}
-	log.Println("Retrieving from location '" + GetFiles()[idx].Path + "'")
-	switch GetFiles()[idx].HostType {
+	log.Println("Retrieving from location '" + s.GetFiles()[idx].Path + "'")
+	switch s.GetFiles()[idx].HostType {
 	case repository.LocalFile:
-		sourcesProvider.Directory.Download(w, r, gameID, GetFiles()[idx].Path)
+		s.sourcesProvider.Directory.Download(w, r, gameID, s.GetFiles()[idx].Path)
 	case repository.NFSShare:
-		sourcesProvider.NFS.Download(w, r, gameID, GetFiles()[idx].Path)
+		s.sourcesProvider.NFS.Download(w, r, gameID, s.GetFiles()[idx].Path)
 
 	default:
 		w.WriteHeader(http.StatusNotImplemented)
-		log.Printf("The type '%s' is not implemented to download game", GetFiles()[idx].HostType)
+		log.Printf("The type '%s' is not implemented to download game", s.GetFiles()[idx].HostType)
 	}
 }

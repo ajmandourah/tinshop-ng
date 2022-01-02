@@ -77,6 +77,9 @@ Dead simple, thanks to Golang!
 
 If you change an interface (or add a new one), do not forget to execute `./update_mocks.sh` to generate up-to-date mocks for tests.
 
+## What to launch tests?
+
+You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.
 # Roadmap
 
 You can see the [roadmap here](https://github.com/DblK/tinshop/projects/1).

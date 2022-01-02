@@ -34,6 +34,30 @@ func (m *MockConfig) EXPECT() *MockConfigMockRecorder {
 	return m.recorder
 }
 
+// AddBeforeHook mocks base method.
+func (m *MockConfig) AddBeforeHook(arg0 func(repository.Config)) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AddBeforeHook", arg0)
+}
+
+// AddBeforeHook indicates an expected call of AddBeforeHook.
+func (mr *MockConfigMockRecorder) AddBeforeHook(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddBeforeHook", reflect.TypeOf((*MockConfig)(nil).AddBeforeHook), arg0)
+}
+
+// AddHook mocks base method.
+func (m *MockConfig) AddHook(arg0 func(repository.Config)) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AddHook", arg0)
+}
+
+// AddHook indicates an expected call of AddHook.
+func (mr *MockConfigMockRecorder) AddHook(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddHook", reflect.TypeOf((*MockConfig)(nil).AddHook), arg0)
+}
+
 // BannedTheme mocks base method.
 func (m *MockConfig) BannedTheme() []string {
 	m.ctrl.T.Helper()
@@ -174,6 +198,18 @@ func (mr *MockConfigMockRecorder) IsWhitelisted(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsWhitelisted", reflect.TypeOf((*MockConfig)(nil).IsWhitelisted), arg0)
 }
 
+// LoadConfig mocks base method.
+func (m *MockConfig) LoadConfig() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "LoadConfig")
+}
+
+// LoadConfig indicates an expected call of LoadConfig.
+func (mr *MockConfigMockRecorder) LoadConfig() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadConfig", reflect.TypeOf((*MockConfig)(nil).LoadConfig))
+}
+
 // NfsShares mocks base method.
 func (m *MockConfig) NfsShares() []string {
 	m.ctrl.T.Helper()
@@ -283,10 +319,10 @@ func (mr *MockConfigMockRecorder) ShopTitle() *gomock.Call {
 }
 
 // Sources mocks base method.
-func (m *MockConfig) Sources() repository.Sources {
+func (m *MockConfig) Sources() repository.ConfigSources {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Sources")
-	ret0, _ := ret[0].(repository.Sources)
+	ret0, _ := ret[0].(repository.ConfigSources)
 	return ret0
 }
 

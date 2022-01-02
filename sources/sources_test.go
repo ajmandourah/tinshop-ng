@@ -1,15 +1,20 @@
 package sources_test
 
 import (
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	"github.com/DblK/tinshop/repository"
 	"github.com/DblK/tinshop/sources"
 )
 
 var _ = Describe("Sources", func() {
+	var allSources repository.Sources
+	BeforeEach(func() {
+		allSources = sources.New(nil)
+	})
 	It("Return list of game files", func() {
-		files := sources.GetFiles()
+		files := allSources.GetFiles()
 
 		Expect(len(files)).To(Equal(0))
 	})

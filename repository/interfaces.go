@@ -19,8 +19,8 @@ type GameID interface {
 	Extension() string
 }
 
-// Sources describe all sources type handled
-type Sources struct {
+// ConfigSources describe all sources type handled
+type ConfigSources struct {
 	Directories []string `mapstructure:"directories"`
 	Nfs         []string `mapstructure:"nfs"`
 }
@@ -37,7 +37,7 @@ type Config interface {
 	DebugNoSecurity() bool
 	DebugTicket() bool
 
-	Sources() Sources
+	Sources() ConfigSources
 	Directories() []string
 	NfsShares() []string
 	ShopTitle() string
@@ -51,6 +51,10 @@ type Config interface {
 
 	CustomDB() map[string]TitleDBEntry
 	VerifyNSP() bool
+
+	AddHook(f func(Config))
+	AddBeforeHook(f func(Config))
+	LoadConfig()
 }
 
 // ShopTemplate contains all variables used for shop template
@@ -134,9 +138,12 @@ type TitleDBEntry struct {
 	Category        []string `mapstructure:"category" json:"category,omitempty"`
 	RatingContent   []string `mapstructure:"ratingContent" json:"ratingContent,omitempty"`
 	NumberOfPlayers int      `mapstructure:"numberOfPlayers" json:"numberOfPlayers,omitempty"`
-	Publisher       string   `mapstructure:"publisher" json:"publisher,omitempty"`
 	Rating          int      `mapstructure:"rating" json:"rating,omitempty"`
+	Developer       string   `mapstructure:"developer" json:"developer,omitempty"`
+	Publisher       string   `mapstructure:"publisher" json:"publisher,omitempty"`
+	FrontBoxArt     string   `mapstructure:"frontBoxArt" json:"frontBoxArt,omitempty"`
 	IconURL         string   `mapstructure:"iconUrl" json:"iconUrl,omitempty"`
+	Screenshots     []string `mapstructure:"screenshots" json:"screenshots,omitempty"`
 	BannerURL       string   `mapstructure:"bannerUrl" json:"bannerUrl,omitempty"`
 	Intro           string   `mapstructure:"intro" json:"intro,omitempty"`
 	Description     string   `mapstructure:"description" json:"description,omitempty"`
@@ -152,4 +159,35 @@ type Source interface {
 	UnWatchAll()
 	Reset()
 	GetFiles() []FileDesc
+}
+
+// Sources describes all function to handle all sources
+type Sources interface {
+	OnConfigUpdate(Config)
+	BeforeConfigUpdate(Config)
+	GetFiles() []FileDesc
+	DownloadGame(string, http.ResponseWriter, *http.Request)
+}
+
+// Collection describes all information about collection
+type Collection interface {
+	Load()
+	OnConfigUpdate(Config)
+	Filter(string) GameType
+	RemoveGame(string)
+	CountGames() int
+	AddNewGames([]FileDesc)
+	Library() map[string]TitleDBEntry
+	HasGameIDInLibrary(string) bool
+	IsBaseGame(string) bool
+	Games() GameType
+	GetKey(string) (string, error)
+	ResetGamesCollection()
+}
+
+// Shop holds all tinshop information
+type Shop struct {
+	Collection Collection
+	Sources    Sources
+	Config     Config
 }

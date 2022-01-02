@@ -10,12 +10,10 @@ import (
 	"log"
 	"strings"
 	"unsafe"
-
-	"github.com/DblK/tinshop/config"
 )
 
 // IsTicketValid return if ticket is valid or not
-func IsTicketValid(file io.ReadSeeker, titleDBKey string) (bool, error) {
+func IsTicketValid(file io.ReadSeeker, titleDBKey string, debugTicket bool) (bool, error) {
 	newNSP := &nspFile{}
 
 	// Read Header
@@ -93,7 +91,7 @@ func IsTicketValid(file io.ReadSeeker, titleDBKey string) (bool, error) {
 	}
 	var ticketKey = strings.ToUpper(hex.EncodeToString(titleKey))
 
-	if config.GetConfig().DebugTicket() {
+	if debugTicket {
 		if ticketKey == "00000000000000000000000000000000" {
 			log.Println("Missing Ticket Key")
 		}

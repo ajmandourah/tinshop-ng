@@ -8,24 +8,27 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DblK/tinshop/config"
 	"github.com/DblK/tinshop/repository"
 	"github.com/vmware/go-nfs-client/nfs/util"
 )
 
-var gameFiles []repository.FileDesc
-
 type nfsSource struct {
+	gameFiles  []repository.FileDesc
+	collection repository.Collection
+	config     repository.Config
 }
 
 // New create a nfs source
-func New() repository.Source {
-	gameFiles = make([]repository.FileDesc, 0)
-	return &nfsSource{}
+func New(collection repository.Collection, config repository.Config) repository.Source {
+	return &nfsSource{
+		gameFiles:  make([]repository.FileDesc, 0),
+		collection: collection,
+		config:     config,
+	}
 }
 
 func (src *nfsSource) Download(w http.ResponseWriter, r *http.Request, game, share string) {
-	if config.GetConfig().DebugNfs() {
+	if src.config.DebugNfs() {
 		util.DefaultLogger.SetDebug(true)
 	}
 
@@ -98,11 +101,11 @@ func (src *nfsSource) Download(w http.ResponseWriter, r *http.Request, game, sha
 }
 func (src *nfsSource) Load(shares []string, unique bool) {
 	for _, share := range shares {
-		loadGamesNfs(share)
+		src.loadGamesNfs(share)
 	}
 }
 func (src *nfsSource) Reset() {
-	gameFiles = make([]repository.FileDesc, 0)
+	src.gameFiles = make([]repository.FileDesc, 0)
 }
 
 func (src *nfsSource) UnWatchAll() {
@@ -110,5 +113,5 @@ func (src *nfsSource) UnWatchAll() {
 }
 
 func (src *nfsSource) GetFiles() []repository.FileDesc {
-	return gameFiles
+	return src.gameFiles
 }

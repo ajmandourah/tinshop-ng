@@ -13,23 +13,32 @@ import (
 	"os"
 	"strings"
 
-	"github.com/DblK/tinshop/config"
 	"github.com/DblK/tinshop/repository"
 	"github.com/DblK/tinshop/utils"
 )
 
-var library map[string]repository.TitleDBEntry
-var mergedLibrary map[string]repository.TitleDBEntry
-var games repository.GameType
-
-// Load ensure that necessary data is loaded
-func Load() {
-	loadTitlesLibrary()
-
-	ResetGamesCollection()
+type collect struct {
+	games         repository.GameType
+	library       map[string]repository.TitleDBEntry
+	mergedLibrary map[string]repository.TitleDBEntry
+	config        repository.Config
 }
 
-func loadTitlesLibrary() {
+// New create a new collection
+func New(config repository.Config) repository.Collection {
+	return &collect{
+		config: config,
+	}
+}
+
+// Load ensure that necessary data is loaded
+func (c *collect) Load() {
+	c.loadTitlesLibrary()
+
+	c.ResetGamesCollection()
+}
+
+func (c *collect) loadTitlesLibrary() {
 	// Open our jsonFile
 	jsonFile, err := os.Open("titles.US.en.json")
 
@@ -55,7 +64,7 @@ func loadTitlesLibrary() {
 
 	byteValue, _ := io.ReadAll(jsonFile)
 
-	err = json.Unmarshal(byteValue, &library)
+	err = json.Unmarshal(byteValue, &c.library)
 	if err != nil {
 		log.Println("Error while loading titles library", err)
 	} else {
@@ -64,77 +73,78 @@ func loadTitlesLibrary() {
 }
 
 // ResetGamesCollection reset the game collection
-func ResetGamesCollection() {
+func (c *collect) ResetGamesCollection() {
 	// Build games object
-	games.Success = "Welcome to your own shop!"
-	games.Titledb = make(map[string]repository.TitleDBEntry)
-	games.Files = make([]repository.GameFileType, 0)
-	games.ThemeBlackList = nil
+	c.games.Success = "Welcome to your own shop!"
+	c.games.Titledb = make(map[string]repository.TitleDBEntry)
+	c.games.Files = make([]repository.GameFileType, 0)
+	c.games.ThemeBlackList = nil
 }
 
 // OnConfigUpdate the collection of files
-func OnConfigUpdate(cfg repository.Config) {
-	ResetGamesCollection()
+func (c *collect) OnConfigUpdate(cfg repository.Config) {
+	c.config = cfg
+	c.ResetGamesCollection()
 
 	// Create merged library
-	mergedLibrary = make(map[string]repository.TitleDBEntry)
+	c.mergedLibrary = make(map[string]repository.TitleDBEntry)
 
 	// Copy library
-	for key, entry := range library {
+	for key, entry := range c.library {
 		gameID := strings.ToUpper(key)
 
-		mergedLibrary[gameID] = entry
+		c.mergedLibrary[gameID] = entry
 	}
 
 	// Copy CustomDB
-	for key, entry := range cfg.CustomDB() {
+	for key, entry := range c.config.CustomDB() {
 		gameID := strings.ToUpper(key)
-		if _, ok := mergedLibrary[gameID]; ok {
+		if _, ok := c.mergedLibrary[gameID]; ok {
 			log.Println("Duplicate customDB entry from official titledb (consider removing from configuration)", gameID)
 		} else {
-			mergedLibrary[gameID] = entry
+			c.mergedLibrary[gameID] = entry
 		}
 	}
 
 	// Check if blacklist entries
-	if len(cfg.BannedTheme()) != 0 {
-		games.ThemeBlackList = cfg.BannedTheme()
+	if len(c.config.BannedTheme()) != 0 {
+		c.games.ThemeBlackList = c.config.BannedTheme()
 	} else {
-		games.ThemeBlackList = nil
+		c.games.ThemeBlackList = nil
 	}
 }
 
 // Library returns the titledb library
-func Library() map[string]repository.TitleDBEntry {
-	return mergedLibrary
+func (c *collect) Library() map[string]repository.TitleDBEntry {
+	return c.mergedLibrary
 }
 
 // HasGameIDInLibrary tells if we have gameID information in library
-func HasGameIDInLibrary(gameID string) bool {
-	_, ok := Library()[gameID]
+func (c *collect) HasGameIDInLibrary(gameID string) bool {
+	_, ok := c.Library()[gameID]
 	return ok
 }
 
 // IsBaseGame tells if the gameID is a base game or not
-func IsBaseGame(gameID string) bool {
-	return Library()[gameID].IconURL != ""
+func (c *collect) IsBaseGame(gameID string) bool {
+	return c.Library()[gameID].IconURL != ""
 }
 
 // Games returns the games inside the library
-func Games() repository.GameType {
-	return games
+func (c *collect) Games() repository.GameType {
+	return c.games
 }
 
 // Filter returns the games inside the library after filtering
-func Filter(filter string) repository.GameType {
+func (c *collect) Filter(filter string) repository.GameType {
 	var filteredGames repository.GameType
-	filteredGames.Success = games.Success
-	filteredGames.ThemeBlackList = games.ThemeBlackList
+	filteredGames.Success = c.games.Success
+	filteredGames.ThemeBlackList = c.games.ThemeBlackList
 	upperFilter := strings.ToUpper(filter)
 
 	newTitleDB := make(map[string]repository.TitleDBEntry)
 	newFiles := make([]repository.GameFileType, 0)
-	for ID, entry := range games.Titledb {
+	for ID, entry := range c.games.Titledb {
 		entryFiltered := false
 		if upperFilter == "WORLD" {
 			entryFiltered = true
@@ -154,12 +164,12 @@ func Filter(filter string) repository.GameType {
 
 		if entryFiltered {
 			newTitleDB[ID] = entry
-			idx := utils.Search(len(games.Files), func(index int) bool {
-				return strings.Contains(games.Files[index].URL, ID)
+			idx := utils.Search(len(c.games.Files), func(index int) bool {
+				return strings.Contains(c.games.Files[index].URL, ID)
 			})
 
 			if idx != -1 {
-				newFiles = append(newFiles, games.Files[idx])
+				newFiles = append(newFiles, c.games.Files[idx])
 			}
 		}
 	}
@@ -170,28 +180,28 @@ func Filter(filter string) repository.GameType {
 }
 
 // RemoveGame remove ID from the collection
-func RemoveGame(ID string) {
+func (c *collect) RemoveGame(ID string) {
 	gameID := strings.ToUpper(ID)
 	log.Println("Removing game", gameID)
 
 	// Remove from Files entry
-	idx := utils.Search(len(games.Files), func(index int) bool {
-		return strings.Contains(games.Files[index].URL, gameID)
+	idx := utils.Search(len(c.games.Files), func(index int) bool {
+		return strings.Contains(c.games.Files[index].URL, gameID)
 	})
 
 	if idx != -1 {
-		games.Files = utils.RemoveGameFile(games.Files, idx)
+		c.games.Files = utils.RemoveGameFile(c.games.Files, idx)
 	}
 
 	// Remove from titledb entry
-	delete(games.Titledb, gameID)
+	delete(c.games.Titledb, gameID)
 }
 
 // CountGames return the number of games in collection
-func CountGames() int {
+func (c *collect) CountGames() int {
 	var uniqueGames int
-	for _, entry := range games.Titledb {
-		if entry.IconURL != "" {
+	for _, entry := range c.games.Titledb {
+		if entry.IconURL != "" || entry.BannerURL != "" {
 			uniqueGames++
 		}
 	}
@@ -199,35 +209,44 @@ func CountGames() int {
 }
 
 // AddNewGames increase the games available in the shop
-func AddNewGames(newGames []repository.FileDesc) {
+func (c *collect) AddNewGames(newGames []repository.FileDesc) {
 	log.Println("Add new games...")
 	var gameList = make([]repository.GameFileType, 0)
 
 	for _, file := range newGames {
 		game := repository.GameFileType{
-			URL:  config.GetConfig().RootShop() + "/games/" + file.GameID + "#" + file.GameInfo,
+			URL:  c.config.RootShop() + "/games/" + file.GameID + "#" + file.GameInfo,
 			Size: file.Size,
 		}
-		gameList = append(gameList, game)
 
-		if HasGameIDInLibrary(file.GameID) {
+		// Handle duplicate entry for file
+		idx := utils.Search(len(gameList), func(index int) bool {
+			return strings.Contains(gameList[index].URL, file.GameID)
+		})
+		if idx == -1 {
+			gameList = append(gameList, game)
+		} else {
+			log.Println("Duplicate Game", file.GameID, file.Path)
+		}
+
+		if c.HasGameIDInLibrary(file.GameID) {
 			// Verify already present and not update nor dlc
-			if _, ok := games.Titledb[file.GameID]; ok && IsBaseGame(file.GameID) {
+			if _, ok := c.games.Titledb[file.GameID]; ok && c.IsBaseGame(file.GameID) {
 				log.Println("Already added id!", file.GameID, file.Path)
 			} else {
-				games.Titledb[file.GameID] = Library()[file.GameID]
+				c.games.Titledb[file.GameID] = c.Library()[file.GameID]
 			}
 		} else {
 			log.Println("Game not found in database!", file.GameInfo, file.Path)
 		}
 	}
-	games.Files = append(games.Files, gameList...)
+	c.games.Files = append(c.games.Files, gameList...)
 	log.Printf("Added %d games in your library\n", len(gameList))
 }
 
 // GetKey return the key from the titledb
-func GetKey(gameID string) (string, error) {
-	var key = Library()[gameID].Key
+func (c *collect) GetKey(gameID string) (string, error) {
+	var key = c.Library()[gameID].Key
 	if key == "" {
 		return "", errors.New("TitleDBKey for game " + gameID + " is not found")
 	}

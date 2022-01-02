@@ -14,17 +14,17 @@ import (
 	"github.com/DblK/tinshop/repository"
 )
 
-// All languages available
-// To update this list run: `jq '[.[].regions] | del(..|nulls) | flatten | unique' titles.US.en.json`
-var languageFilter = []string{
-	"AR", "AT", "AU", "BE", "CA", "CL", "CN", "CO", "CZ", "DE",
-	"DK", "ES", "FI", "FR", "GB", "GR", "HK", "HU", "IT", "JP",
-	"KR", "MX", "NL", "NO", "NZ", "PE", "PL", "PT", "RU", "SE",
-	"US", "ZA",
-}
-
 // IsValidFilter returns true if the filter is handled
 func IsValidFilter(filter string) bool {
+	// All languages available
+	// To update this list run: `jq '[.[].regions] | del(..|nulls) | flatten | unique' titles.US.en.json`
+	var languageFilter = []string{
+		"AR", "AT", "AU", "BE", "CA", "CL", "CN", "CO", "CZ", "DE",
+		"DK", "ES", "FI", "FR", "GB", "GR", "HK", "HU", "IT", "JP",
+		"KR", "MX", "NL", "NO", "NZ", "PE", "PL", "PT", "RU", "SE",
+		"US", "ZA",
+	}
+
 	upperFilter := strings.ToUpper(filter)
 	return upperFilter == "MULTI" || upperFilter == "WORLD" || Contains(languageFilter, upperFilter)
 }

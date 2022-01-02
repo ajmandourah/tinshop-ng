@@ -42,10 +42,10 @@ linters:
     # - wsl
     - exportloopref
     - golint
+    - gochecknoglobals
   disable:
     - noctx
     - scopelint
-    - gochecknoglobals
     - errorlint
 
   disable-all: false
