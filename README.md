@@ -2,8 +2,8 @@
 <img alt="TinShop" src="./logo.png" width="50%"><br><br>
 Your own personal shop right into tinfoil!<br><br>
 
-[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?branch=master&event=release)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
-[![test](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml/badge.svg?branch=master&event=release)](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml)
+[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?branch=master)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
+[![test](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml/badge.svg?branch=master)](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/DblK/tinshop.svg)](https://github.com/DblK/tinshop)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/DblK/tinshop)
 [![GoReportCard](https://goreportcard.com/badge/github.com/DblK/tinshop)](https://goreportcard.com/report/github.com/DblK/tinshop)
