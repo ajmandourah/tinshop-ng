@@ -26,4 +26,4 @@ jobs:
           go get github.com/onsi/gomega/...
       - name: Print out Ginkgo version
         run: ginkgo version
-      - run: ginkgo -r --randomize-all --randomize-suites --race --trace
+      - run: ginkgo -r --randomize-all --randomize-suites --race --trace -cover
