@@ -73,6 +73,20 @@ func (mr *MockSourcesMockRecorder) GetFiles() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFiles", reflect.TypeOf((*MockSources)(nil).GetFiles))
 }
 
+// HasGame mocks base method.
+func (m *MockSources) HasGame(arg0 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasGame", arg0)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasGame indicates an expected call of HasGame.
+func (mr *MockSourcesMockRecorder) HasGame(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasGame", reflect.TypeOf((*MockSources)(nil).HasGame), arg0)
+}
+
 // OnConfigUpdate mocks base method.
 func (m *MockSources) OnConfigUpdate(arg0 repository.Config) {
 	m.ctrl.T.Helper()

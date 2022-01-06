@@ -72,6 +72,13 @@ func (s *allSources) GetFiles() []repository.FileDesc {
 	return mergedGameFiles
 }
 
+func (s *allSources) HasGame(gameID string) bool {
+	idx := utils.Search(len(s.GetFiles()), func(index int) bool {
+		return s.GetFiles()[index].GameID == gameID
+	})
+	return idx != -1
+}
+
 // DownloadGame method provide the file based on the source storage
 func (s *allSources) DownloadGame(gameID string, w http.ResponseWriter, r *http.Request) {
 	idx := utils.Search(len(s.GetFiles()), func(index int) bool {

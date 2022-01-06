@@ -6,6 +6,7 @@
 package utils
 
 import (
+	"net/http"
 	"reflect"
 	"regexp"
 	"strings"
@@ -87,4 +88,13 @@ func Contains(list interface{}, elem interface{}) bool {
 		}
 	}
 	return false
+}
+
+// GetIPFromRequest returns ip from the request
+func GetIPFromRequest(r *http.Request) string {
+	ip := strings.Split(r.RemoteAddr, ":")[0]
+	if r.Header.Get("X-Forwarded-For") != "" {
+		ip = r.Header.Get("X-Forwarded-For")
+	}
+	return ip
 }

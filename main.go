@@ -11,10 +11,12 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/DblK/tinshop/api"
 	"github.com/DblK/tinshop/config"
 	collection "github.com/DblK/tinshop/gamescollection"
 	"github.com/DblK/tinshop/repository"
 	"github.com/DblK/tinshop/sources"
+	"github.com/DblK/tinshop/stats"
 	"github.com/DblK/tinshop/utils"
 	"github.com/gorilla/mux"
 )
@@ -73,9 +75,12 @@ func createShop() TinShop {
 	r.HandleFunc("/games/{game}", shop.GamesHandler)
 	r.HandleFunc("/{filter}", shop.FilteringHandler)
 	r.HandleFunc("/{filter}/", shop.FilteringHandler)
+	r.HandleFunc("/api/{endpoint}", shop.APIHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
+	r.Use(shop.StatsMiddleware)
 	r.Use(shop.TinfoilMiddleware)
+	r.Use(shop.CORSMiddleware)
 	http.Handle("/", r)
 
 	srv := &http.Server{
@@ -103,7 +108,8 @@ func initShop() repository.Shop {
 	myShop.Config = config.New()
 	myShop.Collection = collection.New(myShop.Config)
 	myShop.Sources = sources.New(myShop.Collection)
-	// ResetTinshop(myShop)
+	myShop.Stats = stats.New()
+	myShop.API = api.New()
 
 	// Load collection
 	myShop.Collection.Load()
@@ -113,6 +119,9 @@ func initShop() repository.Shop {
 	myShop.Config.AddHook(myShop.Sources.OnConfigUpdate)
 	myShop.Config.AddBeforeHook(myShop.Sources.BeforeConfigUpdate)
 	myShop.Config.LoadConfig()
+
+	// Loading stats
+	myShop.Stats.Load()
 
 	return myShop
 }
@@ -176,4 +185,44 @@ func (s *TinShop) FilteringHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	serveCollection(w, s.Shop.Collection.Filter(vars["filter"]))
+}
+
+// APIHandler handles api calls
+func (s *TinShop) APIHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	if vars["endpoint"] == "stats" {
+		summary, err := s.Shop.Stats.Summary()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Println(err)
+			return
+		}
+		s.Shop.API.Stats(w, summary)
+		return
+	}
+	// Everything not existing
+	w.WriteHeader(http.StatusBadRequest)
+}
+
+// StatsMiddleware is a middleware to collect statistics
+func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
+			console := &repository.Switch{
+				IP:       utils.GetIPFromRequest(r),
+				UID:      r.Header.Get("Uid"),
+				Theme:    r.Header.Get("Theme"),
+				Version:  r.Header.Get("Version"),
+				Language: r.Header.Get("Language"),
+			}
+			_ = s.Shop.Stats.ListVisit(console)
+		} else if r.RequestURI[0:7] == "/games/" {
+			vars := mux.Vars(r)
+			if s.Shop.Sources.HasGame(vars["game"]) {
+				_ = s.Shop.Stats.DownloadAsked(utils.GetIPFromRequest(r), vars["game"])
+			}
+		}
+		next.ServeHTTP(w, r)
+	})
 }

@@ -23,6 +23,7 @@ var _ = Describe("Security", func() {
 			myMockCollection *mock_repository.MockCollection
 			myMockSources    *mock_repository.MockSources
 			myMockConfig     *mock_repository.MockConfig
+			myMockStats      *mock_repository.MockStats
 			ctrl             *gomock.Controller
 			myShop           *main.TinShop
 		)
@@ -32,6 +33,7 @@ var _ = Describe("Security", func() {
 			myMockCollection = mock_repository.NewMockCollection(ctrl)
 			myMockSources = mock_repository.NewMockSources(ctrl)
 			myMockConfig = mock_repository.NewMockConfig(ctrl)
+			myMockStats = mock_repository.NewMockStats(ctrl)
 			myShop = &main.TinShop{}
 		})
 
@@ -40,6 +42,7 @@ var _ = Describe("Security", func() {
 			myShop.Shop.Config = myMockConfig
 			myShop.Shop.Collection = myMockCollection
 			myShop.Shop.Sources = myMockSources
+			myShop.Shop.Stats = myMockStats
 		})
 
 		Context("No security", func() {

@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "asciicheck",
+        "bbolt",
         "bodyclose",
         "dblk",
         "deadcode",
@@ -34,6 +35,7 @@
         "ineffassign",
         "Infof",
         "interfacer",
+        "itob",
         "logrus",
         "logutils",
         "mitchellh",

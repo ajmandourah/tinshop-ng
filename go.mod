@@ -11,6 +11,7 @@ require (
 	github.com/onsi/gomega v1.17.0
 	github.com/spf13/viper v1.10.1
 	github.com/vmware/go-nfs-client v0.0.0-20190605212624-d43b92724c1b
+	go.etcd.io/bbolt v1.3.6
 	gopkg.in/fsnotify.v1 v1.4.7
 )
 

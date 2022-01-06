@@ -9,6 +9,22 @@ import (
 	"github.com/DblK/tinshop/utils"
 )
 
+// CORSMiddleware is a middleware to ensure right CORS headers
+func (s *TinShop) CORSMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.RequestURI, "/api/") {
+			w.Header().Set("Access-Control-Allow-Origin", s.Shop.Config.RootShop())
+			w.Header().Set("Vary", "Origin")
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+		if r.Method == http.MethodOptions {
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 // TinfoilMiddleware is a middleware to ensure not forged query and real tinfoil client
 func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 	shopTemplate, _ := template.ParseFS(assetData, "assets/shop.tmpl")

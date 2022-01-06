@@ -134,7 +134,11 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Context("Security for Blacklist/Whitelist tests", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
 
 		Describe("Blacklist tests", func() { //nolint:dupl
 			It("With empty blacklist", func() {
@@ -206,7 +210,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Context("Security for theme", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		Describe("IsBannedTheme", func() {
 			It("should not be banned if empty config", func() {
 				Expect(myConfig.IsBannedTheme("myTheme")).To(BeFalse())
@@ -226,7 +235,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Protocol", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.Protocol()).To(BeEmpty())
 		})
@@ -236,7 +250,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Host", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.Host()).To(BeEmpty())
 		})
@@ -246,7 +265,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Port", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.Port()).To(Equal(0))
 		})
@@ -256,7 +280,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("ShopTitle", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.ShopTitle()).To(BeEmpty())
 		})
@@ -266,7 +295,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugNfs", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.DebugNfs()).To(BeFalse())
 		})
@@ -276,7 +310,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("VerifyNSP", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.VerifyNSP()).To(BeFalse())
 		})
@@ -286,7 +325,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugNoSecurity", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.DebugNoSecurity()).To(BeFalse())
 		})
@@ -296,7 +340,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugTicket", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.DebugTicket()).To(BeFalse())
 		})
@@ -306,7 +355,12 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("BannedTheme", func() {
-		var myConfig = config.File{}
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
 		It("Test with empty object", func() {
 			Expect(myConfig.BannedTheme()).To(HaveLen(0))
 		})

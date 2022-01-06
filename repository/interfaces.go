@@ -166,6 +166,7 @@ type Sources interface {
 	OnConfigUpdate(Config)
 	BeforeConfigUpdate(Config)
 	GetFiles() []FileDesc
+	HasGame(string) bool
 	DownloadGame(string, http.ResponseWriter, *http.Request)
 }
 
@@ -185,9 +186,43 @@ type Collection interface {
 	ResetGamesCollection()
 }
 
+// Switch holds all information about the switch
+type Switch struct {
+	IP       string
+	UID      string
+	Theme    string
+	Version  string
+	Language string
+}
+
+// StatsSummary holds all information about tinshop
+type StatsSummary struct {
+	Visit           uint64                 `json:"visit,omitempty"`
+	UniqueSwitch    uint64                 `json:"uniqueSwitch,omitempty"`
+	VisitPerSwitch  map[string]interface{} `json:"visitPerSwitch,omitempty"`
+	DownloadAsked   uint64                 `json:"downloadAsked,omitempty"`
+	DownloadDetails map[string]interface{} `json:"downloadDetails,omitempty"`
+}
+
+// Stats holds all information about statistics
+type Stats interface {
+	Load()
+	Close() error
+	ListVisit(*Switch) error
+	DownloadAsked(string, string) error
+	Summary() (StatsSummary, error)
+}
+
 // Shop holds all tinshop information
 type Shop struct {
 	Collection Collection
 	Sources    Sources
 	Config     Config
+	Stats      Stats
+	API        API
+}
+
+// API holds all function for api
+type API interface {
+	Stats(http.ResponseWriter, StatsSummary)
 }

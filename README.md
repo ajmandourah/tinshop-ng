@@ -1,17 +1,15 @@
-<p align="center">
-<p align="center">
-    <img alt="TinShop" src="./logo.png" width="50%">  
-</p>
-<p align="center">
-    Your own personal shop right into tinfoil!
-</p>
+<div align="center">
+<img alt="TinShop" src="./logo.png" width="50%"><br><br>
+Your own personal shop right into tinfoil!<br><br>
 
-[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?event=release)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
+[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?branch=master&event=release)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
+[![test](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml/badge.svg?branch=master&event=release)](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/DblK/tinshop.svg)](https://github.com/DblK/tinshop)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/DblK/tinshop)
 [![GoReportCard](https://goreportcard.com/badge/github.com/DblK/tinshop)](https://goreportcard.com/report/github.com/DblK/tinshop)
 [![GitHub release](https://img.shields.io/github/release/DblK/tinshop.svg)](https://GitHub.com/DblK/tinshop/releases/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+</div>
 
 # Disclaimer
 
@@ -48,7 +46,9 @@ Here is the list of all main features so far:
 - [X] You can specify custom titledb to be merged with official one
 - [X] Auto-watch for mounted directories
 - [X] Add filters path for shop
-- [X] Simple ticket check in NSP/NSZ
+- [X] Simple ticket check in NSP/NSZ (based on titledb file)
+- [X] Collect basic statistics
+- [X] An API to query information about your shop
 
 ## Filtering
 
@@ -79,7 +79,8 @@ If you change an interface (or add a new one), do not forget to execute `./updat
 
 ## What to launch tests?
 
-You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.
+You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.  
+Note: you can add `-cover` to have an idea of the code coverage.
 # Roadmap
 
 You can see the [roadmap here](https://github.com/DblK/tinshop/projects/1).
