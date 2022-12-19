@@ -24,7 +24,7 @@ Using your personal NSP dump, with `tinfoil` and `tinshop` everything should be 
 
 To proper use this software, here is the checklist:
 - [ ] _Optional:_ A proper configured `config.yaml`
-    - [ ] Copy/Paste [`config.example.yaml`](https://github.com/DblK/tinshop/blob/master/config.example.yaml) to `config.yaml`
+    - [ ] Copy/Paste [`config.example.yaml`](https://raw.githubusercontent.com/DblK/tinshop/master/config.example.yaml) to `config.yaml`
     - [ ] Comment/Uncomment parts in the config according to your needs
 - [ ] Games should have in their name `[ID][v0]` to be recognized
 - [ ] Games extension should be `nsp` or `nsz`
