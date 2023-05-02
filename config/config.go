@@ -136,7 +136,7 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 		// Retrieve current IP
 		host, _ := os.Hostname()
 		addrs, _ := net.LookupIP(host)
-		var myIP = ""
+		var myIP = "0.0.0.0"
 		for _, addr := range addrs {
 			if ipv4 := addr.To4(); ipv4 != nil {
 				if myIP == "" {

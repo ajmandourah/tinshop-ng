@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	"github.com/DblK/tinshop/api"
@@ -83,9 +84,14 @@ func createShop() TinShop {
 	r.Use(shop.CORSMiddleware)
 	http.Handle("/", r)
 
+	var port = 3000
+	if shop.Shop.Config.Port() != 0 {
+		port = shop.Shop.Config.Port()
+	}
+
 	srv := &http.Server{
 		Handler: r,
-		Addr:    "0.0.0.0:3000",
+		Addr:    "0.0.0.0:" + strconv.Itoa(port),
 
 		// Good practice to set timeouts to avoid Slowloris attacks.
 		WriteTimeout: 0, // Installing large game can take a lot of time

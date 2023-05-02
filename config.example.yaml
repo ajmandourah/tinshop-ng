@@ -7,8 +7,7 @@ host: tinshop.example.com
 protocol: https
 
 # Port [optional]
-# This only affect the url to download games. The web server still run on port 3000.
-# If you change the port, you will need to set up a reverse proxy
+# This affect the url to download games & the web server will run on that port (default: 3000).
 # port: 3000
 
 # Shop name [optional]
