@@ -160,7 +160,7 @@ func serveCollection(w http.ResponseWriter, tinfoilCollection interface{}) {
 }
 
 // HomeHandler handles list of games
-func (s *TinShop) HomeHandler(w http.ResponseWriter, r *http.Request) {
+func (s *TinShop) HomeHandler(w http.ResponseWriter, _ *http.Request) {
 	if s.Shop.Collection == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return

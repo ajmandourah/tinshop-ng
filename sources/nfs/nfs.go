@@ -27,7 +27,7 @@ func New(collection repository.Collection, config repository.Config) repository.
 	}
 }
 
-func (src *nfsSource) Download(w http.ResponseWriter, r *http.Request, game, share string) {
+func (src *nfsSource) Download(w http.ResponseWriter, r *http.Request, _ string, share string) {
 	if src.config.DebugNfs() {
 		util.DefaultLogger.SetDebug(true)
 	}
@@ -99,7 +99,7 @@ func (src *nfsSource) Download(w http.ResponseWriter, r *http.Request, game, sha
 		log.Fatalf("unable to umount target: %v", err)
 	}
 }
-func (src *nfsSource) Load(shares []string, unique bool) {
+func (src *nfsSource) Load(shares []string, _ bool) {
 	for _, share := range shares {
 		src.loadGamesNfs(share)
 	}

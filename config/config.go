@@ -45,7 +45,7 @@ type File struct {
 	Name             string                             `mapstructure:"name"`
 	Security         security                           `mapstructure:"security"`
 	CustomTitleDB    map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
-	NSP              nsp                                `mapsstructure:"nsp"`
+	NSP              nsp                                `mapstructure:"nsp"`
 	shopTemplateData repository.ShopTemplate
 
 	allHooks       []func(repository.Config)

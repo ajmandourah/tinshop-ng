@@ -11,10 +11,7 @@ linters:
     - staticcheck
     - unused
     - gosimple
-    - structcheck
-    - varcheck
     - ineffassign
-    - deadcode
     - typecheck
     - bodyclose
     - revive
@@ -41,7 +38,6 @@ linters:
     - whitespace
     # - wsl
     - exportloopref
-    - golint
     - gochecknoglobals
   disable:
     - noctx

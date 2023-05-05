@@ -48,7 +48,7 @@ func (c *collect) loadTitlesLibrary() {
 			downloadErr := utils.DownloadFile("https://github.com/AdamK2003/titledb/releases/download/latest/titles.US.en.json", "titles.US.en.json")
 			if downloadErr != nil {
 				log.Fatalln(err, downloadErr)
-			} else {
+			} else { // nolint:revive
 				jsonFile, err = os.Open("titles.US.en.json")
 				if err != nil {
 					log.Fatalln("Error while parsing downloaded json file.\nPlease remove the file and start again the program.\n", err)

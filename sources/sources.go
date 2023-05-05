@@ -51,7 +51,7 @@ func (s *allSources) OnConfigUpdate(cfg repository.Config) {
 }
 
 // BeforeConfigUpdate from all sources
-func (s *allSources) BeforeConfigUpdate(cfg repository.Config) {
+func (s *allSources) BeforeConfigUpdate(_ repository.Config) {
 	if s.sourcesProvider.Directory != nil {
 		s.sourcesProvider.Directory.UnWatchAll()
 	}
