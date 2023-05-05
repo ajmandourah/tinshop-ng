@@ -1,29 +1,74 @@
-name: test
+name: ginkgo
 
-on: [push, pull_request]
+on: 
+  push:
+    tags-ignore:
+      - '**'
+    branches:
+      - master
+  pull_request:
 
 jobs:
+  mod:
+    runs-on: ubuntu-latest
+    name: Check modules
+    steps:
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v14.1
+        with:
+          files: |
+            go.*
+            **/*.go
+
+      - name: Verify Go Modules Setup
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: go mod verify
+      
+      - run: go mod tidy && git diff --exit-code go.mod go.sum
+        if: steps.changed-files.outputs.any_changed == 'true'
+
   build:
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.19'
+
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-      -
-        id: vars
-        run: |
-          echo ::set-output name=go_version::$(cat go.mod | head -3 | tail -1 | cut -d ' ' -f 2)
-          echo "Using Go version ${{ steps.vars.outputs.go_version }}"
-      - name: Set up Go
-        uses: actions/setup-go@v2
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v14.1
         with:
-          go-version: ${{ steps.vars.outputs.go_version }}
-      - run: go mod tidy && git diff --exit-code go.mod go.sum
+          files: |
+            go.*
+            **/*.go
+
+      - run: go vet ./...
+      
       - name: Install ginkgo
-        run: |
-          go get github.com/onsi/ginkgo/v2/ginkgo
-          go get github.com/onsi/gomega/...
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: go get github.com/onsi/ginkgo/v2/ginkgo
+
       - name: Print out Ginkgo version
-        run: ginkgo version
-      - run: ginkgo -r --randomize-all --randomize-suites --race --trace -cover
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: go run github.com/onsi/ginkgo/v2/ginkgo version
+
+      - name: Launch tests
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: go run github.com/onsi/ginkgo/v2/ginkgo -r --randomize-all --randomize-suites --race --trace -cover

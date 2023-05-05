@@ -1,7 +1,12 @@
 name: golangci-lint
 on:
   push:
+    tags:
+      - v*
+    branches:
+      - master
   pull_request:
+
 permissions:
   contents: read
 jobs:
@@ -9,8 +14,23 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v14.1
+        with:
+          files: |
+            go.*
+            **/*.go
+
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: golangci/golangci-lint-action@v3.3.1
         with:
           version: v1.52.2

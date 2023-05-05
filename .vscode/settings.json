@@ -44,6 +44,7 @@
         "noctx",
         "nolintlint",
         "nxdumptool",
+        "onsi",
         "prealloc",
         "renameio",
         "robustio",
