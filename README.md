@@ -77,6 +77,11 @@ Dead simple, thanks to Golang!
 
 If you change an interface (or add a new one), do not forget to execute `./update_mocks.sh` to generate up-to-date mocks for tests.
 
+Do not forget to install `mockgen` first:
+```sh
+go install github.com/golang/mock/mockgen@v1.6.0
+```
+
 ## What to launch tests?
 
 You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.  

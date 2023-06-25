@@ -9,21 +9,23 @@ on:
 
 permissions:
   contents: read
+
 jobs:
   golangci:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
-          go-version: 1.17
+          go-version: '1.20'
+          cache: false
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v35.9.2
+        uses: tj-actions/changed-files@v37.0.2
         with:
           files: |
             go.*
@@ -31,6 +33,6 @@ jobs:
 
       - name: golangci-lint
         if: steps.changed-files.outputs.any_changed == 'true'
-        uses: golangci/golangci-lint-action@v3.4.0
+        uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.52.2
+          version: v1.53.3

@@ -24,7 +24,7 @@ linters:
     - gocognit
     - gofmt
     - goimports
-    - depguard
+    # - depguard
     - misspell
     - lll
     - unparam

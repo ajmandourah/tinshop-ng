@@ -41,6 +41,7 @@ type File struct {
 	ShopProtocol     string                             `mapstructure:"protocol"`
 	ShopPort         int                                `mapstructure:"port"`
 	Debug            debug                              `mapstructure:"debug"`
+	Proxy            bool                               `mapstructure:"reverseProxy"`
 	AllSources       repository.ConfigSources           `mapstructure:"sources"`
 	Name             string                             `mapstructure:"name"`
 	Security         security                           `mapstructure:"security"`
@@ -94,6 +95,7 @@ func (cfg *File) configChange() {
 	cfg.ShopHost = newConfig.ShopHost
 	cfg.ShopProtocol = newConfig.ShopProtocol
 	cfg.ShopPort = newConfig.ShopPort
+	cfg.Proxy = newConfig.Proxy
 	cfg.Debug = newConfig.Debug
 	cfg.AllSources = newConfig.AllSources
 	cfg.Name = newConfig.Name
@@ -148,11 +150,15 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 	} else {
 		rootShop += config.Host()
 	}
-	if config.Port() == 0 {
-		rootShop += ":3000"
-	} else if !(config.Port() == 443 && config.Protocol() == "https") && !(config.Port() == 80 && config.Protocol() == "http") {
-		rootShop += ":" + strconv.Itoa(config.Port())
+
+	if !config.ReverseProxy() {
+		if config.Port() == 0 {
+			rootShop += ":3000"
+		} else if !(config.Port() == 443 && config.Protocol() == "https") && !(config.Port() == 80 && config.Protocol() == "http") {
+			rootShop += ":" + strconv.Itoa(config.Port())
+		}
 	}
+	log.Println((rootShop))
 	config.SetRootShop(rootShop)
 
 	config.SetShopTemplateData(repository.ShopTemplate{
@@ -180,6 +186,9 @@ func (cfg *File) SetRootShop(root string) {
 // RootShop returns the RootShop url
 func (cfg *File) RootShop() string {
 	return cfg.rootShop
+}
+func (cfg *File) ReverseProxy() bool {
+	return cfg.Proxy
 }
 
 // Protocol returns the protocol scheme (http or https)

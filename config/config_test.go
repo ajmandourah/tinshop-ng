@@ -64,6 +64,10 @@ var _ = Describe("Config", func() {
 					Port().
 					Return(0).
 					AnyTimes()
+				myMockConfig.EXPECT().
+					ReverseProxy().
+					Return(false).
+					AnyTimes()
 				config.ComputeDefaultValues(myMockConfig)
 
 				Expect(testRootShop).To(Equal("http://tinshop.example.com:3000"))
@@ -84,6 +88,10 @@ var _ = Describe("Config", func() {
 				myMockConfig.EXPECT().
 					Port().
 					Return(443).
+					AnyTimes()
+				myMockConfig.EXPECT().
+					ReverseProxy().
+					Return(false).
 					AnyTimes()
 				config.ComputeDefaultValues(myMockConfig)
 
@@ -106,6 +114,10 @@ var _ = Describe("Config", func() {
 					Port().
 					Return(80).
 					AnyTimes()
+				myMockConfig.EXPECT().
+					ReverseProxy().
+					Return(false).
+					AnyTimes()
 				config.ComputeDefaultValues(myMockConfig)
 
 				Expect(testRootShop).To(Equal("http://tinshop.example.com"))
@@ -127,9 +139,38 @@ var _ = Describe("Config", func() {
 					Port().
 					Return(8080).
 					AnyTimes()
+				myMockConfig.EXPECT().
+					ReverseProxy().
+					Return(false).
+					AnyTimes()
 				config.ComputeDefaultValues(myMockConfig)
 
 				Expect(testRootShop).To(Equal("http://tinshop.example.com:8080"))
+			})
+			It("Should not set port if reverse proxy", func() {
+				var testRootShop string
+				myMockConfig.EXPECT().
+					Protocol().
+					Return("http").
+					AnyTimes()
+				myMockConfig.EXPECT().
+					SetRootShop(gomock.Any()).
+					Return().
+					Do(func(rootShop string) {
+						testRootShop = rootShop
+					}).
+					AnyTimes()
+				myMockConfig.EXPECT().
+					Port().
+					Return(0).
+					AnyTimes()
+				myMockConfig.EXPECT().
+					ReverseProxy().
+					Return(true).
+					AnyTimes()
+				config.ComputeDefaultValues(myMockConfig)
+
+				Expect(testRootShop).To(Equal("http://tinshop.example.com"))
 			})
 		})
 	})
@@ -277,6 +318,21 @@ var _ = Describe("Config", func() {
 		It("Test with a value", func() {
 			myConfig.ShopPort = 12345
 			Expect(myConfig.Port()).To(Equal(12345))
+		})
+	})
+	Describe("ReverseProxy", func() {
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
+		It("Test with empty object", func() {
+			Expect(myConfig.ReverseProxy()).To(BeFalse())
+		})
+		It("Test with a value", func() {
+			myConfig.Proxy = true
+			Expect(myConfig.ReverseProxy()).To(BeTrue())
 		})
 	})
 	Describe("ShopTitle", func() {

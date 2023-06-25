@@ -252,6 +252,20 @@ func (mr *MockConfigMockRecorder) Protocol() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Protocol", reflect.TypeOf((*MockConfig)(nil).Protocol))
 }
 
+// ReverseProxy mocks base method.
+func (m *MockConfig) ReverseProxy() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReverseProxy")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// ReverseProxy indicates an expected call of ReverseProxy.
+func (mr *MockConfigMockRecorder) ReverseProxy() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReverseProxy", reflect.TypeOf((*MockConfig)(nil).ReverseProxy))
+}
+
 // RootShop mocks base method.
 func (m *MockConfig) RootShop() string {
 	m.ctrl.T.Helper()

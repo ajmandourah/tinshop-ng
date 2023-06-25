@@ -32,6 +32,7 @@ type Config interface {
 	Host() string
 	Protocol() string
 	Port() int
+	ReverseProxy() bool
 
 	DebugNfs() bool
 	DebugNoSecurity() bool

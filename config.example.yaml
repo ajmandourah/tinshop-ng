@@ -14,6 +14,10 @@ protocol: https
 # This is used as title when trying to visit the shop with a non switch device
 name: TinShop
 
+# Tells if we are using a reverse proxy if front of tinshop [optional]
+# This is used to rewrite correct url to download games when reverse proxy used
+reverseProxy: false
+
 # All debug flags will be stored here
 debug:
   # Display more information when connecting to nfs share
