@@ -116,6 +116,27 @@ In the `sources` section, you can have the following:
 Yes, you can!  
 Use a reverse proxy (like [traefik](https://github.com/traefik/traefik), [caddy](https://github.com/caddyserver/caddy), nginx...) to do tls termination and forward to your instance on port `3000`.
 
+### Example for caddy
+
+To work with `caddy`, you need to put in your `Caddyfile` something similar to this:
+
+```Caddyfile
+tinshop.example.com:80 {
+	reverse_proxy 192.168.1.2:3000
+}
+```
+
+and your `config.yaml` as follow:
+
+```yaml
+host: tinshop.example.com
+protocol: http
+port: 3000
+reverseProxy: true
+```
+
+If you want to have HTTPS, ensure `caddy` handle it (it will with Let's Encrypt) and change `https` in the config and remove `:80` in the `Caddyfile` example.
+
 ## How can I add a `basic auth` to protect my shop?
 
 TinShop **does not** implement basic auth by itself.  
