@@ -1,6 +1,7 @@
 name: ginkgo
 
 on: 
+  workflow_dispatch:
   push:
     tags-ignore:
       - '**'
