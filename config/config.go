@@ -28,6 +28,7 @@ type security struct {
 	Whitelist   []string `mapstructure:"whitelist"`
 	Backlist    []string `mapstructure:"backlist"`
 	BannedTheme []string `mapstructure:"bannedTheme"`
+	ForwardAuth string   `mapstructure:"forwardAuth"`
 }
 
 type nsp struct {
@@ -259,6 +260,11 @@ func (cfg *File) ShopTitle() string {
 // VerifyNSP tells if we need to verify NSP
 func (cfg *File) VerifyNSP() bool {
 	return cfg.NSP.CheckVerified
+}
+
+// ForwardAuthURL returns the url of the forward auth
+func (cfg *File) ForwardAuthURL() string {
+	return cfg.Security.ForwardAuth
 }
 
 // IsBlacklisted tells if the uid is blacklisted or not

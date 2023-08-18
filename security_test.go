@@ -107,6 +107,11 @@ var _ = Describe("Security", func() {
 					AnyTimes()
 
 				myMockConfig.EXPECT().
+					ForwardAuthURL().
+					Return("").
+					AnyTimes()
+
+				myMockConfig.EXPECT().
 					IsBlacklisted(gomock.Any()).
 					Return(true).
 					AnyTimes()
@@ -158,6 +163,11 @@ var _ = Describe("Security", func() {
 				myMockConfig.EXPECT().
 					DebugNoSecurity().
 					Return(false).
+					AnyTimes()
+
+				myMockConfig.EXPECT().
+					ForwardAuthURL().
+					Return("").
 					AnyTimes()
 
 				myMockConfig.EXPECT().
@@ -217,6 +227,11 @@ var _ = Describe("Security", func() {
 				myMockConfig.EXPECT().
 					DebugNoSecurity().
 					Return(false).
+					AnyTimes()
+
+				myMockConfig.EXPECT().
+					ForwardAuthURL().
+					Return("").
 					AnyTimes()
 
 				myMockConfig.EXPECT().
@@ -280,6 +295,11 @@ var _ = Describe("Security", func() {
 					AnyTimes()
 
 				myMockConfig.EXPECT().
+					ForwardAuthURL().
+					Return("").
+					AnyTimes()
+
+				myMockConfig.EXPECT().
 					IsBlacklisted(gomock.Any()).
 					Return(false).
 					AnyTimes()
@@ -336,6 +356,11 @@ var _ = Describe("Security", func() {
 				myMockConfig.EXPECT().
 					DebugNoSecurity().
 					Return(false).
+					AnyTimes()
+
+				myMockConfig.EXPECT().
+					ForwardAuthURL().
+					Return("").
 					AnyTimes()
 
 				myMockConfig.EXPECT().

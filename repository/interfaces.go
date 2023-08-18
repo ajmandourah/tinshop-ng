@@ -45,6 +45,7 @@ type Config interface {
 	ShopTemplateData() ShopTemplate
 	SetShopTemplateData(ShopTemplate)
 
+	ForwardAuthURL() string
 	IsBlacklisted(string) bool
 	IsWhitelisted(string) bool
 	IsBannedTheme(string) bool

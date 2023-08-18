@@ -142,6 +142,20 @@ func (mr *MockConfigMockRecorder) Directories() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Directories", reflect.TypeOf((*MockConfig)(nil).Directories))
 }
 
+// ForwardAuthURL mocks base method.
+func (m *MockConfig) ForwardAuthURL() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ForwardAuthURL")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// ForwardAuthURL indicates an expected call of ForwardAuthURL.
+func (mr *MockConfigMockRecorder) ForwardAuthURL() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ForwardAuthURL", reflect.TypeOf((*MockConfig)(nil).ForwardAuthURL))
+}
+
 // Host mocks base method.
 func (m *MockConfig) Host() string {
 	m.ctrl.T.Helper()

@@ -49,6 +49,7 @@ Here is the list of all main features so far:
 - [X] Simple ticket check in NSP/NSZ (based on titledb file)
 - [X] Collect basic statistics
 - [X] An API to query information about your shop
+- [X] Handle Basic Auth from Tinfoil through Forward Auth Endpoint
 
 ## Filtering
 
@@ -118,7 +119,7 @@ Use a reverse proxy (like [traefik](https://github.com/traefik/traefik), [caddy]
 
 ### Example for caddy
 
-To work with `caddy`, you need to put in your `Caddyfile` something similar to this:
+To work with [`caddy`](https://caddyserver.com/), you need to put in your `Caddyfile` something similar to this:
 
 ```Caddyfile
 tinshop.example.com:80 {
@@ -139,10 +140,12 @@ If you want to have HTTPS, ensure `caddy` handle it (it will with Let's Encrypt)
 
 ## How can I add a `basic auth` to protect my shop?
 
-TinShop **does not** implement basic auth by itself.  
-You should configure it inside your reverse proxy.
+TinShop **does** handle basic auth but not by itself.  
+You should look for `forwardAuth` in the `config.yaml` to set the endpoint that will handle the authentication in behalf of TinShop.
 
-For other type of protection, you can whitelist your own switch and this will do the trick.
+In the future, a proper user management will be incorporated into TinShop to handle it.
+
+In addition, for other type of protection, you can whitelist/blacklist your own switch and this will do the trick.
 
 ## I have tons of missing title displayed in `tinfoil`, what should I do?
 

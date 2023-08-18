@@ -3,6 +3,8 @@ linters-settings:
     line-length: 200
   gocyclo:
     min-complexity: 20
+  gocognit:
+    min-complexity: 30
 
 linters:
   enable:
@@ -57,5 +59,8 @@ issues:
       linters:
         - gochecknoglobals
         - dupl
+    - path: security.go
+      linters:
+        - gocognit
   include:
     - EXC0002

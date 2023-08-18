@@ -62,6 +62,12 @@ security:
   # You can find the uid of a switch in the log upon access
   backlist:
     - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS
+  # Endpoint to which a query will be sent to verify user/password/uid to
+  # Headers sent :
+  # - Authorization: same as sent by switch
+  # - Device-Id: Switch fingerprint
+  # Response with status code other than 200 will be treated as failure
+  forwardAuth: https://auth.tinshop.com/switch
 
 # This section describe all custom title db to show up properly in tinfoil
 customTitledb:
