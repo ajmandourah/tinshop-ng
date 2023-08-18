@@ -75,7 +75,7 @@ func (c *collect) loadTitlesLibrary() {
 // ResetGamesCollection reset the game collection
 func (c *collect) ResetGamesCollection() {
 	// Build games object
-	c.games.Success = "Welcome to your own shop!"
+	c.games.Success = c.config.WelcomeMessage()
 	c.games.Titledb = make(map[string]repository.TitleDBEntry)
 	c.games.Files = make([]repository.GameFileType, 0)
 	c.games.ThemeBlackList = nil

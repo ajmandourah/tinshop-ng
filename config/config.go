@@ -37,18 +37,19 @@ type nsp struct {
 
 // File holds all config information
 type File struct {
-	rootShop         string
-	ShopHost         string                             `mapstructure:"host"`
-	ShopProtocol     string                             `mapstructure:"protocol"`
-	ShopPort         int                                `mapstructure:"port"`
-	Debug            debug                              `mapstructure:"debug"`
-	Proxy            bool                               `mapstructure:"reverseProxy"`
-	AllSources       repository.ConfigSources           `mapstructure:"sources"`
-	Name             string                             `mapstructure:"name"`
-	Security         security                           `mapstructure:"security"`
-	CustomTitleDB    map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
-	NSP              nsp                                `mapstructure:"nsp"`
-	shopTemplateData repository.ShopTemplate
+	rootShop           string
+	ShopHost           string                             `mapstructure:"host"`
+	ShopProtocol       string                             `mapstructure:"protocol"`
+	ShopWelcomeMessage string                             `mapstructure:"welcomeMessage"`
+	ShopPort           int                                `mapstructure:"port"`
+	Debug              debug                              `mapstructure:"debug"`
+	Proxy              bool                               `mapstructure:"reverseProxy"`
+	AllSources         repository.ConfigSources           `mapstructure:"sources"`
+	Name               string                             `mapstructure:"name"`
+	Security           security                           `mapstructure:"security"`
+	CustomTitleDB      map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
+	NSP                nsp                                `mapstructure:"nsp"`
+	shopTemplateData   repository.ShopTemplate
 
 	allHooks       []func(repository.Config)
 	beforeAllHooks []func(repository.Config)
@@ -65,6 +66,7 @@ func (cfg *File) LoadConfig() {
 	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
 	viper.AddConfigPath(".")      // optionally look for config in the working directory
 	viper.SetDefault("sources.directories", "./games")
+	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -96,6 +98,11 @@ func (cfg *File) configChange() {
 	cfg.ShopHost = newConfig.ShopHost
 	cfg.ShopProtocol = newConfig.ShopProtocol
 	cfg.ShopPort = newConfig.ShopPort
+	if newConfig.ShopWelcomeMessage != "" {
+		cfg.ShopWelcomeMessage = newConfig.ShopWelcomeMessage
+	} else {
+		cfg.ShopWelcomeMessage = "Welcome to your own TinShop!"
+	}
 	cfg.Proxy = newConfig.Proxy
 	cfg.Debug = newConfig.Debug
 	cfg.AllSources = newConfig.AllSources
@@ -188,8 +195,15 @@ func (cfg *File) SetRootShop(root string) {
 func (cfg *File) RootShop() string {
 	return cfg.rootShop
 }
+
+// ReverseProxy returns the ReverseProxy setting
 func (cfg *File) ReverseProxy() bool {
 	return cfg.Proxy
+}
+
+// WelcomeMessage returns the WelcomeMessage
+func (cfg *File) WelcomeMessage() string {
+	return cfg.ShopWelcomeMessage
 }
 
 // Protocol returns the protocol scheme (http or https)

@@ -305,6 +305,21 @@ var _ = Describe("Config", func() {
 			Expect(myConfig.Host()).To(Equal("tinshop.example.com"))
 		})
 	})
+	Describe("WelcomeMessage", func() {
+		var myConfig config.File
+
+		BeforeEach(func() {
+			myConfig = config.File{}
+		})
+
+		It("Test with empty object", func() {
+			Expect(myConfig.WelcomeMessage()).To(BeEmpty())
+		})
+		It("Test with a value", func() {
+			myConfig.ShopWelcomeMessage = "We are testing it!"
+			Expect(myConfig.WelcomeMessage()).To(Equal("We are testing it!"))
+		})
+	})
 	Describe("Port", func() {
 		var myConfig config.File
 

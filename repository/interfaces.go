@@ -33,6 +33,7 @@ type Config interface {
 	Protocol() string
 	Port() int
 	ReverseProxy() bool
+	WelcomeMessage() string
 
 	DebugNfs() bool
 	DebugNoSecurity() bool

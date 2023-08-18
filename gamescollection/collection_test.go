@@ -26,6 +26,10 @@ var _ = Describe("Collection", func() {
 			RootShop().
 			Return("http://tinshop.example.com").
 			AnyTimes()
+		myMockConfig.EXPECT().
+			WelcomeMessage().
+			Return("Welcome to testing shop!").
+			AnyTimes()
 
 		testCollection = collection.New(myMockConfig)
 	})
@@ -69,6 +73,10 @@ var _ = Describe("Collection", func() {
 					myMockConfig.EXPECT().
 						RootShop().
 						Return("http://tinshop.example.com").
+						AnyTimes()
+					myMockConfig.EXPECT().
+						WelcomeMessage().
+						Return("Welcome to testing shop!").
 						AnyTimes()
 
 					testCollection.OnConfigUpdate(myMockConfig)
@@ -218,6 +226,10 @@ var _ = Describe("Collection", func() {
 				RootShop().
 				Return("http://tinshop.example.com").
 				AnyTimes()
+			myMockConfig.EXPECT().
+				WelcomeMessage().
+				Return("Welcome to testing shop!").
+				AnyTimes()
 
 			testCollection.OnConfigUpdate(myMockConfig)
 
@@ -335,6 +347,10 @@ var _ = Describe("Collection", func() {
 			myMockConfig.EXPECT().
 				BannedTheme().
 				Return(nil).
+				AnyTimes()
+			myMockConfig.EXPECT().
+				WelcomeMessage().
+				Return("Welcome to testing shop!").
 				AnyTimes()
 
 			testCollection.OnConfigUpdate(myMockConfig)

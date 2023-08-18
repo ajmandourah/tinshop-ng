@@ -373,3 +373,17 @@ func (mr *MockConfigMockRecorder) VerifyNSP() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyNSP", reflect.TypeOf((*MockConfig)(nil).VerifyNSP))
 }
+
+// WelcomeMessage mocks base method.
+func (m *MockConfig) WelcomeMessage() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WelcomeMessage")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// WelcomeMessage indicates an expected call of WelcomeMessage.
+func (mr *MockConfigMockRecorder) WelcomeMessage() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WelcomeMessage", reflect.TypeOf((*MockConfig)(nil).WelcomeMessage))
+}
