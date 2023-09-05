@@ -26,7 +26,7 @@ type debug struct {
 
 type security struct {
 	Whitelist   []string `mapstructure:"whitelist"`
-	Backlist    []string `mapstructure:"backlist"`
+	Blacklist   []string `mapstructure:"blacklist"`
 	BannedTheme []string `mapstructure:"bannedTheme"`
 	ForwardAuth string   `mapstructure:"forwardAuth"`
 }
@@ -298,8 +298,8 @@ func (cfg *File) IsWhitelisted(uid string) bool {
 }
 
 func (cfg *File) isInBlackList(uid string) bool {
-	idxBlackList := utils.Search(len(cfg.Security.Backlist), func(index int) bool {
-		return cfg.Security.Backlist[index] == uid
+	idxBlackList := utils.Search(len(cfg.Security.Blacklist), func(index int) bool {
+		return cfg.Security.Blacklist[index] == uid
 	})
 	return idxBlackList != -1
 }

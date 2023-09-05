@@ -190,7 +190,7 @@ var _ = Describe("Config", func() {
 				var blacklist = make([]string, 0)
 				blacklist = append(blacklist, "me")
 
-				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Blacklist = blacklist
 				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
 				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
 			})
@@ -198,7 +198,7 @@ var _ = Describe("Config", func() {
 				var blacklist = make([]string, 0)
 				blacklist = append(blacklist, "someoneElse")
 
-				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Blacklist = blacklist
 				Expect(myConfig.IsBlacklisted("me")).To(BeFalse())
 				Expect(myConfig.IsWhitelisted("me")).To(BeTrue())
 			})
@@ -232,7 +232,7 @@ var _ = Describe("Config", func() {
 				var whitelist = make([]string, 0)
 				whitelist = append(whitelist, "someoneElse")
 
-				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Blacklist = blacklist
 				myConfig.Security.Whitelist = whitelist
 				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
 				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())
@@ -243,7 +243,7 @@ var _ = Describe("Config", func() {
 				var whitelist = make([]string, 0)
 				whitelist = append(whitelist, "someoneElse")
 
-				myConfig.Security.Backlist = blacklist
+				myConfig.Security.Blacklist = blacklist
 				myConfig.Security.Whitelist = whitelist
 				Expect(myConfig.IsBlacklisted("me")).To(BeTrue())
 				Expect(myConfig.IsWhitelisted("me")).To(BeFalse())

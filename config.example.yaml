@@ -64,7 +64,7 @@ security:
   # List of switch uid to blacklist
   # Block access to all switch present in this list
   # You can find the uid of a switch in the log upon access
-  backlist:
+  blacklist:
     - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS
   # Endpoint to which a query will be sent to verify user/password/uid to
   # Headers sent :
