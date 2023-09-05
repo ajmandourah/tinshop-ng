@@ -159,6 +159,24 @@ So you might still get some error about signature failed even with `checkVerifie
 
 Maybe later, this feature will be enhanced to add additional checks on game files (PR Welcome!).
 
+## `tinfoil` does not display the name of the game but the file name, what should I do?
+
+You must follow the naming convention for the games as follow:  
+`[gameId][version].(nsp/nsz)`
+
+`gameId` should be a 16 characters long string.
+
+For example, those are invalid:
+- `0000000000000000 [v0].nsp`
+- `[0000000000000000].nsp`
+- `[0000000000000000][v0].xxx`
+
+Those are valid:
+- `[0000000000000000] [v0].nsp`
+- `[0000000000000000][v131072].nsz`
+- `My Saved Game [0000000000000000] [v0].nsp`
+- `Awesome title [0000000000000000][v0] (15Gb).nsz`
+
 # Credits
 
 I would like to give back thanks to the people who helped me with or without knowing!
