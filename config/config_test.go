@@ -319,6 +319,10 @@ var _ = Describe("Config", func() {
 			myConfig.ShopWelcomeMessage = "We are testing it!"
 			Expect(myConfig.WelcomeMessage()).To(Equal("We are testing it!"))
 		})
+		It("Test with a empty value value", func() {
+			myConfig.ShopWelcomeMessage = ""
+			Expect(myConfig.WelcomeMessage()).To(BeEmpty())
+		})
 	})
 	Describe("Port", func() {
 		var myConfig config.File

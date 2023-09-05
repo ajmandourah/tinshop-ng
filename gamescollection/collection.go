@@ -75,7 +75,11 @@ func (c *collect) loadTitlesLibrary() {
 // ResetGamesCollection reset the game collection
 func (c *collect) ResetGamesCollection() {
 	// Build games object
-	c.games.Success = c.config.WelcomeMessage()
+	if c.config.NoWelcomeMessage() {
+		c.games.Success = ""
+	} else {
+		c.games.Success = c.config.WelcomeMessage()
+	}
 	c.games.Titledb = make(map[string]repository.TitleDBEntry)
 	c.games.Files = make([]repository.GameFileType, 0)
 	c.games.ThemeBlackList = nil
@@ -138,7 +142,9 @@ func (c *collect) Games() repository.GameType {
 // Filter returns the games inside the library after filtering
 func (c *collect) Filter(filter string) repository.GameType {
 	var filteredGames repository.GameType
-	filteredGames.Success = c.games.Success
+	if !c.config.NoWelcomeMessage() {
+		filteredGames.Success = c.games.Success
+	}
 	filteredGames.ThemeBlackList = c.games.ThemeBlackList
 	upperFilter := strings.ToUpper(filter)
 

@@ -30,6 +30,10 @@ var _ = Describe("Collection", func() {
 			WelcomeMessage().
 			Return("Welcome to testing shop!").
 			AnyTimes()
+		myMockConfig.EXPECT().
+			NoWelcomeMessage().
+			Return(false).
+			AnyTimes()
 
 		testCollection = collection.New(myMockConfig)
 	})
@@ -77,6 +81,10 @@ var _ = Describe("Collection", func() {
 					myMockConfig.EXPECT().
 						WelcomeMessage().
 						Return("Welcome to testing shop!").
+						AnyTimes()
+					myMockConfig.EXPECT().
+						NoWelcomeMessage().
+						Return(false).
 						AnyTimes()
 
 					testCollection.OnConfigUpdate(myMockConfig)
@@ -230,6 +238,10 @@ var _ = Describe("Collection", func() {
 				WelcomeMessage().
 				Return("Welcome to testing shop!").
 				AnyTimes()
+			myMockConfig.EXPECT().
+				NoWelcomeMessage().
+				Return(false).
+				AnyTimes()
 
 			testCollection.OnConfigUpdate(myMockConfig)
 
@@ -351,6 +363,10 @@ var _ = Describe("Collection", func() {
 			myMockConfig.EXPECT().
 				WelcomeMessage().
 				Return("Welcome to testing shop!").
+				AnyTimes()
+			myMockConfig.EXPECT().
+				NoWelcomeMessage().
+				Return(false).
 				AnyTimes()
 
 			testCollection.OnConfigUpdate(myMockConfig)

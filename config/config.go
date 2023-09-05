@@ -37,19 +37,20 @@ type nsp struct {
 
 // File holds all config information
 type File struct {
-	rootShop           string
-	ShopHost           string                             `mapstructure:"host"`
-	ShopProtocol       string                             `mapstructure:"protocol"`
-	ShopWelcomeMessage string                             `mapstructure:"welcomeMessage"`
-	ShopPort           int                                `mapstructure:"port"`
-	Debug              debug                              `mapstructure:"debug"`
-	Proxy              bool                               `mapstructure:"reverseProxy"`
-	AllSources         repository.ConfigSources           `mapstructure:"sources"`
-	Name               string                             `mapstructure:"name"`
-	Security           security                           `mapstructure:"security"`
-	CustomTitleDB      map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
-	NSP                nsp                                `mapstructure:"nsp"`
-	shopTemplateData   repository.ShopTemplate
+	rootShop             string
+	ShopHost             string                             `mapstructure:"host"`
+	ShopProtocol         string                             `mapstructure:"protocol"`
+	ShopWelcomeMessage   string                             `mapstructure:"welcomeMessage"`
+	ShopNoWelcomeMessage bool                               `mapstructure:"noWelcomeMessage"`
+	ShopPort             int                                `mapstructure:"port"`
+	Debug                debug                              `mapstructure:"debug"`
+	Proxy                bool                               `mapstructure:"reverseProxy"`
+	AllSources           repository.ConfigSources           `mapstructure:"sources"`
+	Name                 string                             `mapstructure:"name"`
+	Security             security                           `mapstructure:"security"`
+	CustomTitleDB        map[string]repository.TitleDBEntry `mapstructure:"customTitledb"`
+	NSP                  nsp                                `mapstructure:"nsp"`
+	shopTemplateData     repository.ShopTemplate
 
 	allHooks       []func(repository.Config)
 	beforeAllHooks []func(repository.Config)
@@ -67,6 +68,7 @@ func (cfg *File) LoadConfig() {
 	viper.AddConfigPath(".")      // optionally look for config in the working directory
 	viper.SetDefault("sources.directories", "./games")
 	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
+	viper.SetDefault("noWelcomeMessage", false)
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -103,6 +105,7 @@ func (cfg *File) configChange() {
 	} else {
 		cfg.ShopWelcomeMessage = "Welcome to your own TinShop!"
 	}
+	cfg.ShopNoWelcomeMessage = newConfig.ShopNoWelcomeMessage
 	cfg.Proxy = newConfig.Proxy
 	cfg.Debug = newConfig.Debug
 	cfg.AllSources = newConfig.AllSources
@@ -204,6 +207,11 @@ func (cfg *File) ReverseProxy() bool {
 // WelcomeMessage returns the WelcomeMessage
 func (cfg *File) WelcomeMessage() string {
 	return cfg.ShopWelcomeMessage
+}
+
+// NoWelcomeMessage returns the NoWelcomeMessage
+func (cfg *File) NoWelcomeMessage() bool {
+	return cfg.ShopNoWelcomeMessage
 }
 
 // Protocol returns the protocol scheme (http or https)

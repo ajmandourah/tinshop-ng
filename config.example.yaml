@@ -21,6 +21,8 @@ reverseProxy: false
 # Welcome message on Switch [optional]
 # The default message will be "Welcome to your own TinShop!"
 welcomeMessage: "Welcome to your own TinShop!"
+# If you want to disable the welcome message, set it to true [optional]
+noWelcomeMessage: false
 
 # All debug flags will be stored here
 debug:

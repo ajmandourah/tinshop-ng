@@ -34,6 +34,7 @@ type Config interface {
 	Port() int
 	ReverseProxy() bool
 	WelcomeMessage() string
+	NoWelcomeMessage() bool
 
 	DebugNfs() bool
 	DebugNoSecurity() bool
@@ -86,7 +87,7 @@ type FileDesc struct {
 
 // GameType structure
 type GameType struct {
-	Success        string                  `json:"success"`
+	Success        string                  `json:"success,omitempty"`
 	Titledb        map[string]TitleDBEntry `json:"titledb"`
 	Files          []GameFileType          `json:"files"`
 	ThemeBlackList []string                `json:"themeBlackList,omitempty"`

@@ -238,6 +238,20 @@ func (mr *MockConfigMockRecorder) NfsShares() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NfsShares", reflect.TypeOf((*MockConfig)(nil).NfsShares))
 }
 
+// NoWelcomeMessage mocks base method.
+func (m *MockConfig) NoWelcomeMessage() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "NoWelcomeMessage")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// NoWelcomeMessage indicates an expected call of NoWelcomeMessage.
+func (mr *MockConfigMockRecorder) NoWelcomeMessage() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NoWelcomeMessage", reflect.TypeOf((*MockConfig)(nil).NoWelcomeMessage))
+}
+
 // Port mocks base method.
 func (m *MockConfig) Port() int {
 	m.ctrl.T.Helper()
