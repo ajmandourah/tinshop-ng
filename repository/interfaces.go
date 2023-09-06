@@ -78,11 +78,12 @@ const (
 
 // FileDesc structure
 type FileDesc struct {
-	GameID   string
-	Size     int64
-	GameInfo string
-	Path     string
-	HostType HostType
+	GameID    string
+	Size      int64
+	GameInfo  string
+	Path      string
+	Extension string
+	HostType  HostType
 }
 
 // GameType structure

@@ -106,6 +106,7 @@ func (src *nfsSource) lookIntoNfsDirectory(v *nfs.Target, share, path string) []
 		newFile.GameID = names.ShortID()
 		newFile.GameInfo = names.FullID()
 		newFile.HostType = repository.NFSShare
+		newFile.Extension = names.Extension()
 
 		var valid = true
 		var errTicket error

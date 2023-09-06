@@ -49,6 +49,7 @@ func (src *directorySource) addDirectoryGame(gameFiles []repository.FileDesc, ex
 			newFile.GameID = names.ShortID()
 			newFile.GameInfo = names.FullID()
 			newFile.HostType = repository.LocalFile
+			newFile.Extension = names.Extension()
 
 			if src.config.VerifyNSP() {
 				valid, errTicket := src.nspCheck(newFile)

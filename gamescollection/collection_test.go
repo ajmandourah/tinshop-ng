@@ -55,104 +55,209 @@ var _ = Describe("Collection", func() {
 			Expect(games.Titledb).To(HaveLen(0))
 		})
 		Context("No TitleDB", func() {
-			Context("With TitleDB", func() {
-				JustBeforeEach(func() {
-					customDB := make(map[string]repository.TitleDBEntry)
-					custom1 := repository.TitleDBEntry{
-						ID:              "0000000000000001",
-						Languages:       []string{"FR", "EN", "US"},
-						NumberOfPlayers: 1,
-						IconURL:         "http://fake.icon.url",
-					}
-					customDB["0000000000000001"] = custom1
-					myMockConfig = mock_repository.NewMockConfig(ctrl)
-					myMockConfig.EXPECT().
-						CustomDB().
-						Return(customDB).
-						AnyTimes()
-					myMockConfig.EXPECT().
-						BannedTheme().
-						Return(nil).
-						AnyTimes()
-					myMockConfig.EXPECT().
-						RootShop().
-						Return("http://tinshop.example.com").
-						AnyTimes()
-					myMockConfig.EXPECT().
-						WelcomeMessage().
-						Return("Welcome to testing shop!").
-						AnyTimes()
-					myMockConfig.EXPECT().
-						NoWelcomeMessage().
-						Return(false).
-						AnyTimes()
+			// TODO: Need to add tests here!
+		})
+		Context("With TitleDB", func() {
+			JustBeforeEach(func() {
+				customDB := make(map[string]repository.TitleDBEntry)
+				custom1 := repository.TitleDBEntry{ // Base
+					ID:              "010034500641A000",
+					Languages:       []string{"FR", "EN", "US"},
+					Name:            "Attack on Titan 2",
+					Region:          "US",
+					NumberOfPlayers: 1,
+					IconURL:         "http://fake.icon.url",
+				}
+				custom2 := repository.TitleDBEntry{ // Update
+					ID:      "010034500641A800",
+					Version: 917504,
+				}
+				custom3 := repository.TitleDBEntry{ // DLC
+					ID:      "010034500641B001",
+					Name:    "Additional Episode, \"A Sudden Rain\"",
+					Version: 131072,
+				}
+				custom4 := repository.TitleDBEntry{ // Base (No Region)
+					ID:              "0100574002AF4000",
+					Languages:       []string{"FR", "EN", "US"},
+					Name:            "ONE PIECE: Unlimited World Red Deluxe Edition",
+					NumberOfPlayers: 1,
+				}
+				custom5 := repository.TitleDBEntry{ // Base (No info)
+					ID: "010034501225C000",
+				}
+				customDB["010034500641A000"] = custom1
+				customDB["010034500641A800"] = custom2
+				customDB["010034500641B001"] = custom3
+				customDB["0100574002AF4000"] = custom4
+				customDB["010034501225C000"] = custom5
+				myMockConfig = mock_repository.NewMockConfig(ctrl)
+				myMockConfig.EXPECT().
+					CustomDB().
+					Return(customDB).
+					AnyTimes()
+				myMockConfig.EXPECT().
+					BannedTheme().
+					Return(nil).
+					AnyTimes()
+				myMockConfig.EXPECT().
+					RootShop().
+					Return("http://tinshop.example.com").
+					AnyTimes()
+				myMockConfig.EXPECT().
+					WelcomeMessage().
+					Return("Welcome to testing shop!").
+					AnyTimes()
+				myMockConfig.EXPECT().
+					NoWelcomeMessage().
+					Return(false).
+					AnyTimes()
 
-					testCollection.OnConfigUpdate(myMockConfig)
-				})
-				It("Add a game", func() {
-					newGames := make([]repository.FileDesc, 0)
-					newFile := repository.FileDesc{
-						Size:     42,
-						Path:     "/here/is/my/game",
-						GameID:   "0000000000000001",
-						GameInfo: "[0000000000000001][v0].nsp",
-						HostType: repository.LocalFile,
-					}
-					newGames = append(newGames, newFile)
-					testCollection.AddNewGames(newGames)
+				testCollection.OnConfigUpdate(myMockConfig)
+			})
+			It("Add a base game", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "010034500641A000",
+					GameInfo:  "[010034500641A000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile)
+				testCollection.AddNewGames(newGames)
 
-					games := testCollection.Games()
-					Expect(games.Files).To(HaveLen(1))
-					Expect(games.Titledb).To(HaveLen(1))
-				})
-				It("Add a duplicate game", func() {
-					newGames := make([]repository.FileDesc, 0)
-					newFile1 := repository.FileDesc{
-						Size:     42,
-						Path:     "/here/is/my/game",
-						GameID:   "0000000000000001",
-						GameInfo: "[0000000000000001][v0].nsp",
-						HostType: repository.LocalFile,
-					}
-					newFile2 := repository.FileDesc{
-						Size:     43,
-						Path:     "/here/is/my/game",
-						GameID:   "0000000000000001",
-						GameInfo: "[0000000000000001][v0].nsp",
-						HostType: repository.LocalFile,
-					}
-					newGames = append(newGames, newFile1)
-					newGames = append(newGames, newFile2)
-					testCollection.AddNewGames(newGames)
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034500641A000#[010034500641A000] Attack on Titan 2 (US) [BASE].nsp"))
+			})
+			It("Add a base game (without Region)", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "0100574002AF4000",
+					GameInfo:  "[0100574002AF4000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile)
+				testCollection.AddNewGames(newGames)
 
-					games := testCollection.Games()
-					Expect(games.Files).To(HaveLen(1))
-					Expect(games.Titledb).To(HaveLen(1))
-				})
-				It("Add a duplicate game (with different path)", func() {
-					newGames := make([]repository.FileDesc, 0)
-					newFile1 := repository.FileDesc{
-						Size:     42,
-						Path:     "/here/is/my/game1",
-						GameID:   "0000000000000001",
-						GameInfo: "[0000000000000001][v0].nsp",
-						HostType: repository.LocalFile,
-					}
-					newFile2 := repository.FileDesc{
-						Size:     43,
-						Path:     "/here/is/my/game2",
-						GameID:   "0000000000000001",
-						GameInfo: "[0000000000000001][v0].nsp",
-						HostType: repository.LocalFile,
-					}
-					newGames = append(newGames, newFile1)
-					newGames = append(newGames, newFile2)
-					testCollection.AddNewGames(newGames)
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/0100574002AF4000#[0100574002AF4000] ONE PIECE: Unlimited World Red Deluxe Edition [BASE].nsp"))
+			})
+			It("Add a base game (without any information)", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "010034501225C000",
+					GameInfo:  "[010034501225C000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile)
+				testCollection.AddNewGames(newGames)
 
-					games := testCollection.Games()
-					Expect(games.Files).To(HaveLen(1))
-					Expect(games.Titledb).To(HaveLen(1))
-				})
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034501225C000#[010034501225C000] [BASE].nsp"))
+			})
+			It("Add a DLC game", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "010034500641B001",
+					GameInfo:  "[010034500641B001][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile)
+				testCollection.AddNewGames(newGames)
+
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034500641B001#[010034500641B001] Attack on Titan 2 (US) - Additional Episode, \"A Sudden Rain\" [DLC].nsp"))
+			})
+			It("Add an UPDATE game", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "010034500641A800",
+					GameInfo:  "[010034500641A800][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile)
+				testCollection.AddNewGames(newGames)
+
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034500641A800#[010034500641A800] Attack on Titan 2 (US) [v917504][UPD].nsp"))
+			})
+			It("Add a duplicate game", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile1 := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game",
+					GameID:    "010034500641A000",
+					GameInfo:  "[010034500641A000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newFile2 := repository.FileDesc{
+					Size:      43,
+					Path:      "/here/is/my/game",
+					GameID:    "010034500641A000",
+					GameInfo:  "[010034500641A000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile1)
+				newGames = append(newGames, newFile2)
+				testCollection.AddNewGames(newGames)
+
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034500641A000#[010034500641A000] Attack on Titan 2 (US) [BASE].nsp"))
+			})
+			It("Add a duplicate game (with different path)", func() {
+				newGames := make([]repository.FileDesc, 0)
+				newFile1 := repository.FileDesc{
+					Size:      42,
+					Path:      "/here/is/my/game1",
+					GameID:    "010034500641A000",
+					GameInfo:  "[010034500641A000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newFile2 := repository.FileDesc{
+					Size:      43,
+					Path:      "/here/is/my/game2",
+					GameID:    "010034500641A000",
+					GameInfo:  "[010034500641A000][v0].nsp",
+					Extension: "nsp",
+					HostType:  repository.LocalFile,
+				}
+				newGames = append(newGames, newFile1)
+				newGames = append(newGames, newFile2)
+				testCollection.AddNewGames(newGames)
+
+				games := testCollection.Games()
+				Expect(games.Files).To(HaveLen(1))
+				Expect(games.Titledb).To(HaveLen(1))
+				Expect(games.Files[0].URL).To(Equal("http://tinshop.example.com/games/010034500641A000#[010034500641A000] Attack on Titan 2 (US) [BASE].nsp"))
 			})
 		})
 	})

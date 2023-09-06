@@ -6,6 +6,8 @@
 package utils
 
 import (
+	"fmt"
+	"math/big"
 	"net/http"
 	"reflect"
 	"regexp"
@@ -41,6 +43,44 @@ func ExtractGameID(fileName string) repository.GameID {
 	}
 
 	return gameid.New(strings.ToUpper(matches[1]), "["+strings.ToUpper(matches[1])+"]["+matches[2]+"]."+ext[len(ext)-1], ext[len(ext)-1])
+}
+
+// GetTitleMeta returns the BaseID of the content, as well as Update / DLC flags
+func GetTitleMeta(titleID string) (string, bool, bool) {
+	var lastDigit = titleID[len(titleID)-1:]
+	var baseID = strings.Join([]string{titleID[:len(titleID)-3], "000"}, "")
+	var update = false
+	var dlc = false
+
+	if titleID != baseID {
+		update = true
+	}
+
+	if lastDigit != "0" {
+		dlc = true
+		update = false
+
+		// Parse the hexadecimal string into a big integer
+		intValue, success := new(big.Int).SetString(baseID, 16)
+		if !success {
+			return "", false, false
+		}
+
+		// Parse the subtraction value (in hexadecimal)
+		subtractionValue := new(big.Int)
+		subtractionValue, success = subtractionValue.SetString("1000", 16)
+		if !success {
+			return "", false, false
+		}
+
+		// Subtract the values
+		intValue.Sub(intValue, subtractionValue)
+
+		// Convert the resulting integer back to a hexadecimal string, left padded with 0 to 16 chars
+		baseID = fmt.Sprintf("0000000000000000%X", intValue)
+		baseID = baseID[len(baseID)-16:]
+	}
+	return baseID, update, dlc
 }
 
 // Search returns the index in an object
