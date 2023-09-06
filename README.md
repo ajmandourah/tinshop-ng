@@ -11,7 +11,7 @@ Your own personal shop right into tinfoil!<br><br>
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 </div>
 
-# Disclaimer
+# ⚠️ Disclaimer
 
 This program **DOES NOT** encourage piracy at all!  
 It was designed to reduce the time to download/install a game from the Nintendo eShop.  
@@ -20,7 +20,7 @@ In case you have a ADSL connection, to install latest `Zelda` ([14.4Gb](https://
 On top of that, if you have bought a game on eShop like [Jump Force](https://www.bandainamcoent.com/news/jump-force-sunsetting-announcement), once it is not anymore on the shop how can you install it again?  
 Using your personal NSP dump, with `tinfoil` and `tinshop` everything should be fine and fast!
 
-# Use
+# 🎮 Use
 
 To proper use this software, here is the checklist:
 - [ ] _Optional:_ A proper configured `config.yaml`
@@ -32,7 +32,7 @@ To proper use this software, here is the checklist:
 
 Now simply run it and add a shop inside tinfoil with the address setup in `config` (or `http://localIp:3000` if not specified).
 
-# Features
+# 🎉 Features
 
 Here is the list of all main features so far:
 - [X] Automatically download `titles.US.en.json` if missing at startup
@@ -51,14 +51,14 @@ Here is the list of all main features so far:
 - [X] An API to query information about your shop
 - [X] Handle Basic Auth from Tinfoil through Forward Auth Endpoint
 
-## Filtering
+## 🏳️ Filtering
 
 When you setup your shop inside `tinfoil` you can now add the following path:
 - `multi` : Filter only multiplayer games
 - `fr`, `en`, ... : Filter by languages
 - `world` : All games without any filter (equivalent without path)
 
-# Dev or build from source
+# 🧱 Dev or build from source
 
 I suggest to use a tiny executable [gow](https://github.com/mitranim/gow) to help you during the process (hot reload, etc..).  
 For example I use the following command to develop `gow -c run .`.
@@ -67,14 +67,14 @@ If you want to build `TinShop` from source, please run `go build`.
 
 And then, simply run `./tinshop`.
 
-## Want to do cross-build generation?
+## 🥍 Want to do cross-build generation?
 
 Wanting to generate all possible os binaries (macOS, linux, windows) with all architectures (arm, amd64)?  
 Here is the command `goreleaser release --snapshot --skip-publish --rm-dist`.
 
 Dead simple, thanks to Golang!
 
-## Changing the structure of an interface?
+## 🏛️ Changing the structure of an interface?
 
 If you change an interface (or add a new one), do not forget to execute `./update_mocks.sh` to generate up-to-date mocks for tests.
 
@@ -83,17 +83,18 @@ Do not forget to install `mockgen` first:
 go install github.com/golang/mock/mockgen@v1.6.0
 ```
 
-## What to launch tests?
+## 🧪 What to launch tests?
 
 You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.  
 Note: you can add `-cover` to have an idea of the code coverage.
-# Roadmap
+
+# 🎯 Roadmap
 
 You can see the [roadmap here](https://github.com/DblK/tinshop/projects/1).
 
 If you have any suggestions, do not hesitate to participate!
 
-# Q & A
+# 👂🏻 Q & A
 
 ## Why use this instead of `X` (NUT or others software)?
 
@@ -177,10 +178,12 @@ Those are valid:
 - `My Saved Game [0000000000000000] [v0].nsp`
 - `Awesome title [0000000000000000][v0] (15Gb).nsz`
 
-# Credits
+# 🙏 Credits
 
 I would like to give back thanks to the people who helped me with or without knowing!
 - [Bogdan Rosu Creative](https://www.iconfinder.com/icons/353439/basket_purse_shopping_cart_ecommerce_shop_buy_online_icon) for his shop icon.
 - [Dono](https://github.com/Donorhan) for his support and tests.
 - [AdamK2003](https://github.com/AdamK2003/titledb) for his up-to-date [`titles.US.en.json`](https://github.com/AdamK2003/titledb/releases/download/latest/titles.US.en.json) and his answers on discord.
 - [nxdumptool](https://github.com/DarkMatterCore/nxdumptool) for the information taken of NSP format
+
+# 🤝 Contributors
