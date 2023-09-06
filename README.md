@@ -28,7 +28,7 @@ To proper use this software, here is the checklist:
     - [ ] Comment/Uncomment parts in the config according to your needs
 - [ ] Games should have in their name `[ID][v0]` to be recognized
 - [ ] Games extension should be `nsp` or `nsz`
-- [ ] Retrieve binary from [latest release](https://github.com/DblK/tinshop/releases) or build from source (See `Dev` section below)
+- [ ] Retrieve binary from [latest release](https://github.com/DblK/tinshop/releases) or [container](https://github.com/DblK/tinshop/pkgs/container/tinshop) or build from source (See [`Dev`](https://github.com/DblK/tinshop/tree/master#-dev-or-build-from-source) section below)
 
 Now simply run it and add a shop inside tinfoil with the address setup in `config` (or `http://localIp:3000` if not specified).
 
@@ -98,12 +98,19 @@ If you have any suggestions, do not hesitate to participate!
 
 ## Why use this instead of `X` (NUT or others software)?
 
+<details>
+<summary>Answer</summary>
+
 It's dead simple, and no dependencies! It's just a single small executable.  
 Easier to install games without connecting switch or by updating SD card (Nightmare if you are on macOS).
 
 The upcoming features will also be a huge advantage against others software.
+</details>
 
 ## Where do I put my games?
+
+<details>
+<summary>Answer</summary>
 
 By default, `TinShop` will look into the `games` directory relative to `tinshop` executable.
 
@@ -111,9 +118,12 @@ However in the `config.yaml` file, you can change this.
 In the `sources` section, you can have the following:
 - `directories`: List of directories where you put your games
 - `nfs`: List of NFS shares that contains your games
-
+</details>
 
 ## Can I set up a `https` endpoint?
+
+<details>
+<summary>Answer</summary>
 
 Yes, you can!  
 Use a reverse proxy (like [traefik](https://github.com/traefik/traefik), [caddy](https://github.com/caddyserver/caddy), nginx...) to do tls termination and forward to your instance on port `3000`.
@@ -124,7 +134,7 @@ To work with [`caddy`](https://caddyserver.com/), you need to put in your `Caddy
 
 ```Caddyfile
 tinshop.example.com:80 {
-	reverse_proxy 192.168.1.2:3000
+    reverse_proxy 192.168.1.2:3000
 }
 ```
 
@@ -138,8 +148,12 @@ reverseProxy: true
 ```
 
 If you want to have HTTPS, ensure `caddy` handle it (it will with Let's Encrypt) and change `https` in the config and remove `:80` in the `Caddyfile` example.
+</details>
 
 ## How can I add a `basic auth` to protect my shop?
+
+<details>
+<summary>Answer</summary>
 
 TinShop **does** handle basic auth but not by itself.  
 You should look for `forwardAuth` in the `config.yaml` to set the endpoint that will handle the authentication in behalf of TinShop.
@@ -147,20 +161,32 @@ You should look for `forwardAuth` in the `config.yaml` to set the endpoint that 
 In the future, a proper user management will be incorporated into TinShop to handle it.
 
 In addition, for other type of protection, you can whitelist/blacklist your own switch and this will do the trick.
+</details>
 
 ## I have tons of missing title displayed in `tinfoil`, what should I do?
 
+<details>
+<summary>Answer</summary>
+
 First, download and replace the latest [`titles.US.en.json`](https://github.com/AdamK2003/titledb/releases/download/latest/titles.US.en.json) available (or delete it, it will be automatically downloaded at startup).  
 If this does not solve your issue, then you should use custom titledb entry to describe those which are missing.
+</details>
 
 ## Why I still get `NCA signature verification failed` error in `tinfoil` and nothing in `tinshop`?
+
+<details>
+<summary>Answer</summary>
 
 The current implementation to verify the NSP/NSZ are basic and based on the Ticket information.  
 So you might still get some error about signature failed even with `checkVerified` enabled.
 
 Maybe later, this feature will be enhanced to add additional checks on game files (PR Welcome!).
+</details>
 
 ## `tinfoil` does not display the name of the game but the file name, what should I do?
+
+<details>
+<summary>Answer</summary>
 
 You must follow the naming convention for the games as follow:  
 `[gameId][version].(nsp/nsz)`
@@ -177,6 +203,7 @@ Those are valid:
 - `[0000000000000000][v131072].nsz`
 - `My Saved Game [0000000000000000] [v0].nsp`
 - `Awesome title [0000000000000000][v0] (15Gb).nsz`
+</details>
 
 # 🙏 Credits
 
