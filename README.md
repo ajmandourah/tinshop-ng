@@ -187,3 +187,29 @@ I would like to give back thanks to the people who helped me with or without kno
 - [nxdumptool](https://github.com/DarkMatterCore/nxdumptool) for the information taken of NSP format
 
 # 🤝 Contributors
+
+<table>
+<tr>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/DblK>
+            <img src=https://avatars.githubusercontent.com/u/832617?v=4 width="100;"  alt=Rémy Boulanouar/>
+            <br />
+            <sub style="font-size:14px"><b>Rémy Boulanouar</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/Helvio88>
+            <img src=https://avatars.githubusercontent.com/u/650183?v=4 width="100;"  alt=Helvio Pedreschi/>
+            <br />
+            <sub style="font-size:14px"><b>Helvio Pedreschi</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/bay0>
+            <img src=https://avatars.githubusercontent.com/u/30617751?v=4 width="100;"  alt=bay0/>
+            <br />
+            <sub style="font-size:14px"><b>bay0</b></sub>
+        </a>
+    </td>
+</tr>
+</table>
