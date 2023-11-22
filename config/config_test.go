@@ -175,10 +175,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Context("Security for Blacklist/Whitelist tests", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		Describe("Blacklist tests", func() { //nolint:dupl
@@ -251,10 +251,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Context("Security for theme", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		Describe("IsBannedTheme", func() {
@@ -276,10 +276,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Protocol", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -291,10 +291,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Host", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -306,10 +306,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("WelcomeMessage", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -325,10 +325,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("Port", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -340,10 +340,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("ReverseProxy", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -355,10 +355,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("ShopTitle", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -370,10 +370,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugNfs", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -385,10 +385,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("VerifyNSP", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -400,10 +400,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugNoSecurity", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -415,10 +415,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("DebugTicket", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {
@@ -430,10 +430,10 @@ var _ = Describe("Config", func() {
 		})
 	})
 	Describe("BannedTheme", func() {
-		var myConfig config.File
+		var myConfig config.Configuration
 
 		BeforeEach(func() {
-			myConfig = config.File{}
+			myConfig = config.Configuration{}
 		})
 
 		It("Test with empty object", func() {

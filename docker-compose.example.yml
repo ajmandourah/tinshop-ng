@@ -5,10 +5,23 @@ services:
     build: .
     container_name: app
     restart: unless-stopped
+    environment:
+      - TINSHOP_HOST=tinshop.example.com
+      - TINSHOP_PROTOCOL=https
+      - TINSHOP_NAME=TinShop
+      - TINSHOP_REVERSEPROXY=true
+      - TINSHOP_WELCOMEMESSAGE=Welcome to TinShop!
+      - TINSHOP_NOWELCOMEMESSAGE=false
+      - TINSHOP_DEBUG_NFS=false
+      - TINSHOP_DEBUG_NOSECURITY=false
+      - TINSHOP_DEBUG_TICKET=false
+      - TINSHOP_NSP_CHECKVERIFIED=true
+      - TINSHOP_SOURCES_DIRECTORIES=/games
+      - TINSHOP_SECURITY_WHITELIST=0000000000000000000000000000000000000000000000000000000000000000 1111111111111111111111111111111111111111111111111111111111111111
     ports:
       - 3000:3000
     volumes:
-      - ./config.example.yaml:/config.yaml
+      - /media/switch:/games
       
 
   nginx:

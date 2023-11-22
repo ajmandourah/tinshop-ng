@@ -28,7 +28,7 @@ To proper use this software, here is the checklist:
     - [ ] Comment/Uncomment parts in the config according to your needs
 - [ ] Games should have in their name `[ID][v0]` to be recognized
 - [ ] Games extension should be `nsp` or `nsz`
-- [ ] Retrieve binary from [latest release](https://github.com/DblK/tinshop/releases) or [container](https://github.com/DblK/tinshop/pkgs/container/tinshop) or build from source (See [`Dev`](https://github.com/DblK/tinshop/tree/master#-dev-or-build-from-source) section below)
+- [ ] Retrieve binary from [latest release](https://github.com/DblK/tinshop/releases) or [container](https://github.com/DblK/tinshop/pkgs/container/tinshop) (See [`Docker`](https://github.com/DblK/tinshop/tree/master#-docker) section below) or build from source (See [`Dev`](https://github.com/DblK/tinshop/tree/master#-dev-or-build-from-source) section below)
 
 Now simply run it and add a shop inside tinfoil with the address setup in `config` (or `http://localIp:3000` if not specified).
 
@@ -66,6 +66,52 @@ For example I use the following command to develop `gow -c run .`.
 If you want to build `TinShop` from source, please run `go build`.
 
 And then, simply run `./tinshop`.
+
+# 🐋 Docker
+
+To run with [Docker](https://docs.docker.com/engine/install/), you can use this as a starting `cli` example:
+
+`docker run -d --restart=always -e TINSHOP_SOURCES_DIRECTORIES=/games -e TINSHOP_WELCOMEMESSAGE="Welcome to my Tinshop!" -v /local/game/backups:/games -p 3000:3000 ghcr.io/dblk/tinshop:latest`
+
+This will run Tinshop on  `http://localhost:3000` and persist across reboots!
+
+If `docker compose` is your thing, then start with this example:
+
+```yaml
+version: '3.9'
+services:
+  tinshop:
+    container_name: tinshop
+    image: ghcr.io/dblk/tinshop:latest
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - TINSHOP_SOURCES_DIRECTORIES=/games
+      - TINSHOP_WELCOMEMESSAGE=Welcome to my Tinshop!
+    volumes:
+      - /media/switch:/games
+```
+All of the settings in the `config.yaml` file are valid Environment Variables. They must be `UPPERCASE` and prefixed by `TINSHOP_`. Nested properties should be prefixed by `_`. Here are a few examples:
+
+| ENV_VAR                      | `config.yaml` entry | Default Value                  | Example Value                     |
+|------------------------------|---------------------|--------------------------------|-----------------------------------|
+| TINSHOP_HOST                 | host                | `<empty>`                      | `tinshop.example.com`             |
+| TINSHOP_PROTOCOL             | protocol            | `http`                         | `https`                           |
+| TINSHOP_NAME                 | name                | `TinShop`                      | `MyShop`                          |
+| TINSHOP_REVERSEPROXY         | reverseProxy        | `false`                        | `true`                            |
+| TINSHOP_WELCOMEMESSAGE       | welcomeMessage      | `Welcome to your own TinShop!` | `Welcome to my shop!`             |
+| TINSHOP_NOWELCOMEMESSAGE     | noWelcomeMessage    | `false`                        | `true`                            |
+| TINSHOP_DEBUG_NFS            | debug.nfs           | `false`                        | `true`                            |
+| TINSHOP_DEBUG_NOSECURITY     | debug.nosecurity    | `false`                        | `true`                            |
+| TINSHOP_DEBUG_TICKET         | debug.ticket        | `false`                        | `true`                            |
+| TINSHOP_NSP_CHECKVERIFIED    | nsp.checkVerified   | `false`                        | `true`                            |
+| TINSHOP_SOURCES_DIRECTORIES  | sources.directories | `./games`                      | `/games /path/two /path/three`    |
+| TINSHOP_SOURCES_NSF          | sources.nfs         | `null`                         | `192.168.1.100:/path/to/games`    |
+| TINSHOP_SECURITY_BANNEDTHEME | sources.bannedTheme | `null`                         | `THEME1 THEME2 THEME3`            |
+| TINSHOP_SECURITY_WHITELIST   | sources.whitelist   | `null`                         | `NSWID1 NSWID2 NSWID3`            |
+| TINSHOP_SECURITY_BLACKLIST   | sources.blacklist   | `null`                         | `NSWID4 NSWID5 NSWID6`            |
+| TINSHOP_SECURITY_FORWARDAUTH | sources.forwardAuth | `null`                         | `https://auth.tinshop.com/switch` |
 
 ## 🥍 Want to do cross-build generation?
 
@@ -148,6 +194,37 @@ reverseProxy: true
 ```
 
 If you want to have HTTPS, ensure `caddy` handle it (it will with Let's Encrypt) and change `https` in the config and remove `:80` in the `Caddyfile` example.
+
+### Example for traefik
+
+To work with [`traefik`](https://traefik.io/), you need to put in your Dynamic Configuration something similar to this:
+
+```yaml
+http:
+  routers:
+    service: tinshop
+    rule: Host(`tinshop.example.com`)
+    entryPoints: websecure # Could be web if not using https
+
+  services:
+    tinshop:
+      loadBalancer:
+        servers:
+          - url: http://192.168.1.2:3000
+```
+
+and your `config.yaml` as follow:
+
+```yaml
+host: tinshop.example.com
+protocol: http
+port: 3000
+reverseProxy: true
+```
+
+If you want to have HTTPS, ensure `traefik` can handle it (it will with Let's Encrypt) and use protocol `https` in the config.
+
+For more details on Traefik + Let's Encrypt, [click here](https://doc.traefik.io/traefik/https/acme/).
 </details>
 
 ## How can I add a `basic auth` to protect my shop?

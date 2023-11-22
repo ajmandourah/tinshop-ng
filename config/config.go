@@ -11,6 +11,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/DblK/tinshop/repository"
 	"github.com/DblK/tinshop/utils"
@@ -35,8 +36,8 @@ type nsp struct {
 	CheckVerified bool `mapstructure:"checkVerified"`
 }
 
-// File holds all config information
-type File struct {
+// Configuration holds all config information
+type Configuration struct {
 	rootShop             string
 	ShopHost             string                             `mapstructure:"host"`
 	ShopProtocol         string                             `mapstructure:"protocol"`
@@ -58,17 +59,40 @@ type File struct {
 
 // New returns a new configuration
 func New() repository.Config {
-	return &File{}
+	return &Configuration{}
 }
 
 // LoadConfig handles viper under the hood
-func (cfg *File) LoadConfig() {
-	viper.SetConfigName("config") // name of config file (without extension)
-	viper.SetConfigType("yaml")   // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath(".")      // optionally look for config in the working directory
-	viper.SetDefault("sources.directories", "./games")
+func (cfg *Configuration) LoadConfig() {
+	viper.SetConfigName("config")     // name of config file (without extension)
+	viper.SetConfigType("yaml")       // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath(".")          // optionally look for config in the working directory
+	viper.SetTypeByDefaultValue(true) // Allows []string to be parsed from Env Vars
+
+	viper.SetDefault("host", "")
+	viper.SetDefault("protocol", "http")
+	viper.SetDefault("name", "TinShop")
+	viper.SetDefault("reverseProxy", false)
 	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
 	viper.SetDefault("noWelcomeMessage", false)
+
+	viper.SetDefault("debug.nfs", false)
+	viper.SetDefault("debug.noSecurity", false)
+	viper.SetDefault("debug.ticket", false)
+
+	viper.SetDefault("nsp.checkVerified", false)
+
+	viper.SetDefault("sources.directories", []string{"./games"})
+	viper.SetDefault("sources.nfs", []string{})
+
+	viper.SetDefault("security.bannedTheme", []string{})
+	viper.SetDefault("security.whitelist", []string{})
+	viper.SetDefault("security.blacklist", []string{})
+	viper.SetDefault("security.forwardAuth", "")
+
+	viper.SetEnvPrefix("TINSHOP")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
@@ -89,7 +113,7 @@ func (cfg *File) LoadConfig() {
 	cfg.configChange()
 }
 
-func (cfg *File) configChange() {
+func (cfg *Configuration) configChange() {
 	// Call all before hooks
 	for _, hook := range cfg.beforeAllHooks {
 		hook(cfg)
@@ -121,8 +145,8 @@ func (cfg *File) configChange() {
 	}
 }
 
-func loadAndCompute() *File {
-	var loadedConfig = &File{}
+func loadAndCompute() *Configuration {
+	var loadedConfig = &Configuration{}
 	err := viper.Unmarshal(&loadedConfig)
 
 	if err != nil {
@@ -169,7 +193,7 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 			rootShop += ":" + strconv.Itoa(config.Port())
 		}
 	}
-	log.Println((rootShop))
+	log.Println(rootShop)
 	config.SetRootShop(rootShop)
 
 	config.SetShopTemplateData(repository.ShopTemplate{
@@ -180,117 +204,117 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 }
 
 // AddHook Add hook function on change config
-func (cfg *File) AddHook(f func(repository.Config)) {
+func (cfg *Configuration) AddHook(f func(repository.Config)) {
 	cfg.allHooks = append(cfg.allHooks, f)
 }
 
 // AddBeforeHook Add hook function before on change config
-func (cfg *File) AddBeforeHook(f func(repository.Config)) {
+func (cfg *Configuration) AddBeforeHook(f func(repository.Config)) {
 	cfg.beforeAllHooks = append(cfg.beforeAllHooks, f)
 }
 
 // SetRootShop allow to change the root url of the shop
-func (cfg *File) SetRootShop(root string) {
+func (cfg *Configuration) SetRootShop(root string) {
 	cfg.rootShop = root
 }
 
 // RootShop returns the RootShop url
-func (cfg *File) RootShop() string {
+func (cfg *Configuration) RootShop() string {
 	return cfg.rootShop
 }
 
 // ReverseProxy returns the ReverseProxy setting
-func (cfg *File) ReverseProxy() bool {
+func (cfg *Configuration) ReverseProxy() bool {
 	return cfg.Proxy
 }
 
 // WelcomeMessage returns the WelcomeMessage
-func (cfg *File) WelcomeMessage() string {
+func (cfg *Configuration) WelcomeMessage() string {
 	return cfg.ShopWelcomeMessage
 }
 
 // NoWelcomeMessage returns the NoWelcomeMessage
-func (cfg *File) NoWelcomeMessage() bool {
+func (cfg *Configuration) NoWelcomeMessage() bool {
 	return cfg.ShopNoWelcomeMessage
 }
 
 // Protocol returns the protocol scheme (http or https)
-func (cfg *File) Protocol() string {
+func (cfg *Configuration) Protocol() string {
 	return cfg.ShopProtocol
 }
 
 // Host returns the host of the shop
-func (cfg *File) Host() string {
+func (cfg *Configuration) Host() string {
 	return cfg.ShopHost
 }
 
 // Port returns the port number for outside access
-func (cfg *File) Port() int {
+func (cfg *Configuration) Port() int {
 	return cfg.ShopPort
 }
 
 // DebugTicket tells if we should display additional log for ticket verification
-func (cfg *File) DebugTicket() bool {
+func (cfg *Configuration) DebugTicket() bool {
 	return cfg.Debug.Ticket
 }
 
 // DebugNfs tells if we should display additional log for nfs
-func (cfg *File) DebugNfs() bool {
+func (cfg *Configuration) DebugNfs() bool {
 	return cfg.Debug.Nfs
 }
 
 // DebugNoSecurity returns if we should disable security or not
-func (cfg *File) DebugNoSecurity() bool {
+func (cfg *Configuration) DebugNoSecurity() bool {
 	return cfg.Debug.NoSecurity
 }
 
 // Directories returns the list of directories sources
-func (cfg *File) Directories() []string {
+func (cfg *Configuration) Directories() []string {
 	return cfg.AllSources.Directories
 }
 
 // CustomDB returns the list of custom title db
-func (cfg *File) CustomDB() map[string]repository.TitleDBEntry {
+func (cfg *Configuration) CustomDB() map[string]repository.TitleDBEntry {
 	return cfg.CustomTitleDB
 }
 
 // NfsShares returns the list of nfs sources
-func (cfg *File) NfsShares() []string {
+func (cfg *Configuration) NfsShares() []string {
 	return cfg.AllSources.Nfs
 }
 
 // Sources returns all available sources
-func (cfg *File) Sources() repository.ConfigSources {
+func (cfg *Configuration) Sources() repository.ConfigSources {
 	return cfg.AllSources
 }
 
 // ShopTemplateData returns the data needed to render template
-func (cfg *File) ShopTemplateData() repository.ShopTemplate {
+func (cfg *Configuration) ShopTemplateData() repository.ShopTemplate {
 	return cfg.shopTemplateData
 }
 
 // SetShopTemplateData sets the data for template
-func (cfg *File) SetShopTemplateData(data repository.ShopTemplate) {
+func (cfg *Configuration) SetShopTemplateData(data repository.ShopTemplate) {
 	cfg.shopTemplateData = data
 }
 
 // ShopTitle returns the name of the shop
-func (cfg *File) ShopTitle() string {
+func (cfg *Configuration) ShopTitle() string {
 	return cfg.Name
 }
 
 // VerifyNSP tells if we need to verify NSP
-func (cfg *File) VerifyNSP() bool {
+func (cfg *Configuration) VerifyNSP() bool {
 	return cfg.NSP.CheckVerified
 }
 
 // ForwardAuthURL returns the url of the forward auth
-func (cfg *File) ForwardAuthURL() string {
+func (cfg *Configuration) ForwardAuthURL() string {
 	return cfg.Security.ForwardAuth
 }
 
 // IsBlacklisted tells if the uid is blacklisted or not
-func (cfg *File) IsBlacklisted(uid string) bool {
+func (cfg *Configuration) IsBlacklisted(uid string) bool {
 	if len(cfg.Security.Whitelist) != 0 {
 		return !cfg.isInWhiteList(uid)
 	}
@@ -298,20 +322,20 @@ func (cfg *File) IsBlacklisted(uid string) bool {
 }
 
 // IsWhitelisted tells if the uid is whitelisted or not
-func (cfg *File) IsWhitelisted(uid string) bool {
+func (cfg *Configuration) IsWhitelisted(uid string) bool {
 	if len(cfg.Security.Whitelist) == 0 {
 		return !cfg.isInBlackList(uid)
 	}
 	return cfg.isInWhiteList(uid)
 }
 
-func (cfg *File) isInBlackList(uid string) bool {
+func (cfg *Configuration) isInBlackList(uid string) bool {
 	idxBlackList := utils.Search(len(cfg.Security.Blacklist), func(index int) bool {
 		return cfg.Security.Blacklist[index] == uid
 	})
 	return idxBlackList != -1
 }
-func (cfg *File) isInWhiteList(uid string) bool {
+func (cfg *Configuration) isInWhiteList(uid string) bool {
 	idxWhiteList := utils.Search(len(cfg.Security.Whitelist), func(index int) bool {
 		return cfg.Security.Whitelist[index] == uid
 	})
@@ -319,7 +343,7 @@ func (cfg *File) isInWhiteList(uid string) bool {
 }
 
 // IsBannedTheme tells if the theme is banned or not
-func (cfg *File) IsBannedTheme(theme string) bool {
+func (cfg *Configuration) IsBannedTheme(theme string) bool {
 	idxBannedTheme := utils.Search(len(cfg.Security.BannedTheme), func(index int) bool {
 		return cfg.Security.BannedTheme[index] == theme
 	})
@@ -327,6 +351,6 @@ func (cfg *File) IsBannedTheme(theme string) bool {
 }
 
 // BannedTheme returns all banned theme
-func (cfg *File) BannedTheme() []string {
+func (cfg *Configuration) BannedTheme() []string {
 	return cfg.Security.BannedTheme
 }
