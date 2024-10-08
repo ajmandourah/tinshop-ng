@@ -9,7 +9,8 @@ import (
 	"strings"
 )
 
-func ReadXciMetadata(filePath string) (map[string]*ContentMetaAttributes, error) {
+func ReadXciMetadata(filePath string) (*ContentMetaAttributes, error) {
+	var metadata *ContentMetaAttributes = nil
 	file, err := OpenFile(filePath)
 	if err != nil {
 		return nil, err
@@ -40,7 +41,6 @@ func ReadXciMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 		return nil, err
 	}
 
-	contentMap := map[string]*ContentMetaAttributes{}
 
 	for _, pfs0File := range secureHfs0.Files {
 
@@ -68,7 +68,7 @@ func ReadXciMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 				currCnmt.Ncap = nacp
 			}
 
-			contentMap[currCnmt.TitleId] = currCnmt
+			metadata = currCnmt
 
 		} /* else if strings.Contains(pfs0File.Name, ".cnmt.xml") {
 			xmlBytes := make([]byte, pfs0File.Size)
@@ -85,7 +85,7 @@ func ReadXciMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 		}*/
 	}
 
-	return contentMap, nil
+	return metadata, nil
 }
 
 func getNcaById(hfs0 *PFS0, id string) *fileEntry {

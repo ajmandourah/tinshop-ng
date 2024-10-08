@@ -11,12 +11,14 @@ import (
 	"os/signal"
 	"strconv"
 	"time"
+	"fmt"
 
 	"github.com/ajmandourah/tinshop/api"
 	"github.com/ajmandourah/tinshop/config"
 	collection "github.com/ajmandourah/tinshop/gamescollection"
 	"github.com/ajmandourah/tinshop/repository"
 	"github.com/ajmandourah/tinshop/sources"
+	"github.com/ajmandourah/tinshop/keys"
 	"github.com/ajmandourah/tinshop/stats"
 	"github.com/ajmandourah/tinshop/utils"
 	"github.com/gorilla/mux"
@@ -24,7 +26,6 @@ import (
 
 //go:embed assets/*
 var assetData embed.FS //nolint:gochecknoglobals
-
 // TinShop holds all information about the Shop
 type TinShop struct {
 	Shop   repository.Shop
@@ -32,6 +33,18 @@ type TinShop struct {
 }
 
 func main() {
+
+	// this is dirty. will leave it for now untill implemented correctly as there are some conflicts around the shop init
+
+	config := config.New()
+	config.LoadConfig()
+
+	prodkeys, _ := keys.InitSwitchKeys(config.ProdKeys())
+	if prodkeys == nil || prodkeys.GetKey("header_key") == "" {
+		fmt.Printf("\n!!NOTE!!: keys file was not found, deep scan is disabled, library will be based on file tags.\n %v")
+		keys.UseKey = false
+	}
+
 	shop := createShop()
 
 	// Run our server in a goroutine so that it doesn't block.

@@ -39,11 +39,11 @@ func openMetaNcaDataSection(reader io.ReaderAt, ncaOffset int64) (*fsHeader, []b
 		return nil, nil, errors.New("failed to read NCA header")
 	}
 
-	keys, err := settings.SwitchKeys()
+	prodkeys, err := keys.SwitchKeys()
 	if err != nil {
 		return nil, nil, err
 	}
-	headerKey := keys.GetKey("header_key")
+	headerKey := prodkeys.GetKey("header_key")
 	if headerKey == "" {
 		return nil, nil, errors.New("missing key - header_key")
 	}
@@ -107,10 +107,10 @@ func decryptAesCtr(ncaHeader *ncaHeader, fsHeader *fsHeader, offset uint32, size
 		return []byte{}, errors.New("unsupported crypto type")
 	}
 
-	keys, _ := settings.SwitchKeys()
+	prodkeys, _ := keys.SwitchKeys()
 
 	keyName := fmt.Sprintf("key_area_key_application_%x", keyRevision)
-	KeyString := keys.GetKey(keyName)
+	KeyString := prodkeys.GetKey(keyName)
 	if KeyString == "" {
 		return nil, errors.New(fmt.Sprintf("missing Key_area_key[%v]", keyName))
 	}

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func ReadNspMetadata(filePath string) (map[string]*ContentMetaAttributes, error) {
+func ReadNspMetadata(filePath string) (*ContentMetaAttributes, error) {
 
 	pfs0, err := ReadPfs0File(filePath)
 	if err != nil {
@@ -21,7 +21,7 @@ func ReadNspMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 
 	defer file.Close()
 
-	contentMap := map[string]*ContentMetaAttributes{}
+	var metadata *ContentMetaAttributes = nil
 
 	for _, pfs0File := range pfs0.Files {
 
@@ -48,7 +48,7 @@ func ReadNspMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 				currCnmt.Ncap = nacp
 			}
 
-			contentMap[currCnmt.TitleId] = currCnmt
+			metadata = currCnmt
 
 		} /*else if strings.Contains(pfs0File.Name, ".cnmt.xml") {
 			xmlBytes := make([]byte, pfs0File.Size)
@@ -64,6 +64,6 @@ func ReadNspMetadata(filePath string) (map[string]*ContentMetaAttributes, error)
 			contentMap[currCnmt.TitleId] = currCnmt
 		}*/
 	}
-	return contentMap, nil
+	return metadata, nil
 
 }

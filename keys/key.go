@@ -2,15 +2,16 @@ package keys
 
 import (
 	"errors"
+	"log"
 	"path/filepath"
 	"strings"
-	"github.com/ajmandourah/tinshop/config"
+
 	"github.com/magiconair/properties"
-	"go.uber.org/zap"
 )
 
 var (
 	keysInstance *switchKeys
+	UseKey bool = true
 )
 
 type switchKeys struct {
@@ -31,19 +32,15 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 		p    *properties.Properties
 		err  error
 	)
-	logger := zap.S()
 
 	// first, try to read the prod keys from the settings value
-	setting := config.New()
-	setting.LoadConfig()
-	setting.getKeys()
-	if settings.Prodkeys != "" {
-		path = settings.Prodkeys
+	if baseFolder != "" {
+		path = baseFolder
 		if !strings.HasSuffix(path, ".keys") {
 			path = filepath.Join(path, "prod.keys")
 		}
 
-		logger.Infof("Trying to load prod.keys based on settings.json: %v", path)
+		log.Println("Trying to load prod.keys based on settings.json: %v", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	} else {
 		err = errors.New("prod.keys not defined in settings.json")
@@ -53,12 +50,20 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 	if err != nil {
 		path = filepath.Join(baseFolder, "prod.keys")
 
-		logger.Infof("Trying to load prod.keys based on current folder: %v", path)
+		log.Println("Trying to load prod.keys based on current folder: %v", path)
+		p, err = properties.LoadFile(path, properties.UTF8)
+	}
+
+	// third, if not found in current, look in home directory
+	if err != nil {
+		path = "${HOME}/.switch/prod.keys"
+
+		log.Println("Trying to load prod.keys based on home directory: %v", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	}
 
 	if err != nil {
-		logger.Info("Unable to find prod.keys")
+		log.Println("Unable to find prod.keys")
 		return nil, errors.New("Error trying to read prod.keys [reason:" + err.Error() + "]")
 	}
 
@@ -68,6 +73,6 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 		keysInstance.keys[key] = value
 	}
 
-	logger.Infof("Loaded prod.keys from: %v", path)
+	log.Println("Loaded prod.keys from: %v", path)
 	return keysInstance, nil
 }

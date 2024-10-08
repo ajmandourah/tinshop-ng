@@ -31,6 +31,7 @@ type Config interface {
 	SetRootShop(string)
 	Host() string
 	Protocol() string
+	ProdKeys() string
 	Port() int
 	ReverseProxy() bool
 	WelcomeMessage() string

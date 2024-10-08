@@ -7,7 +7,7 @@ import (
 	"github.com/ajmandourah/tinshop/switchfs"
 )
 
-func ReadSplitFileMetadata(filePath string) (map[string]*switchfs.ContentMetaAttributes, error) {
+func DecryptMetadata(filePath string) (*switchfs.ContentMetaAttributes, error) {
 	//check if this is a NS* or XC* file
 	_, err := switchfs.ReadPfs0File(filePath)
 	isXCI := false

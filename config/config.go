@@ -247,7 +247,7 @@ func (cfg *Configuration) Protocol() string {
 }
 
 // Protocol returns the protocol scheme (http or https)
-func (cfg *Configuration) getKeys() string {
+func (cfg *Configuration) ProdKeys() string {
 	return cfg.Keys
 }
 

@@ -11,8 +11,11 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 
+	"github.com/ajmandourah/tinshop/fileio"
+	"github.com/ajmandourah/tinshop/keys"
 	"github.com/ajmandourah/tinshop/gameid"
 	"github.com/ajmandourah/tinshop/repository"
 )
@@ -39,7 +42,18 @@ func ExtractGameID(fileName string) repository.GameID {
 	matches := re.FindStringSubmatch(fileName)
 
 	if len(matches) != 3 {
-		return gameid.New("", "", "")
+		// try decrypting the name of the file
+		if keys.UseKey {
+
+			metadata, err := fileio.DecryptMetadata(fileName)
+			if err != nil {
+				return gameid.New("", "", "")
+			}
+			return gameid.New(strings.ToUpper(metadata.TitleId), "["+strings.ToUpper(metadata.TitleId)+"][v"+strconv.Itoa(metadata.Version)+"]."+ext[len(ext)-1], ext[len(ext)-1])
+		}else {
+			return gameid.New("", "", "")
+
+		}
 	}
 
 	return gameid.New(strings.ToUpper(matches[1]), "["+strings.ToUpper(matches[1])+"]["+matches[2]+"]."+ext[len(ext)-1], ext[len(ext)-1])
