@@ -46,7 +46,7 @@ func (c *collect) loadTitlesLibrary() {
 	if err != nil {
 		if err.Error() == "open titles.US.en.json: no such file or directory" {
 			log.Println("Missing 'titles.US.en.json'! Start downloading it.")
-			downloadErr := utils.DownloadFile("https://github.com/AdamK2003/titledb/releases/download/latest/titles.US.en.json", "titles.US.en.json")
+			downloadErr := utils.DownloadFile("https://tinfoil.media/repo/db/titles.json", "titles.US.en.json")
 			if downloadErr != nil {
 				log.Fatalln(err, downloadErr)
 			} else { // nolint:revive
