@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
@@ -41,6 +41,7 @@ type Configuration struct {
 	rootShop             string
 	ShopHost             string                             `mapstructure:"host"`
 	ShopProtocol         string                             `mapstructure:"protocol"`
+	Keys		     string				`mapstructure:"keys"`
 	ShopWelcomeMessage   string                             `mapstructure:"welcomeMessage"`
 	ShopNoWelcomeMessage bool                               `mapstructure:"noWelcomeMessage"`
 	ShopPort             int                                `mapstructure:"port"`
@@ -71,6 +72,7 @@ func (cfg *Configuration) LoadConfig() {
 
 	viper.SetDefault("host", "")
 	viper.SetDefault("protocol", "http")
+	viper.SetDefault("keys","prod.keys")
 	viper.SetDefault("name", "TinShop")
 	viper.SetDefault("reverseProxy", false)
 	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
@@ -123,6 +125,7 @@ func (cfg *Configuration) configChange() {
 	cfg.rootShop = newConfig.rootShop
 	cfg.ShopHost = newConfig.ShopHost
 	cfg.ShopProtocol = newConfig.ShopProtocol
+	cfg.Keys = newConfig.Keys
 	cfg.ShopPort = newConfig.ShopPort
 	if newConfig.ShopWelcomeMessage != "" {
 		cfg.ShopWelcomeMessage = newConfig.ShopWelcomeMessage
@@ -241,6 +244,11 @@ func (cfg *Configuration) NoWelcomeMessage() bool {
 // Protocol returns the protocol scheme (http or https)
 func (cfg *Configuration) Protocol() string {
 	return cfg.ShopProtocol
+}
+
+// Protocol returns the protocol scheme (http or https)
+func (cfg *Configuration) getKeys() string {
+	return cfg.Keys
 }
 
 // Host returns the host of the shop

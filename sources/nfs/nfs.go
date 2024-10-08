@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/DblK/tinshop/repository"
+	"github.com/ajmandourah/tinshop/repository"
 	"github.com/vmware/go-nfs-client/nfs/util"
 )
 

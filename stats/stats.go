@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/utils"
 	bolt "go.etcd.io/bbolt"
 )
 

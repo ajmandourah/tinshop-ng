@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/ajmandourah/switch-library-manager/switchfs"
+	"github.com/ajmandourah/tinshop/switchfs"
 )
 
 func ReadSplitFileMetadata(filePath string) (map[string]*switchfs.ContentMetaAttributes, error) {

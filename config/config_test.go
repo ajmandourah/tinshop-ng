@@ -5,9 +5,9 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/DblK/tinshop/config"
-	"github.com/DblK/tinshop/mock_repository"
-	"github.com/DblK/tinshop/repository"
+	"github.com/ajmandourah/tinshop/config"
+	"github.com/ajmandourah/tinshop/mock_repository"
+	"github.com/ajmandourah/tinshop/repository"
 )
 
 var _ = Describe("Config", func() {

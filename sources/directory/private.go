@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/DblK/tinshop/nsp"
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/nsp"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/utils"
 )
 
 func (src *directorySource) removeGamesWatcherDirectories() {

@@ -1,10 +1,10 @@
-package settings
+package keys
 
 import (
 	"errors"
 	"path/filepath"
 	"strings"
-
+	"github.com/ajmandourah/tinshop/config"
 	"github.com/magiconair/properties"
 	"go.uber.org/zap"
 )
@@ -34,7 +34,9 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 	logger := zap.S()
 
 	// first, try to read the prod keys from the settings value
-	settings := ReadSettings(baseFolder)
+	setting := config.New()
+	setting.LoadConfig()
+	setting.getKeys()
 	if settings.Prodkeys != "" {
 		path = settings.Prodkeys
 		if !strings.HasSuffix(path, ".keys") {
@@ -52,14 +54,6 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 		path = filepath.Join(baseFolder, "prod.keys")
 
 		logger.Infof("Trying to load prod.keys based on current folder: %v", path)
-		p, err = properties.LoadFile(path, properties.UTF8)
-	}
-
-	// third, if not found in current, look in home directory
-	if err != nil {
-		path = "${HOME}/.switch/prod.keys"
-
-		logger.Infof("Trying to load prod.keys based on home directory: %v", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	}
 

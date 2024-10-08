@@ -13,8 +13,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/DblK/tinshop/gameid"
-	"github.com/DblK/tinshop/repository"
+	"github.com/ajmandourah/tinshop/gameid"
+	"github.com/ajmandourah/tinshop/repository"
 )
 
 // IsValidFilter returns true if the filter is handled

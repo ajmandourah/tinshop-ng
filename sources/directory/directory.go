@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/DblK/tinshop/repository"
+	"github.com/ajmandourah/tinshop/repository"
 	"gopkg.in/fsnotify.v1"
 )
 

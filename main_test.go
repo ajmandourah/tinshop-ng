@@ -10,9 +10,9 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	main "github.com/DblK/tinshop"
-	"github.com/DblK/tinshop/mock_repository"
-	"github.com/DblK/tinshop/repository"
+	main "github.com/ajmandourah/tinshop"
+	"github.com/ajmandourah/tinshop/mock_repository"
+	"github.com/ajmandourah/tinshop/repository"
 )
 
 var _ = Describe("Main", func() {

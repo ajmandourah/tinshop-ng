@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/utils"
 )
 
 // CORSMiddleware is a middleware to ensure right CORS headers

@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/ajmandourah/switch-library-manager/settings"
-	"github.com/ajmandourah/switch-library-manager/switchfs/_crypto"
+	"github.com/ajmandourah/tinshop/keys"
+	"github.com/ajmandourah/tinshop/switchfs/_crypto"
 )
 
 const (

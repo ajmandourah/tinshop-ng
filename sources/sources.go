@@ -9,10 +9,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/sources/directory"
-	"github.com/DblK/tinshop/sources/nfs"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/sources/directory"
+	"github.com/ajmandourah/tinshop/sources/nfs"
+	"github.com/ajmandourah/tinshop/utils"
 )
 
 // SourceProvider stores all sources available

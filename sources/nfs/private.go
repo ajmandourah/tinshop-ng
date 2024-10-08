@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/DblK/tinshop/nsp"
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/nsp"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/utils"
 	"github.com/vmware/go-nfs-client/nfs"
 	"github.com/vmware/go-nfs-client/nfs/rpc"
 	"github.com/vmware/go-nfs-client/nfs/util"

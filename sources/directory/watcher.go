@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/DblK/tinshop/repository"
+	"github.com/ajmandourah/tinshop/repository"
 	"gopkg.in/fsnotify.v1"
 )
 

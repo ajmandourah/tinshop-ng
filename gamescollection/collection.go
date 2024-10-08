@@ -14,8 +14,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/DblK/tinshop/repository"
-	"github.com/DblK/tinshop/utils"
+	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop/utils"
 )
 
 type collect struct {
