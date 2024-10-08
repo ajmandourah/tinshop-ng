@@ -13,7 +13,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
+	"log"
 	"github.com/ajmandourah/tinshop/fileio"
 	"github.com/ajmandourah/tinshop/keys"
 	"github.com/ajmandourah/tinshop/gameid"
@@ -44,11 +44,11 @@ func ExtractGameID(fileName string) repository.GameID {
 	if len(matches) != 3 {
 		// try decrypting the name of the file
 		if keys.UseKey {
-
 			metadata, err := fileio.DecryptMetadata(fileName)
 			if err != nil {
 				return gameid.New("", "", "")
 			}
+			log.Println("Data decrypted from ", fileName)
 			return gameid.New(strings.ToUpper(metadata.TitleId), "["+strings.ToUpper(metadata.TitleId)+"][v"+strconv.Itoa(metadata.Version)+"]."+ext[len(ext)-1], ext[len(ext)-1])
 		}else {
 			return gameid.New("", "", "")
@@ -56,6 +56,7 @@ func ExtractGameID(fileName string) repository.GameID {
 		}
 	}
 
+	log.Println("Data parsed from ", fileName)
 	return gameid.New(strings.ToUpper(matches[1]), "["+strings.ToUpper(matches[1])+"]["+matches[2]+"]."+ext[len(ext)-1], ext[len(ext)-1])
 }
 

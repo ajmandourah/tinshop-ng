@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/charlievieth/fastwalk"
 	"github.com/ajmandourah/tinshop/nsp"
 	"github.com/ajmandourah/tinshop/repository"
 	"github.com/ajmandourah/tinshop/utils"
@@ -41,7 +42,7 @@ func (src *directorySource) addDirectoryGame(gameFiles []repository.FileDesc, ex
 	var newGameFiles []repository.FileDesc
 	newGameFiles = append(newGameFiles, gameFiles...)
 
-	if extension == ".nsp" || extension == ".nsz" {
+	if extension == ".nsp" || extension == ".nsz" || extension == ".xci" {
 		newFile := repository.FileDesc{Size: size, Path: path}
 		names := utils.ExtractGameID(path)
 
@@ -74,14 +75,19 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 
 	var newGameFiles []repository.FileDesc
 	// Walk through games directory
-	err := filepath.Walk(directory,
-		func(path string, info os.FileInfo, err error) error {
+	
+	err := fastwalk.Walk(nil,directory,
+		func(path string, info os.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
 			if !info.IsDir() {
 				extension := filepath.Ext(info.Name())
-				newGameFiles = src.addDirectoryGame(newGameFiles, extension, info.Size(), path)
+				fileInfo, err := info.Info()
+				if err != nil {
+					return err
+				}
+				newGameFiles = src.addDirectoryGame(newGameFiles, extension, fileInfo.Size(), path)
 			} else if info.IsDir() {
 				if path != directory {
 					src.watchDirectory(path)

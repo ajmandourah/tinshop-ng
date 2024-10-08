@@ -11,7 +11,6 @@ import (
 	"os/signal"
 	"strconv"
 	"time"
-	"fmt"
 
 	"github.com/ajmandourah/tinshop/api"
 	"github.com/ajmandourah/tinshop/config"
@@ -41,7 +40,7 @@ func main() {
 
 	prodkeys, _ := keys.InitSwitchKeys(config.ProdKeys())
 	if prodkeys == nil || prodkeys.GetKey("header_key") == "" {
-		fmt.Printf("\n!!NOTE!!: keys file was not found, deep scan is disabled, library will be based on file tags.\n %v")
+		log.Println("!!NOTE!!: keys file was not found, deep scan is disabled, library will be based on file tags.")
 		keys.UseKey = false
 	}
 

@@ -19,6 +19,7 @@ require (
 )
 
 require (
+	github.com/charlievieth/fastwalk v1.0.8 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
