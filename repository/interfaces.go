@@ -32,6 +32,7 @@ type Config interface {
 	Host() string
 	Protocol() string
 	ProdKeys() string
+	Rename() bool
 	Port() int
 	ReverseProxy() bool
 	WelcomeMessage() string

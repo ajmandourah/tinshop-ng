@@ -12,6 +12,7 @@ import (
 var (
 	keysInstance *switchKeys
 	UseKey bool = true
+	Rename bool = false
 )
 
 type switchKeys struct {

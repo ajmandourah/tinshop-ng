@@ -43,6 +43,7 @@ func main() {
 		log.Println("!!NOTE!!: keys file was not found, deep scan is disabled, library will be based on file tags.")
 		keys.UseKey = false
 	}
+	keys.Rename = config.Rename() 
 
 	shop := createShop()
 

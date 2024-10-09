@@ -7,16 +7,18 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"math/big"
 	"net/http"
+	"os"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
-	"log"
+
 	"github.com/ajmandourah/tinshop/fileio"
-	"github.com/ajmandourah/tinshop/keys"
 	"github.com/ajmandourah/tinshop/gameid"
+	"github.com/ajmandourah/tinshop/keys"
 	"github.com/ajmandourah/tinshop/repository"
 )
 
@@ -48,8 +50,22 @@ func ExtractGameID(fileName string) repository.GameID {
 			if err != nil {
 				return gameid.New("", "", "")
 			}
+			info := "["+strings.ToUpper(metadata.TitleId)+"][v"+strconv.Itoa(metadata.Version)+"]."+ext[len(ext)-1]
 			log.Println("Data decrypted from ", fileName)
-			return gameid.New(strings.ToUpper(metadata.TitleId), "["+strings.ToUpper(metadata.TitleId)+"][v"+strconv.Itoa(metadata.Version)+"]."+ext[len(ext)-1], ext[len(ext)-1])
+			if keys.Rename {
+				name := []string{}
+				if len(ext) > 2 {
+					name = ext[:len(ext)-1] 
+					newName := strings.Join(name,".")
+					os.Rename(fileName,newName + info) 	
+					log.Println("Renamed the file to: ", newName + info )
+				}else{
+					os.Rename(fileName,ext[0] + info)
+					log.Println("Renamed the file to: ", ext[0] + info )
+
+				}
+			}
+			return gameid.New(strings.ToUpper(metadata.TitleId), info, ext[len(ext)-1])
 		}else {
 			return gameid.New("", "", "")
 

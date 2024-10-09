@@ -75,8 +75,13 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 
 	var newGameFiles []repository.FileDesc
 	// Walk through games directory
+
+	conf := fastwalk.Config{
+		Sort: fastwalk.SortDirsFirst,
+		NumWorkers: 10,
+	}
 	
-	err := fastwalk.Walk(nil,directory,
+	err := fastwalk.Walk(&conf,directory,
 		func(path string, info os.DirEntry, err error) error {
 			if err != nil {
 				return err

@@ -42,6 +42,7 @@ type Configuration struct {
 	ShopHost             string                             `mapstructure:"host"`
 	ShopProtocol         string                             `mapstructure:"protocol"`
 	Keys		     string				`mapstructure:"keys"`
+	RenameFiles          bool                               `mapstructure:"renameFiles"`
 	ShopWelcomeMessage   string                             `mapstructure:"welcomeMessage"`
 	ShopNoWelcomeMessage bool                               `mapstructure:"noWelcomeMessage"`
 	ShopPort             int                                `mapstructure:"port"`
@@ -73,6 +74,7 @@ func (cfg *Configuration) LoadConfig() {
 	viper.SetDefault("host", "")
 	viper.SetDefault("protocol", "http")
 	viper.SetDefault("keys","prod.keys")
+	viper.SetDefault("renameFiles","false")
 	viper.SetDefault("name", "TinShop")
 	viper.SetDefault("reverseProxy", false)
 	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
@@ -126,6 +128,7 @@ func (cfg *Configuration) configChange() {
 	cfg.ShopHost = newConfig.ShopHost
 	cfg.ShopProtocol = newConfig.ShopProtocol
 	cfg.Keys = newConfig.Keys
+	cfg.RenameFiles = newConfig.RenameFiles
 	cfg.ShopPort = newConfig.ShopPort
 	if newConfig.ShopWelcomeMessage != "" {
 		cfg.ShopWelcomeMessage = newConfig.ShopWelcomeMessage
@@ -246,11 +249,15 @@ func (cfg *Configuration) Protocol() string {
 	return cfg.ShopProtocol
 }
 
-// Protocol returns the protocol scheme (http or https)
+// Protocol returns the path/keys file
 func (cfg *Configuration) ProdKeys() string {
 	return cfg.Keys
 }
 
+// Tells if files should be renamed after decrypting
+func (cfg *Configuration) Rename() bool {
+	return cfg.RenameFiles
+}
 // Host returns the host of the shop
 func (cfg *Configuration) Host() string {
 	return cfg.ShopHost

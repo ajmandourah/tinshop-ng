@@ -10,6 +10,12 @@ protocol: https
 # This is a fallback in case parsing failed due to bad rename pattern. slower than parsing but more accurate in captureing content information.
 #keys: prod.keys
 
+# renameFiles [optional] [keys must be present if true otherwise will do nothing]
+# this will rename files that is misrenamed somehow by appending the title id and version to the end of the file. this may result in duplicate ids in the file name
+# as it does not check for already present data.
+# enabling this option will make processing much faster after the initial rename as there will be no need to decrypt the files any longer
+renameFiles: false
+
 # Port [optional]
 # This affect the url to download games & the web server will run on that port (default: 3000).
 # port: 3000
