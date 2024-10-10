@@ -27,6 +27,7 @@ Some of the new features implemented so far:
 - Updated titlesdb now using Tinfoil's own data. 
 - You can now rename unidentified content to one that meet the naming scheme's requiremnets for faster next time processing. 
 - Implemented some features and functions from the popular `Switch-library-manager`
+- Tested on rclone mount with more than 10K titles. processing with titles matching the name schemes in almost 10 sec.
 
 # ⚠️ Disclaimer
 
@@ -303,36 +304,10 @@ Those are valid:
 
 # 🙏 Credits
 
-I would like to give back thanks to the people who helped me with or without knowing!
-- [Bogdan Rosu Creative](https://www.iconfinder.com/icons/353439/basket_purse_shopping_cart_ecommerce_shop_buy_online_icon) for his shop icon.
-- [Dono](https://github.com/Donorhan) for his support and tests.
-- [AdamK2003](https://github.com/AdamK2003/titledb) for his up-to-date [`titles.US.en.json`](https://github.com/AdamK2003/titledb/releases/download/latest/titles.US.en.json) and his answers on discord.
-- [nxdumptool](https://github.com/DarkMatterCore/nxdumptool) for the information taken of NSP format
+- [DblK](https://github.com/DblK) for the original effort on the original repo @DblK
+- [Trembon](https://github.com/trembon) outstanding work on [switch-library-manager](https://github.com/trembon/switch-library-manager)
 
-# 🤝 Contributors
+# Todo
+- A new container with ability to edit config.yaml 
+- workflow edit
 
-<table>
-<tr>
-    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/DblK>
-            <img src=https://avatars.githubusercontent.com/u/832617?v=4 width="100;"  alt=Rémy Boulanouar/>
-            <br />
-            <sub style="font-size:14px"><b>Rémy Boulanouar</b></sub>
-        </a>
-    </td>
-    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/Helvio88>
-            <img src=https://avatars.githubusercontent.com/u/650183?v=4 width="100;"  alt=Helvio Pedreschi/>
-            <br />
-            <sub style="font-size:14px"><b>Helvio Pedreschi</b></sub>
-        </a>
-    </td>
-    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
-        <a href=https://github.com/bay0>
-            <img src=https://avatars.githubusercontent.com/u/30617751?v=4 width="100;"  alt=bay0/>
-            <br />
-            <sub style="font-size:14px"><b>bay0</b></sub>
-        </a>
-    </td>
-</tr>
-</table>
