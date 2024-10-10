@@ -18,6 +18,8 @@ import (
 	"github.com/ajmandourah/tinshop/utils"
 )
 
+var Rename bool = false
+
 type collect struct {
 	games         repository.GameType
 	library       map[string]repository.TitleDBEntry
@@ -290,5 +292,40 @@ func (c *collect) getFriendlyName(file repository.FileDesc) string {
 
 	// Build the friendly name for Tinfoil
 	reg := []string{"[" + file.GameID + "]", name, region, extra, "." + file.Extension}
+	return strings.Join(reg[:], "")
+}
+
+func (c *collect) GenTitle(gameID string) string {
+	baseID, update, dlc := utils.GetTitleMeta(gameID)
+	baseTitle := c.Library()[baseID]
+	title := c.Library()[gameID]
+
+	// Default extra for Base title
+	var extra = " [BASE]"
+
+	// Append DLC Name and tag when dlc
+	if dlc {
+		extra = " - " + title.Name + " [DLC]"
+	}
+
+	// Append version when update
+	if update {
+		extra = fmt.Sprintf("[UPD]")
+	}
+	version := fmt.Sprintf("[v%d]", title.Version)
+	name := ""
+	if baseTitle.Name != "" {
+		name = baseTitle.Name
+	} else {
+		name = title.Name
+	}
+
+	region := ""
+	if baseTitle.Region != "" {
+		region = " (" + baseTitle.Region + ")"
+	}
+
+	// Build the friendly name for Tinfoil
+	reg := []string{name, region, extra, "[" + gameID + "]", version}
 	return strings.Join(reg[:], "")
 }

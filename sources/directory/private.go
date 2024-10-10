@@ -7,10 +7,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/charlievieth/fastwalk"
+	collection "github.com/ajmandourah/tinshop/gamescollection"
 	"github.com/ajmandourah/tinshop/nsp"
 	"github.com/ajmandourah/tinshop/repository"
 	"github.com/ajmandourah/tinshop/utils"
+	"github.com/charlievieth/fastwalk"
 )
 
 func (src *directorySource) removeGamesWatcherDirectories() {
@@ -44,8 +45,17 @@ func (src *directorySource) addDirectoryGame(gameFiles []repository.FileDesc, ex
 
 	if extension == ".nsp" || extension == ".nsz" || extension == ".xci" {
 		newFile := repository.FileDesc{Size: size, Path: path}
-		names := utils.ExtractGameID(path)
+		names, decrypted := utils.ExtractGameID(path)
+		//Rename the file if decrypted and option is enabled
+		if decrypted {
+			if collection.Rename {
+				title := src.collection.GenTitle(names.ShortID())
+				newName := filepath.Join(filepath.Dir(path), title+extension)
 
+				os.Rename(path, newName)
+				log.Println("renamed: ", filepath.Base(path), " to ", filepath.Base(newName))
+			}
+		}
 		if names.ShortID() != "" {
 			newFile.GameID = names.ShortID()
 			newFile.GameInfo = names.FullID()
@@ -74,14 +84,13 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 	log.Printf("Loading games from directory '%s'...\n", directory)
 
 	var newGameFiles []repository.FileDesc
-	// Walk through games directory
 
 	conf := fastwalk.Config{
-		Sort: fastwalk.SortDirsFirst,
-		NumWorkers: 10,
+		Sort: fastwalk.SortFilesFirst,
 	}
-	
-	err := fastwalk.Walk(&conf,directory,
+
+	// Walk through games directory
+	err := fastwalk.Walk(&conf, directory,
 		func(path string, info os.DirEntry, err error) error {
 			if err != nil {
 				return err
@@ -92,16 +101,20 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 				if err != nil {
 					return err
 				}
+
 				newGameFiles = src.addDirectoryGame(newGameFiles, extension, fileInfo.Size(), path)
+
 			} else if info.IsDir() {
 				if path != directory {
 					src.watchDirectory(path)
+					return fastwalk.SkipDir
 				} else {
 					src.watchDirectory(directory)
 				}
 			}
 			return nil
 		})
+
 	if err != nil {
 		return err
 	}

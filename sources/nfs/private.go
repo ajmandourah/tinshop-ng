@@ -96,7 +96,7 @@ func (src *nfsSource) lookIntoNfsDirectory(v *nfs.Target, share, path string) []
 
 		nfsRootPath := computeFullPath(share, path)
 		newFile := repository.FileDesc{Size: dir.Size(), Path: nfsRootPath + "/" + dir.FileName}
-		names := utils.ExtractGameID(dir.FileName)
+		names, _ := utils.ExtractGameID(dir.FileName)
 
 		if names.ShortID() == "" {
 			// Useful to rename you file according to readme

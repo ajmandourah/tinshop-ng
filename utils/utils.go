@@ -10,7 +10,6 @@ import (
 	"log"
 	"math/big"
 	"net/http"
-	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -38,7 +37,7 @@ func IsValidFilter(filter string) bool {
 }
 
 // ExtractGameID from fileName the id of game and version
-func ExtractGameID(fileName string) repository.GameID {
+func ExtractGameID(fileName string) (repository.GameID, bool) {
 	ext := strings.Split(fileName, ".")
 	re := regexp.MustCompile(`\[(\w{16})\].*\[(v\d+)\]`)
 	matches := re.FindStringSubmatch(fileName)
@@ -48,32 +47,20 @@ func ExtractGameID(fileName string) repository.GameID {
 		if keys.UseKey {
 			metadata, err := fileio.DecryptMetadata(fileName)
 			if err != nil {
-				return gameid.New("", "", "")
+				return gameid.New("", "", ""), false
 			}
-			info := "["+strings.ToUpper(metadata.TitleId)+"][v"+strconv.Itoa(metadata.Version)+"]."+ext[len(ext)-1]
+			info := "[" + strings.ToUpper(metadata.TitleId) + "][v" + strconv.Itoa(metadata.Version) + "]." + ext[len(ext)-1]
 			log.Println("Data decrypted from ", fileName)
-			if keys.Rename {
-				name := []string{}
-				if len(ext) > 2 {
-					name = ext[:len(ext)-1] 
-					newName := strings.Join(name,".")
-					os.Rename(fileName,newName + info) 	
-					log.Println("Renamed the file to: ", newName + info )
-				}else{
-					os.Rename(fileName,ext[0] + info)
-					log.Println("Renamed the file to: ", ext[0] + info )
 
-				}
-			}
-			return gameid.New(strings.ToUpper(metadata.TitleId), info, ext[len(ext)-1])
-		}else {
-			return gameid.New("", "", "")
+			return gameid.New(strings.ToUpper(metadata.TitleId), info, ext[len(ext)-1]), true
+		} else {
+			return gameid.New("", "", ""), false
 
 		}
 	}
 
 	log.Println("Data parsed from ", fileName)
-	return gameid.New(strings.ToUpper(matches[1]), "["+strings.ToUpper(matches[1])+"]["+matches[2]+"]."+ext[len(ext)-1], ext[len(ext)-1])
+	return gameid.New(strings.ToUpper(matches[1]), "["+strings.ToUpper(matches[1])+"]["+matches[2]+"]."+ext[len(ext)-1], ext[len(ext)-1]), false
 }
 
 // GetTitleMeta returns the BaseID of the content, as well as Update / DLC flags

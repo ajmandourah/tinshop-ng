@@ -11,8 +11,7 @@ import (
 
 var (
 	keysInstance *switchKeys
-	UseKey bool = true
-	Rename bool = false
+	UseKey       bool = true
 )
 
 type switchKeys struct {
@@ -41,7 +40,7 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 			path = filepath.Join(path, "prod.keys")
 		}
 
-		log.Println("Trying to load prod.keys based on settings.json: %v", path)
+		log.Printf("Trying to load prod.keys based on settings.json: %v \n", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	} else {
 		err = errors.New("prod.keys not defined in settings.json")
@@ -51,7 +50,7 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 	if err != nil {
 		path = filepath.Join(baseFolder, "prod.keys")
 
-		log.Println("Trying to load prod.keys based on current folder: %v", path)
+		log.Printf("Trying to load prod.keys based on current folder: %v \n", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	}
 
@@ -59,7 +58,7 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 	if err != nil {
 		path = "${HOME}/.switch/prod.keys"
 
-		log.Println("Trying to load prod.keys based on home directory: %v", path)
+		log.Printf("Trying to load prod.keys based on home directory: %v \n", path)
 		p, err = properties.LoadFile(path, properties.UTF8)
 	}
 
@@ -74,6 +73,6 @@ func InitSwitchKeys(baseFolder string) (*switchKeys, error) {
 		keysInstance.keys[key] = value
 	}
 
-	log.Println("Loaded prod.keys from: %v", path)
+	log.Printf("Loaded prod.keys from: %v \n", path)
 	return keysInstance, nil
 }
