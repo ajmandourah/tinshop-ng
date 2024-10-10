@@ -2,14 +2,31 @@
 <img alt="TinShop" src="./logo.png" width="50%"><br><br>
 Your own personal shop right into tinfoil!<br><br>
 
-[![golangci-lint](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml/badge.svg?branch=master)](https://github.com/DblK/tinshop/actions/workflows/golangci-lint.yml)
-[![test](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml/badge.svg?branch=master)](https://github.com/DblK/tinshop/actions/workflows/ginkgo.yml)
-[![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/DblK/tinshop.svg)](https://github.com/DblK/tinshop)
-[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/DblK/tinshop)
-[![GoReportCard](https://goreportcard.com/badge/github.com/DblK/tinshop)](https://goreportcard.com/report/github.com/DblK/tinshop)
-[![GitHub release](https://img.shields.io/github/release/DblK/tinshop.svg)](https://GitHub.com/DblK/tinshop/releases/)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 </div>
+
+# Why A Next Generation
+
+This is a take on the original Tinshop repo originally by DblK. 
+Current solutions have some issues:
+- Language like python will have some issues when handling massive influx of data. 
+- Can't handle large libraries
+- lack of concurrent processing. 
+- require certain naming schemes and no fallback to alternatives.
+- will need a separate tool for renaming\identifying contents.
+- support only nsp and nsz with no xci.
+- slow as shit.
+
+this will try to solve many of these issues.
+
+# What is New Here? 
+
+Some of the new features implemented so far:
+- XCI extention support has been added.
+- Content identification using your own Keys for content that does not meet the naming schemes. this is optional as instead of skipping unindentified content tinshop will now try to decrypt the data in the files.
+- Tinshop-ng uses `fastwalk` instead of `filepath.walk`. Traversing directories uses multiple goroutines which work concurrently leading to faster processing of your data.
+- Updated titlesdb now using Tinfoil's own data. 
+- You can now rename unidentified content to one that meet the naming scheme's requiremnets for faster next time processing. 
+- Implemented some features and functions from the popular `Switch-library-manager`
 
 # ⚠️ Disclaimer
 
@@ -26,9 +43,9 @@ To proper use this software, here is the checklist:
 - [ ] _Optional:_ A proper configured `config.yaml`
     - [ ] Copy/Paste [`config.example.yaml`](https://raw.githubusercontent.com/DblK/tinshop/master/config.example.yaml) to `config.yaml`
     - [ ] Comment/Uncomment parts in the config according to your needs
-- [ ] Games should have in their name `[ID][v0]` to be recognized
-- [ ] Games extension should be `nsp` or `nsz`
-- [ ] Retrieve binary from [latest release](https://github.com/DblK/tinshop/releases) or [container](https://github.com/DblK/tinshop/pkgs/container/tinshop) (See [`Docker`](https://github.com/DblK/tinshop/tree/master#-docker) section below) or build from source (See [`Dev`](https://github.com/DblK/tinshop/tree/master#-dev-or-build-from-source) section below)
+- [ ] _Optional:_ Games should have in their name `[ID][v0]` to be recognized. 
+- [ ] _Optional:_ You can supply your own keys for content identification.
+- [ ] Games extension should be `nsp` or `nsz` or `xci`
 
 Now simply run it and add a shop inside tinfoil with the address setup in `config` (or `http://localIp:3000` if not specified).
 
@@ -50,6 +67,8 @@ Here is the list of all main features so far:
 - [X] Collect basic statistics
 - [X] An API to query information about your shop
 - [X] Handle Basic Auth from Tinfoil through Forward Auth Endpoint
+- [X] Content identification as fallback if naming schemes requirement are not fillfilled . It will try to identify the content and add it to your library.
+- [X] Optional renaming of the identified content to an acceptable naming scheme so next time you start the server it will identify it faster
 
 ## 🏳️ Filtering
 
@@ -68,6 +87,8 @@ If you want to build `TinShop` from source, please run `go build`.
 And then, simply run `./tinshop`.
 
 # 🐋 Docker
+
+_WIP_ not ready yet.
 
 To run with [Docker](https://docs.docker.com/engine/install/), you can use this as a starting `cli` example:
 
@@ -135,8 +156,6 @@ You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.
 Note: you can add `-cover` to have an idea of the code coverage.
 
 # 🎯 Roadmap
-
-You can see the [roadmap here](https://github.com/DblK/tinshop/projects/1).
 
 If you have any suggestions, do not hesitate to participate!
 
