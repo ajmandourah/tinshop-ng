@@ -104,7 +104,7 @@ version: '3.9'
 services:
   tinshop:
     container_name: tinshop
-    image: ghcr.io/dblk/tinshop:latest
+    image: ghcr.io/ajmandourah/tinshop-ng:latest
     restart: always
     ports:
       - 3000:3000
@@ -113,6 +113,7 @@ services:
       - TINSHOP_WELCOMEMESSAGE=Welcome to my Tinshop!
     volumes:
       - /media/switch:/games
+      - /path/to/config:/data  #this is where config.yaml and titles json file will live. added keys here should also be modifed in config.yaml file as /data/prod.keys 
 ```
 All of the settings in the `config.yaml` file are valid Environment Variables. They must be `UPPERCASE` and prefixed by `TINSHOP_`. Nested properties should be prefixed by `_`. Here are a few examples:
 
@@ -140,26 +141,13 @@ All of the settings in the `config.yaml` file are valid Environment Variables. T
 Wanting to generate all possible os binaries (macOS, linux, windows) with all architectures (arm, amd64)?  
 Here is the command `goreleaser release --snapshot --skip-publish --rm-dist`.
 
-Dead simple, thanks to Golang!
+## Tips for faster processing especially when using cloud shares ie Rclone
 
-## 🏛️ Changing the structure of an interface?
-
-If you change an interface (or add a new one), do not forget to execute `./update_mocks.sh` to generate up-to-date mocks for tests.
-
-Do not forget to install `mockgen` first:
-```sh
-go install github.com/golang/mock/mockgen@v1.6.0
-```
-
-## 🧪 What to launch tests?
-
-You can run `ginkgo -r` for one shot or `ginkgo watch -r` during development.  
-Note: you can add `-cover` to have an idea of the code coverage.
-
-# 🎯 Roadmap
-
-If you have any suggestions, do not hesitate to participate!
-
+If you are going to use rclone or similar cloud storage solutions as your source of content here are some tips:
+- make sure all your contents are in one folder without them being in subfolders. As for every subfolder rclone will need to fetch a list of every file in it. this can take long time especially with large number of folders.
+- either make sure your content matches the naming format. you can also run switch-library-manager on the folder with renaming option enabled to insure these matches. Tinshop-ng with decryption enabled will need to read every file for decryption which will take more time processing .
+- enabling cache will give some boost to processing.
+  
 # 👂🏻 Q & A
 
 ## Why use this instead of `X` (NUT or others software)?
@@ -308,6 +296,6 @@ Those are valid:
 - [Trembon](https://github.com/trembon) outstanding work on [switch-library-manager](https://github.com/trembon/switch-library-manager)
 
 # Todo
-- A new container with ability to edit config.yaml 
-- workflow edit
+- ~~A new container with ability to edit config.yaml~~
+- ~~workflow edit~~
 
