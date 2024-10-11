@@ -78,14 +78,112 @@ When you setup your shop inside `tinfoil` you can now add the following path:
 - `fr`, `en`, ... : Filter by languages
 - `world` : All games without any filter (equivalent without path)
 
-# 🧱 Dev or build from source
+# Configuration
 
-I suggest to use a tiny executable [gow](https://github.com/mitranim/gow) to help you during the process (hot reload, etc..).  
-For example I use the following command to develop `gow -c run .`.
+This is an example of the config.yaml file
 
-If you want to build `TinShop` from source, please run `go build`.
+```yaml
+# Name of the host [optional]
+host: tinshop.example.com
 
-And then, simply run `./tinshop`.
+# Protocol (Can be http or https) [optional]
+# If you use "https" then you should set up a reverse-proxy in front to handle tls
+# And forward the port 443 to "yourIp:3000"
+protocol: https
+
+# keys [optional]
+# This is a fallback in case parsing failed due to bad rename pattern. slower than parsing but more accurate in captureing content information.
+# a full path to the key should be provided. [use /data as the path if you are using docker]
+#keys: prod.keys
+
+# renameFiles [optional] [keys must be present if true otherwise will do nothing]
+# this will rename files that is misrenamed somehow by appending the title id and version to the end of the file. this may result in duplicate ids in the file name
+# as it does not check for already present data.
+# enabling this option will make processing much faster after the initial rename as there will be no need to decrypt the files any longer
+renameFiles: false
+
+# Port [optional]
+# This affect the url to download games & the web server will run on that port (default: 3000).
+# port: 3000
+
+# Shop name [optional]
+# This is used as title when trying to visit the shop with a non switch device
+name: TinShop
+
+# Tells if we are using a reverse proxy if front of tinshop [optional]
+# This is used to rewrite correct url to download games when reverse proxy used
+reverseProxy: false
+
+# Welcome message on Switch [optional]
+# The default message will be "Welcome to your own TinShop!"
+welcomeMessage: "Welcome to your own TinShop!"
+# If you want to disable the welcome message, set it to true [optional]
+noWelcomeMessage: false
+
+# All debug flags will be stored here
+debug:
+  # Display more information when connecting to nfs share
+  nfs: false
+  # Remove middleware security for retrieving index
+  # DO NOT use in production (only for dev purpose)
+  noSecurity: false
+  # Display more information about ticket's verification
+  ticket: false
+
+# All actions related to NSP file will be stored here
+nsp:
+  # Tells if tinshop should verify the ticket inside NSP to ensure no issue with install
+  # This will make processing really slow as every file will be opened for verification 
+  checkVerified: false
+
+# All sources where we should look for games
+# If this section is commented out, then the directory "games" will be looked at
+sources:
+  # Local mounted path [optional]
+  directories:
+    - /my/full/path/to/games
+    - ./games
+
+  # NFS Shares [optional]
+  nfs:
+    - host:sharePath/to/game/files
+
+# All security information will be stored here
+security:
+  # List of theme to be banned with security
+  # Be aware that this should be string (do not forget quotes)
+  # You can find the theme of a switch in the log upon access
+  bannedTheme:
+    - "0000000000000000000000000000000000000000000000000000000000000000"
+  # List of switch uid to whitelist
+  # If enabled then only switch in this area will be listed
+  # You can find the uid of a switch in the log upon access
+  whitelist:
+    - TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+  # List of switch uid to blacklist
+  # Block access to all switch present in this list
+  # You can find the uid of a switch in the log upon access
+  blacklist:
+    - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS
+  # Endpoint to which a query will be sent to verify user/password/uid to
+  # Headers sent :
+  # - Authorization: same as sent by switch
+  # - Device-Id: Switch fingerprint
+  # Response with status code other than 200 will be treated as failure
+  forwardAuth: https://auth.tinshop.com/switch
+
+# This section describe all custom title db to show up properly in tinfoil
+customTitledb:
+  # Id of the entry
+  "060000BADDAD0000":
+    id: "050000BADDAD0000"
+    name: "Tinfoil"
+    region: "US"
+    releaseDate: 20180801
+    description: "Nintendo Switch Title Manager"
+    size: 14000000
+    iconUrl: ""
+```
 
 # 🐋 Docker
 
