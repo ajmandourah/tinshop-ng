@@ -16,7 +16,6 @@ import (
 
 	"github.com/ajmandourah/tinshop/repository"
 	"github.com/ajmandourah/tinshop/utils"
-	jsonpatch "github.com/evanphx/json-patch/v5"
 )
 
 var Rename bool = false
