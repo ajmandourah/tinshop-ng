@@ -16,6 +16,7 @@ import (
 
 	"github.com/ajmandourah/tinshop/repository"
 	"github.com/ajmandourah/tinshop/utils"
+	jsonpatch "github.com/evanphx/json-patch/v5"
 )
 
 var Rename bool = false
@@ -42,17 +43,24 @@ func (c *collect) Load() {
 }
 
 func (c *collect) loadTitlesLibrary() {
+	//determine path 
+	var jsonPath string
+	if _, err := os.Stat("/data/config.yaml"); !os.IsNotExist(err) {
+		jsonPath = "/data/titles.US.en.json" 
+	}else{
+		jsonPath = "titles.US.en.json"
+	}
 	// Open our jsonFile
-	jsonFile, err := os.Open("titles.US.en.json")
+	jsonFile, err := os.Open(jsonPath)
 
 	if err != nil {
 		if err.Error() == "open titles.US.en.json: no such file or directory" {
 			log.Println("Missing 'titles.US.en.json'! Start downloading it.")
-			downloadErr := utils.DownloadFile("https://tinfoil.media/repo/db/titles.json", "titles.US.en.json")
+			downloadErr := utils.DownloadFile("https://tinfoil.media/repo/db/titles.json", jsonPath )
 			if downloadErr != nil {
 				log.Fatalln(err, downloadErr)
 			} else { // nolint:revive
-				jsonFile, err = os.Open("titles.US.en.json")
+				jsonFile, err = os.Open(jsonPath)
 				if err != nil {
 					log.Fatalln("Error while parsing downloaded json file.\nPlease remove the file and start again the program.\n", err)
 				}

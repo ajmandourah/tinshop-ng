@@ -68,7 +68,7 @@ func New() repository.Config {
 func (cfg *Configuration) LoadConfig() {
 	viper.SetConfigName("config")     // name of config file (without extension)
 	viper.SetConfigType("yaml")       // REQUIRED if the config file does not have the extension in the name
-	viper.AddConfigPath("/config")          // optionally look for config in the working directory
+	viper.AddConfigPath("/data")      // for the docker image
 	viper.AddConfigPath(".")          // optionally look for config in the working directory
 	viper.SetTypeByDefaultValue(true) // Allows []string to be parsed from Env Vars
 
@@ -103,6 +103,10 @@ func (cfg *Configuration) LoadConfig() {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// Config file not found; ignore error if desired
 			log.Println("Config not found!")
+			err := viper.WriteConfigAs("/data/config.yaml")
+			if err != nil {
+				log.Println("Error while creating config.yaml in /data, most likely you are not in a container.")
+			}
 		} else {
 			// Config file was found but another error was produced
 			panic(fmt.Errorf("fatal error config file: %w", err))
