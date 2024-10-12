@@ -6,7 +6,7 @@ Your own personal shop right into tinfoil!<br><br>
 
 # Why A Next Generation
 
-This is a take on the original Tinshop repo originally by DblK. 
+This is a take on the original Tinshop repo originally by [DblK](https://github.com/DblK/tinshop). 
 Current solutions have some issues:
 - Language like python will have some issues when handling massive influx of data. 
 - Can't handle large libraries
