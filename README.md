@@ -202,7 +202,7 @@ version: '3.9'
 services:
   tinshop:
     container_name: tinshop
-    image: ghcr.io/ajmandourah/tinshop-ng:main
+    image: ghcr.io/ajmandourah/tinshop-ng:latest
     restart: always
     ports:
       - 3000:3000
