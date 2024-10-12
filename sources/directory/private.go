@@ -107,7 +107,6 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 			} else if info.IsDir() {
 				if path != directory {
 					src.watchDirectory(path)
-					return fastwalk.SkipDir
 				} else {
 					src.watchDirectory(directory)
 				}
