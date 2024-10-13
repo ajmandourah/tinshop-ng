@@ -15,10 +15,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ajmandourah/tinshop/fileio"
-	"github.com/ajmandourah/tinshop/gameid"
-	"github.com/ajmandourah/tinshop/keys"
-	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop-ng/fileio"
+	"github.com/ajmandourah/tinshop-ng/gameid"
+	"github.com/ajmandourah/tinshop-ng/keys"
+	"github.com/ajmandourah/tinshop-ng/repository"
 )
 
 // IsValidFilter returns true if the filter is handled

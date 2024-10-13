@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ajmandourah/tinshop/repository"
-	"github.com/ajmandourah/tinshop/utils"
+	"github.com/ajmandourah/tinshop-ng/repository"
+	"github.com/ajmandourah/tinshop-ng/utils"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )

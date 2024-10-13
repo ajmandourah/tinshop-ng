@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop-ng/repository"
 )
 
 type endpoint struct {

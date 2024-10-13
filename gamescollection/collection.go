@@ -14,8 +14,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ajmandourah/tinshop/repository"
-	"github.com/ajmandourah/tinshop/utils"
+	"github.com/ajmandourah/tinshop-ng/repository"
+	"github.com/ajmandourah/tinshop-ng/utils"
 )
 
 var Rename bool = false
@@ -49,25 +49,20 @@ func (c *collect) loadTitlesLibrary() {
 	}else{
 		jsonPath = "titles.US.en.json"
 	}
-	// Open our jsonFile
-	jsonFile, err := os.Open(jsonPath)
 
-	if err != nil {
-		if err.Error() == "open titles.US.en.json: no such file or directory" {
-			log.Println("Missing 'titles.US.en.json'! Start downloading it.")
-			downloadErr := utils.DownloadFile("https://tinfoil.media/repo/db/titles.json", jsonPath )
-			if downloadErr != nil {
-				log.Fatalln(err, downloadErr)
-			} else { // nolint:revive
-				jsonFile, err = os.Open(jsonPath)
-				if err != nil {
-					log.Fatalln("Error while parsing downloaded json file.\nPlease remove the file and start again the program.\n", err)
-				}
-			}
-		} else {
-			log.Fatalln(err)
-		}
+	// Open our jsonFile
+	if _, err := os.Stat(jsonPath); os.IsNotExist(err) {
+		log.Println("Missing 'titles.US.en.json'! Start downloading it.")
+		downloadErr := utils.DownloadFile("https://tinfoil.media/repo/db/titles.json", jsonPath )
+		if downloadErr != nil {
+			log.Fatalln(err, downloadErr)
 	}
+	}
+	jsonFile, err := os.Open(jsonPath)
+	if err != nil {
+		log.Fatalln("Error while parsing downloaded json file.\nPlease remove the file and start again the program.\n", err)
+	}
+
 	log.Println("Successfully Opened titles library")
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()

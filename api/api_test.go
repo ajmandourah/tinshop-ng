@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/ajmandourah/tinshop/api"
-	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop-ng/api"
+	"github.com/ajmandourah/tinshop-ng/repository"
 )
 
 var _ = Describe("Api", func() {

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	main "github.com/ajmandourah/tinshop"
-	"github.com/ajmandourah/tinshop/mock_repository"
-	"github.com/ajmandourah/tinshop/repository"
+	main "github.com/ajmandourah/tinshop-ng"
+	"github.com/ajmandourah/tinshop-ng/mock_repository"
+	"github.com/ajmandourah/tinshop-ng/repository"
 	"github.com/golang/mock/gomock"
 	"github.com/gorilla/mux"
 	. "github.com/onsi/ginkgo/v2"

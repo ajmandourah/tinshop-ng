@@ -12,14 +12,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ajmandourah/tinshop/api"
-	"github.com/ajmandourah/tinshop/config"
-	collection "github.com/ajmandourah/tinshop/gamescollection"
-	"github.com/ajmandourah/tinshop/keys"
-	"github.com/ajmandourah/tinshop/repository"
-	"github.com/ajmandourah/tinshop/sources"
-	"github.com/ajmandourah/tinshop/stats"
-	"github.com/ajmandourah/tinshop/utils"
+	"github.com/ajmandourah/tinshop-ng/api"
+	"github.com/ajmandourah/tinshop-ng/config"
+	collection "github.com/ajmandourah/tinshop-ng/gamescollection"
+	"github.com/ajmandourah/tinshop-ng/keys"
+	"github.com/ajmandourah/tinshop-ng/repository"
+	"github.com/ajmandourah/tinshop-ng/sources"
+	"github.com/ajmandourah/tinshop-ng/stats"
+	"github.com/ajmandourah/tinshop-ng/utils"
 	"github.com/gorilla/mux"
 )
 

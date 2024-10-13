@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/ajmandourah/tinshop/switchfs"
+	"github.com/ajmandourah/tinshop-ng/switchfs"
 )
 
 func DecryptMetadata(filePath string) (*switchfs.ContentMetaAttributes, error) {

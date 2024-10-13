@@ -5,9 +5,9 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	collection "github.com/ajmandourah/tinshop/gamescollection"
-	"github.com/ajmandourah/tinshop/mock_repository"
-	"github.com/ajmandourah/tinshop/repository"
+	collection "github.com/ajmandourah/tinshop-ng/gamescollection"
+	"github.com/ajmandourah/tinshop-ng/mock_repository"
+	"github.com/ajmandourah/tinshop-ng/repository"
 )
 
 var _ = Describe("Collection", func() {

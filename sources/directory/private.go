@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	collection "github.com/ajmandourah/tinshop/gamescollection"
-	"github.com/ajmandourah/tinshop/nsp"
-	"github.com/ajmandourah/tinshop/repository"
-	"github.com/ajmandourah/tinshop/utils"
+	collection "github.com/ajmandourah/tinshop-ng/gamescollection"
+	"github.com/ajmandourah/tinshop-ng/nsp"
+	"github.com/ajmandourah/tinshop-ng/repository"
+	"github.com/ajmandourah/tinshop-ng/utils"
 	"github.com/charlievieth/fastwalk"
 )
 

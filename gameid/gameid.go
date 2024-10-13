@@ -6,7 +6,7 @@
 package gameid
 
 import (
-	"github.com/ajmandourah/tinshop/repository"
+	"github.com/ajmandourah/tinshop-ng/repository"
 )
 
 type gameID struct {
