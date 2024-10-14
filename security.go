@@ -38,6 +38,15 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		log.Println(s.Shop.Config.Get_Hauth())
+
+		//Show Hauth for the specefied host
+		//tinfoil sends requests appending "/" at the end
+		if r.RequestURI == "/hauth/" && r.Header.Get("Hauth") != "" {
+			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
+			return
+		}
+
 		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
@@ -71,9 +80,17 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
+
+			//Hauth check
+			if s.Shop.Config.Get_Hauth() != "" && r.Header.Get("Hauth") != s.Shop.Config.Get_Hauth(){
+				log.Println("Hauth header mismatch. Possible attempt to access shop from a possible forged request. ", r.RemoteAddr)
+				return
+			}
+
+
 			// Enforce true tinfoil queries
 			// TODO: Check Uauth and Hauth headers
-			log.Printf("Switch %s, %s, %s, %s, %s, %s requesting %s", headers["Theme"], headers["Uid"], headers["Version"], headers["Language"], headers["Hauth"], headers["Uauth"], r.RequestURI)
+			log.Printf("Switch %s requesting %s", headers["Uid"], r.RequestURI)
 
 			// Check user password
 			if s.Shop.Config.ForwardAuthURL() != "" && headers["Authorization"] != nil {
@@ -90,6 +107,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				}
 				defer resp.Body.Close()
 				if resp.StatusCode != 200 {
+					log.Println("Wrong credentials enterd from switch ",r.Header.Get("Uid"), " " ,r.RemoteAddr)
 					_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 					return
 				}

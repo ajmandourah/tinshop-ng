@@ -87,6 +87,11 @@ security:
   # Response with status code other than 200 will be treated as failure
   forwardAuth: https://auth.tinshop.com/switch
 
+  #Hauth verification:
+  #This value is unique to your domain, and helps prevent forged requests.
+  #fill this value with the value got from tinfoil. read the wiki for more information.
+  # hauth: XXXXXXXXXXXXXX 
+
 # This section describe all custom title db to show up properly in tinfoil
 customTitledb:
   # Id of the entry
