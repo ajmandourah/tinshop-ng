@@ -37,6 +37,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
+		log.Println(headers["Hauth"])
 
 		//Show Hauth for the specefied host
 		if r.RequestURI == "/hauth" && headers["Hauth"] != nil {
