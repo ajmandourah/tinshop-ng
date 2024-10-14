@@ -30,6 +30,7 @@ type security struct {
 	Blacklist   []string `mapstructure:"blacklist"`
 	BannedTheme []string `mapstructure:"bannedTheme"`
 	ForwardAuth string   `mapstructure:"forwardAuth"`
+	Hauth string         `mapstructure:"hauth"`	
 }
 
 type nsp struct {
@@ -94,6 +95,8 @@ func (cfg *Configuration) LoadConfig() {
 	viper.SetDefault("security.whitelist", []string{})
 	viper.SetDefault("security.blacklist", []string{})
 	viper.SetDefault("security.forwardAuth", "")
+	viper.SetDefault("security.hauth", "")
+	
 
 	viper.SetEnvPrefix("TINSHOP")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -332,6 +335,12 @@ func (cfg *Configuration) VerifyNSP() bool {
 func (cfg *Configuration) ForwardAuthURL() string {
 	return cfg.Security.ForwardAuth
 }
+
+//get Hauth code
+func (cfg *Configuration) Get_Hauth() string {
+	return cfg.Security.Hauth
+}
+
 
 // IsBlacklisted tells if the uid is blacklisted or not
 func (cfg *Configuration) IsBlacklisted(uid string) bool {

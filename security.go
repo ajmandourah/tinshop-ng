@@ -71,9 +71,22 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
+			//Show Hauth for the specefied host
+			if r.RequestURI == "/hauth" {
+				log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
+				return
+			}
+
+			//Hauth check
+			if s.Shop.Config.Get_Hauth() != "" && r.Header.Get("Hauth") != s.Shop.Config.Get_Hauth(){
+				log.Println("Attempt to access shop from a possible forged request. ", r.RemoteAddr)
+				return
+			}
+
+
 			// Enforce true tinfoil queries
 			// TODO: Check Uauth and Hauth headers
-			log.Printf("Switch %s, %s, %s, %s, %s, %s requesting %s", headers["Theme"], headers["Uid"], headers["Version"], headers["Language"], headers["Hauth"], headers["Uauth"], r.RequestURI)
+			log.Printf("Switch %s requesting %s", headers["Uid"], r.RequestURI)
 
 			// Check user password
 			if s.Shop.Config.ForwardAuthURL() != "" && headers["Authorization"] != nil {
