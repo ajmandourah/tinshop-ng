@@ -38,6 +38,12 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		//Show Hauth for the specefied host
+		if r.RequestURI == "/hauth" && headers["Hauth"] != nil {
+			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
+			return
+		}
+
 		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
@@ -71,11 +77,6 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				return
 			}
 
-			//Show Hauth for the specefied host
-			if r.RequestURI == "/hauth" {
-				log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
-				return
-			}
 
 			//Hauth check
 			if s.Shop.Config.Get_Hauth() != "" && r.Header.Get("Hauth") != s.Shop.Config.Get_Hauth(){
