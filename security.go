@@ -37,11 +37,10 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		log.Println(r.RequestURI)
-		log.Println(r.URL)
-		log.Println(r.Header)
+
 		//Show Hauth for the specefied host
-		if r.RequestURI == "/hauth" && r.Header.Get("Hauth") != "" {
+		//tinfoil sends requests appending "/" at the end
+		if r.RequestURI == "/hauth/" && r.Header.Get("Hauth") != "" {
 			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
 			return
 		}
