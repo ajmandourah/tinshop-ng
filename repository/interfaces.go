@@ -90,10 +90,11 @@ type FileDesc struct {
 
 // GameType structure
 type GameType struct {
-	Success        string                  `json:"success,omitempty"`
-	Titledb        map[string]TitleDBEntry `json:"titledb"`
-	Files          []GameFileType          `json:"files"`
-	ThemeBlackList []string                `json:"themeBlackList,omitempty"`
+	Success        string         `json:"success,omitempty"`
+	Files          []GameFileType `json:"files"`
+	ThemeBlackList []string       `json:"themeBlackList,omitempty"`
+	// Removing the titledb for the resulted json.
+	Titledb map[string]TitleDBEntry `json:"-"`
 }
 
 // GameFileType stores the fields needed for game files
