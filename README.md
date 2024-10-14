@@ -171,6 +171,8 @@ security:
   # - Device-Id: Switch fingerprint
   # Response with status code other than 200 will be treated as failure
   forwardAuth: https://auth.tinshop.com/switch
+  # Hauth code you obtain from tinfoil. This is unique to your domain and help protect against forged requests
+  hauth: XXXXXXXXXXXXX
 
 # This section describe all custom title db to show up properly in tinfoil
 customTitledb:
@@ -233,6 +235,22 @@ All of the settings in the `config.yaml` file are valid Environment Variables. T
 | TINSHOP_SECURITY_WHITELIST   | sources.whitelist   | `null`                         | `NSWID1 NSWID2 NSWID3`            |
 | TINSHOP_SECURITY_BLACKLIST   | sources.blacklist   | `null`                         | `NSWID4 NSWID5 NSWID6`            |
 | TINSHOP_SECURITY_FORWARDAUTH | sources.forwardAuth | `null`                         | `https://auth.tinshop.com/switch` |
+
+## Using HAUTH for your site
+
+Hauth is signature of the request Url scheme and hostname is sent via "HAUTH: XXXXXXXXXXXXXX" header. This value is unique to your domain, and helps prevent forged requests.
+To use it with Tinshop-ng do the following:
+- Run tinshop-ng as usual and add it to tinfoil
+- When adding to tinfoil , add a path `/hauth` to your server information in the path section.
+- close and reopen tinfoil then Navigate to file browser and click on your server name you added.
+- observer your tinshop-ng logs. you should be getting a log message with the hauth code in it. make sure the host matches your sites domain.
+- edit your config.yaml with `hauth: YOUR_HAURH_CODE` under the security section. Make sure its under the security section and indented as in the example.
+- All done. any requests from any client other than tinfoil will need to have this secret code inside otherwise it won't accept connections. you can test it out by inputting a false code.
+- To cancel hauth verification comment its part in the config.yaml file.
+
+## Some notes about basic auth
+
+Basic auth is umm 'basic' and it has its limitation. some characthers like @ and $ cannot be used as it will mess up the url. stick to alphanumerical long passwords for the time being. 
 
 ## 🥍 Want to do cross-build generation?
 

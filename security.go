@@ -38,6 +38,8 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		log.Println(s.Shop.Config.Get_Hauth())
+
 		//Show Hauth for the specefied host
 		//tinfoil sends requests appending "/" at the end
 		if r.RequestURI == "/hauth/" && r.Header.Get("Hauth") != "" {
@@ -81,7 +83,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 
 			//Hauth check
 			if s.Shop.Config.Get_Hauth() != "" && r.Header.Get("Hauth") != s.Shop.Config.Get_Hauth(){
-				log.Println("Attempt to access shop from a possible forged request. ", r.RemoteAddr)
+				log.Println("Hauth header mismatch. Possible attempt to access shop from a possible forged request. ", r.RemoteAddr)
 				return
 			}
 
@@ -105,6 +107,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				}
 				defer resp.Body.Close()
 				if resp.StatusCode != 200 {
+					log.Println("Wrong credentials enterd from switch ",r.Header.Get("Uid"), " " ,r.RemoteAddr)
 					_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 					return
 				}
