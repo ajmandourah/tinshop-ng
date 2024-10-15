@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"os"
 	"strconv"
 	"strings"
 
@@ -30,7 +29,7 @@ type security struct {
 	Blacklist   []string `mapstructure:"blacklist"`
 	BannedTheme []string `mapstructure:"bannedTheme"`
 	ForwardAuth string   `mapstructure:"forwardAuth"`
-	Hauth string         `mapstructure:"hauth"`	
+	Hauth       string   `mapstructure:"hauth"`
 }
 
 type nsp struct {
@@ -42,7 +41,7 @@ type Configuration struct {
 	rootShop             string
 	ShopHost             string                             `mapstructure:"host"`
 	ShopProtocol         string                             `mapstructure:"protocol"`
-	Keys		     string				`mapstructure:"keys"`
+	Keys                 string                             `mapstructure:"keys"`
 	RenameFiles          bool                               `mapstructure:"renameFiles"`
 	ShopWelcomeMessage   string                             `mapstructure:"welcomeMessage"`
 	ShopNoWelcomeMessage bool                               `mapstructure:"noWelcomeMessage"`
@@ -75,8 +74,8 @@ func (cfg *Configuration) LoadConfig() {
 
 	viper.SetDefault("host", "")
 	viper.SetDefault("protocol", "http")
-	viper.SetDefault("keys","prod.keys")
-	viper.SetDefault("renameFiles","false")
+	viper.SetDefault("keys", "prod.keys")
+	viper.SetDefault("renameFiles", "false")
 	viper.SetDefault("name", "TinShop")
 	viper.SetDefault("reverseProxy", false)
 	viper.SetDefault("welcomeMessage", "Welcome to your own TinShop!")
@@ -96,7 +95,6 @@ func (cfg *Configuration) LoadConfig() {
 	viper.SetDefault("security.blacklist", []string{})
 	viper.SetDefault("security.forwardAuth", "")
 	viper.SetDefault("security.hauth", "")
-	
 
 	viper.SetEnvPrefix("TINSHOP")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -184,17 +182,43 @@ func ComputeDefaultValues(config repository.Config) repository.Config {
 	}
 	rootShop += "://"
 	if config.Host() == "" {
-		// Retrieve current IP
-		host, _ := os.Hostname()
-		addrs, _ := net.LookupIP(host)
-		var myIP = "0.0.0.0"
+		log.Println("Host option in the config file is not set or empty. trying to determine the IP address")
+		log.Println("In case of issues try setting the host to your IP address you want to reach tinshop-ng from.")
+		addrs, err := net.InterfaceAddrs()
+		if err != nil {
+			log.Fatalln("Error:", err)
+		}
+
+		var publicIP, privateIP string
+
 		for _, addr := range addrs {
-			if ipv4 := addr.To4(); ipv4 != nil {
-				if myIP == "" {
-					myIP = ipv4.String()
+			if ipnet, ok := addr.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+				if ipnet.IP.To4() != nil {
+					if ipnet.IP.IsGlobalUnicast() {
+						publicIP = ipnet.IP.String()
+					} else {
+						privateIP = ipnet.IP.String()
+					}
 				}
 			}
 		}
+		var myIP string
+		if privateIP == "" {
+			myIP = publicIP
+		} else {
+			myIP = privateIP
+		}
+		// Retrieve current IP
+		// host, _ := os.Hostname()
+		// addrs, _ := net.LookupIP(host)
+		// var myIP = config.Host()
+		// for _, addr := range addrs {
+		// 	if ipv4 := addr.To4(); ipv4 != nil {
+		// 		if myIP == "" {
+		// 			myIP = ipv4.String()
+		// 		}
+		// 	}
+		// }
 		rootShop += myIP
 	} else {
 		rootShop += config.Host()
@@ -266,6 +290,7 @@ func (cfg *Configuration) ProdKeys() string {
 func (cfg *Configuration) Rename() bool {
 	return cfg.RenameFiles
 }
+
 // Host returns the host of the shop
 func (cfg *Configuration) Host() string {
 	return cfg.ShopHost
@@ -336,11 +361,10 @@ func (cfg *Configuration) ForwardAuthURL() string {
 	return cfg.Security.ForwardAuth
 }
 
-//get Hauth code
+// get Hauth code
 func (cfg *Configuration) Get_Hauth() string {
 	return cfg.Security.Hauth
 }
-
 
 // IsBlacklisted tells if the uid is blacklisted or not
 func (cfg *Configuration) IsBlacklisted(uid string) bool {
