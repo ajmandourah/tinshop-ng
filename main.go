@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/ajmandourah/tinshop-ng/api"
@@ -23,7 +22,6 @@ import (
 	"github.com/ajmandourah/tinshop-ng/utils"
 	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/bcrypt"
 )
 
 //go:embed assets/*
@@ -105,10 +103,13 @@ func createShop() TinShop {
 	r.HandleFunc("/games/{game}", shop.GamesHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
+	
+
+	if len(shop.Shop.Config.Get_Httpauth()) != 0 {
+		authRoute.Use(httpauth.BasicAuth(authOpts))
+	}
+
 	// r.Use(shop.StatsMiddleware)
-
-	authRoute.Use(httpauth.BasicAuth(authOpts))
-
 	r.Use(shop.TinfoilMiddleware)
 	r.Use(shop.CORSMiddleware)
 	http.Handle("/", r)
@@ -266,19 +267,3 @@ func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// HttpAuthCheck function checks for correct credentials
-func HttpAuthCheck(user ,pass string, r *http.Request) bool {
-	for _,cred := range creds {
-		splitted := strings.Split(cred,":")
-		if splitted[0] == user {
-			err := bcrypt.CompareHashAndPassword([]byte(splitted[1]),[]byte(pass))
-			if err == nil {
-				return true
-			}
-		
-		}
-	}
-	log.Println("An attempt to access the shop with username: ", user)
-	return false
-
-}

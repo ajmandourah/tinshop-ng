@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ajmandourah/tinshop-ng/utils"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // CORSMiddleware is a middleware to ensure right CORS headers
@@ -38,16 +39,14 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		log.Println(s.Shop.Config.Get_Hauth())
-
 		//Show Hauth for the specefied host
 		//tinfoil sends requests appending "/" at the end
 		if r.RequestURI == "/hauth/" && r.Header.Get("Hauth") != "" {
 			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
 			return
 		}
-
-		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
+		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) || strings.Contains(r.RequestURI,"/games/") {
+	
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
 			if s.Shop.Config.IsBlacklisted(uid) {
@@ -125,4 +124,21 @@ func cleanPath(path string) string {
 		actualPath = path[1 : len(path)-1]
 	}
 	return actualPath
+}
+
+// HttpAuthCheck function checks for correct credentials
+func HttpAuthCheck(user ,pass string, r *http.Request) bool {
+	for _,cred := range creds {
+		splitted := strings.Split(cred,":")
+		if splitted[0] == user {
+			err := bcrypt.CompareHashAndPassword([]byte(splitted[1]),[]byte(pass))
+			if err == nil {
+				return true
+			}
+		
+		}
+	}
+	log.Println("An attempt to access the shop with username: ", user)
+	return false
+
 }
