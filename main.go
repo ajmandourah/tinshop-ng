@@ -264,6 +264,9 @@ func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
 
 // HttpAuthCheck function checks for correct credentials
 func HttpAuthCheck(user ,pass string, r *http.Request) bool {
+	if strings.HasPrefix(r.RequestURI,"/games/") {
+		return true
+	}
 	for _,cred := range creds {
 		splitted := strings.Split(cred,":")
 		if splitted[0] == user {
