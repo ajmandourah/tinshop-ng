@@ -95,16 +95,20 @@ func createShop() TinShop {
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", shop.HomeHandler)
+
+	authRoute := r.Methods(http.MethodGet).Subrouter()
+	authRoute.HandleFunc("/", shop.HomeHandler)
+	authRoute.HandleFunc("/{filter}", shop.FilteringHandler)
+	authRoute.HandleFunc("/{filter}/", shop.FilteringHandler)
+	authRoute.HandleFunc("/api/{endpoint}", shop.APIHandler)
+
 	r.HandleFunc("/games/{game}", shop.GamesHandler)
-	r.HandleFunc("/{filter}", shop.FilteringHandler)
-	r.HandleFunc("/{filter}/", shop.FilteringHandler)
-	r.HandleFunc("/api/{endpoint}", shop.APIHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
 	// r.Use(shop.StatsMiddleware)
 
-	r.Use(httpauth.BasicAuth(authOpts))
+	authRoute.Use(httpauth.BasicAuth(authOpts))
+
 	r.Use(shop.TinfoilMiddleware)
 	r.Use(shop.CORSMiddleware)
 	http.Handle("/", r)
@@ -264,9 +268,6 @@ func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
 
 // HttpAuthCheck function checks for correct credentials
 func HttpAuthCheck(user ,pass string, r *http.Request) bool {
-	if strings.HasPrefix(r.RequestURI,"/games/") {
-		return true
-	}
 	for _,cred := range creds {
 		splitted := strings.Split(cred,":")
 		if splitted[0] == user {
@@ -274,8 +275,10 @@ func HttpAuthCheck(user ,pass string, r *http.Request) bool {
 			if err == nil {
 				return true
 			}
+		
 		}
 	}
+	log.Println("An attempt to access the shop with username: ", user)
 	return false
 
 }
