@@ -20,6 +20,7 @@ import (
 	"github.com/ajmandourah/tinshop-ng/sources"
 	"github.com/ajmandourah/tinshop-ng/stats"
 	"github.com/ajmandourah/tinshop-ng/utils"
+	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 )
 
@@ -31,6 +32,7 @@ type TinShop struct {
 	Server *http.Server
 }
 
+var creds []string
 func main() {
 
 	// this is dirty. will leave it for now untill implemented correctly as there are some conflicts around the shop init
@@ -83,15 +85,30 @@ func createShop() TinShop {
 	var shop = &TinShop{}
 
 	shop.Shop = initShop()
+	creds = shop.Shop.Config.Get_Httpauth()
+
+	authOpts := httpauth.AuthOptions{
+		Realm: "Tinfoil",
+		AuthFunc: HttpAuthCheck,
+	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", shop.HomeHandler)
+
+	authRoute := r.Methods(http.MethodGet).Subrouter()
+	authRoute.HandleFunc("/", shop.HomeHandler)
+	authRoute.HandleFunc("/{filter}", shop.FilteringHandler)
+	authRoute.HandleFunc("/{filter}/", shop.FilteringHandler)
+	authRoute.HandleFunc("/api/{endpoint}", shop.APIHandler)
+
 	r.HandleFunc("/games/{game}", shop.GamesHandler)
-	r.HandleFunc("/{filter}", shop.FilteringHandler)
-	r.HandleFunc("/{filter}/", shop.FilteringHandler)
-	r.HandleFunc("/api/{endpoint}", shop.APIHandler)
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
+	
+
+	if len(shop.Shop.Config.Get_Httpauth()) != 0 {
+		authRoute.Use(httpauth.BasicAuth(authOpts))
+	}
+
 	// r.Use(shop.StatsMiddleware)
 	r.Use(shop.TinfoilMiddleware)
 	r.Use(shop.CORSMiddleware)
@@ -249,3 +266,4 @@ func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+

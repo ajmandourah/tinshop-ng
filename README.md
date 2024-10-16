@@ -4,6 +4,32 @@ Your own personal shop right into tinfoil!<br><br>
 
 </div>
 
+- [Why A Next Generation](#why-a-next-generation)
+- [What is New Here?](#what-is-new-here-)
+- [⚠️ Disclaimer](#---disclaimer)
+- [🎮 Use](#---use)
+- [🎉 Features](#---features)
+  * [🏳️ Filtering](#----filtering)
+- [Configuration](#configuration)
+- [🐋 Docker](#---docker)
+  * [Using HAUTH for your site](#using-hauth-for-your-site)
+  * [Some notes about basic auth](#some-notes-about-basic-auth)
+  * [🥍 Want to do cross-build generation?](#---want-to-do-cross-build-generation-)
+  * [Tips for faster processing especially when using cloud shares ie Rclone](#tips-for-faster-processing-especially-when-using-cloud-shares-ie-rclone)
+- [👂🏻 Q & A](#-----q---a)
+  * [Why use this instead of `X` (NUT or others software)?](#why-use-this-instead-of--x---nut-or-others-software--)
+  * [Where do I put my games?](#where-do-i-put-my-games-)
+  * [Can I set up a `https` endpoint?](#can-i-set-up-a--https--endpoint-)
+    + [Example for caddy](#example-for-caddy)
+    + [Example for traefik](#example-for-traefik)
+  * [How can I add a `basic auth` to protect my shop?](#how-can-i-add-a--basic-auth--to-protect-my-shop-)
+  * [I have tons of missing title displayed in `tinfoil`, what should I do?](#i-have-tons-of-missing-title-displayed-in--tinfoil---what-should-i-do-)
+  * [Why I still get `NCA signature verification failed` error in `tinfoil` and nothing in `tinshop`?](#why-i-still-get--nca-signature-verification-failed--error-in--tinfoil--and-nothing-in--tinshop--)
+  * [`tinfoil` does not display the name of the game but the file name, what should I do?](#-tinfoil--does-not-display-the-name-of-the-game-but-the-file-name--what-should-i-do-)
+- [🙏 Credits](#---credits)
+- [Todo](#todo)
+
+
 # Why A Next Generation
 
 This is a take on the original Tinshop repo originally by [DblK](https://github.com/DblK/tinshop). 
@@ -173,6 +199,11 @@ security:
   forwardAuth: https://auth.tinshop.com/switch
   # Hauth code you obtain from tinfoil. This is unique to your domain and help protect against forged requests
   hauth: XXXXXXXXXXXXX
+  # HttpAuth. basic http authentication. This is a username:password list. password is hashed using bcrypt. 
+  httpauth:
+    - admin:$2a$12$kWcAoawo7z7A1X3DaL4thOBWmbSpjgNULfndNOXflyctGw/BO0yrG # admin:admin
+    - test:$2a$12$lpZ8JX1a34opuMbKmr96POm8hckLh8MTRZ2ZECkiIviNM4V07N.42  # test:test
+
 
 # This section describe all custom title db to show up properly in tinfoil
 customTitledb:
@@ -236,7 +267,7 @@ All of the settings in the `config.yaml` file are valid Environment Variables. T
 | TINSHOP_SECURITY_BLACKLIST   | sources.blacklist   | `null`                         | `NSWID4 NSWID5 NSWID6`            |
 | TINSHOP_SECURITY_FORWARDAUTH | sources.forwardAuth | `null`                         | `https://auth.tinshop.com/switch` |
 
-## Using HAUTH for your site
+# Using HAUTH for your site
 
 Hauth is signature of the request Url scheme and hostname is sent via "HAUTH: XXXXXXXXXXXXXX" header. This value is unique to your domain, and helps prevent forged requests.
 To use it with Tinshop-ng do the following:
@@ -248,16 +279,44 @@ To use it with Tinshop-ng do the following:
 - All done. any requests from any client other than tinfoil will need to have this secret code inside otherwise it won't accept connections. you can test it out by inputting a false code.
 - To cancel hauth verification comment its part in the config.yaml file.
 
-## Some notes about basic auth
+# Basic Http Auth
+
+Basic Http authentication is supported by one of 2 ways. If you are using one please disable the other one :
+- ForwardAuth, where you delegate the authentication to another path/subdomain. You need to know what you are doing.
+- The implemented Http auth method.
+
+## ForwardAuth
+
+This is an example that you can follow in caddy. Other reverse proxy services may differ but the concept is the same 
+```
+ tinshop-ng.example.com {
+ 
+         reverse_proxy tinshop-ng:3000 {
+         }
+         handle /auth* {
+                basic_auth {
+                      test $2a$12$lpZ8JX1a34opuMbKmr96POm8hckLh8MTRZ2ZECkiIviNM4V07N.42
+                         }
+
+                 respond 200
+         }
+ }
+```
+You should issue a 200 response as tinfoil won't accept otherwise.
+Lastly you should enable the `forwardAuth` option in the config file.
+
+## Implemented Http Auth
+
+This is by far easier than forwardAuth. you just need to uncomment the option in your config file
+Notice that the entries under `httpauth` are preceeded by `-` indicating its a list, that means you can add multiple users to your interface.
+
+Password should be hashed with `bcrypt`. Please don't put passwords in cleartext as they won't work . Use any bcrypt generator to generat the hash from your password. 
+
+# Some notes about basic auth
 
 Basic auth is umm 'basic' and it has its limitation. some characthers like @ and $ cannot be used as it will mess up the url. stick to alphanumerical long passwords for the time being. 
 
-## 🥍 Want to do cross-build generation?
-
-Wanting to generate all possible os binaries (macOS, linux, windows) with all architectures (arm, amd64)?  
-Here is the command `goreleaser release --snapshot --skip-publish --rm-dist`.
-
-## Tips for faster processing especially when using cloud shares ie Rclone
+# Tips for faster processing especially when using cloud shares ie Rclone
 
 If you are going to use rclone or similar cloud storage solutions as your source of content here are some tips:
 - make sure all your contents are in one folder without them being in subfolders. As for every subfolder rclone will need to fetch a list of every file in it. this can take long time especially with large number of folders.
