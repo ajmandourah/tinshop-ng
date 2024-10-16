@@ -12,12 +12,10 @@ Your own personal shop right into tinfoil!<br><br>
   * [🏳️ Filtering](#----filtering)
 - [Configuration](#configuration)
 - [🐋 Docker](#---docker)
-- [Using HAUTH for your site](#using-hauth-for-your-site)
-- [Basic Http Auth](#basic-http-auth)
-  * [ForwardAuth](#forwardauth)
-  * [Implemented Http Auth](#implemented-http-auth)
-- [Some notes about basic auth](#some-notes-about-basic-auth)
-- [Tips for faster processing especially when using cloud shares ie Rclone](#tips-for-faster-processing-especially-when-using-cloud-shares-ie-rclone)
+  * [Using HAUTH for your site](#using-hauth-for-your-site)
+  * [Some notes about basic auth](#some-notes-about-basic-auth)
+  * [🥍 Want to do cross-build generation?](#---want-to-do-cross-build-generation-)
+  * [Tips for faster processing especially when using cloud shares ie Rclone](#tips-for-faster-processing-especially-when-using-cloud-shares-ie-rclone)
 - [👂🏻 Q & A](#-----q---a)
   * [Why use this instead of `X` (NUT or others software)?](#why-use-this-instead-of--x---nut-or-others-software--)
   * [Where do I put my games?](#where-do-i-put-my-games-)
@@ -30,6 +28,7 @@ Your own personal shop right into tinfoil!<br><br>
   * [`tinfoil` does not display the name of the game but the file name, what should I do?](#-tinfoil--does-not-display-the-name-of-the-game-but-the-file-name--what-should-i-do-)
 - [🙏 Credits](#---credits)
 - [Todo](#todo)
+
 
 # Why A Next Generation
 
@@ -296,7 +295,7 @@ This is an example that you can follow in caddy. Other reverse proxy services ma
          }
          handle /auth* {
                 basic_auth {
-                      test:$2a$12$lpZ8JX1a34opuMbKmr96POm8hckLh8MTRZ2ZECkiIviNM4V07N.42
+                      test $2a$12$lpZ8JX1a34opuMbKmr96POm8hckLh8MTRZ2ZECkiIviNM4V07N.42
                          }
 
                  respond 200
