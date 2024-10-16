@@ -1,5 +1,5 @@
 # Name of the host [optional]
-host: tinshop.example.com
+host: tinshop-ng.example.com
 
 # Protocol (Can be http or https) [optional]
 # If you use "https" then you should set up a reverse-proxy in front to handle tls
@@ -9,7 +9,7 @@ protocol: https
 # keys [optional]
 # This is a fallback in case parsing failed due to bad rename pattern. slower than parsing but more accurate in captureing content information.
 # a full path to the key should be provided. [use /data as the path if you are using docker]
-#keys: prod.keys
+keys: prod.keys
 
 # renameFiles [optional] [keys must be present if true otherwise will do nothing]
 # this will rename files that is misrenamed somehow by appending the title id and version to the end of the file. this may result in duplicate ids in the file name
@@ -23,15 +23,15 @@ renameFiles: false
 
 # Shop name [optional]
 # This is used as title when trying to visit the shop with a non switch device
-name: TinShop
+name: TinShop-ng
 
-# Tells if we are using a reverse proxy if front of tinshop [optional]
+# Tells if we are using a reverse proxy if front of tinshop-ng [optional]
 # This is used to rewrite correct url to download games when reverse proxy used
 reverseProxy: false
 
 # Welcome message on Switch [optional]
-# The default message will be "Welcome to your own TinShop!"
-welcomeMessage: "Welcome to your own TinShop!"
+# The default message will be "Welcome to your own TinShop-ng!"
+welcomeMessage: "Welcome to your own TinShop-ng!"
 # If you want to disable the welcome message, set it to true [optional]
 noWelcomeMessage: false
 
@@ -47,7 +47,7 @@ debug:
 
 # All actions related to NSP file will be stored here
 nsp:
-  # Tells if tinshop should verify the ticket inside NSP to ensure no issue with install
+  # Tells if tinshop-ng should verify the ticket inside NSP to ensure no issue with install
   # This will make processing really slow as every file will be opened for verification 
   checkVerified: false
 
@@ -70,27 +70,36 @@ security:
   # You can find the theme of a switch in the log upon access
   bannedTheme:
     - "0000000000000000000000000000000000000000000000000000000000000000"
+
   # List of switch uid to whitelist
   # If enabled then only switch in this area will be listed
   # You can find the uid of a switch in the log upon access
   whitelist:
     - TESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST
+
   # List of switch uid to blacklist
   # Block access to all switch present in this list
   # You can find the uid of a switch in the log upon access
   blacklist:
     - NOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESSNOACCESS
+
   # Endpoint to which a query will be sent to verify user/password/uid to
   # Headers sent :
   # - Authorization: same as sent by switch
   # - Device-Id: Switch fingerprint
   # Response with status code other than 200 will be treated as failure
-  forwardAuth: https://auth.tinshop.com/switch
+  forwardAuth: https://auth.tinshop-ng.com/switch
+  
+
+  # Basic Http Authentication. This is an indented list of username:password . password shoud be encrypted in bcrypt before adding . please don't use cleartext passwords
+  httpauth: 
+    - admin:$2a$12$kWcAoawo7z7A1X3DaL4thOBWmbSpjgNULfndNOXflyctGw/BO0yrG # admin:admin
+    - test:$2a$12$lpZ8JX1a34opuMbKmr96POm8hckLh8MTRZ2ZECkiIviNM4V07N.42  # test:test
 
   #Hauth verification:
   #This value is unique to your domain, and helps prevent forged requests.
   #fill this value with the value got from tinfoil. read the wiki for more information.
-  # hauth: XXXXXXXXXXXXXX 
+  hauth: XXXXXXXXXXXXXX 
 
 # This section describe all custom title db to show up properly in tinfoil
 customTitledb:
