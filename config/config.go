@@ -30,6 +30,8 @@ type security struct {
 	BannedTheme []string `mapstructure:"bannedTheme"`
 	ForwardAuth string   `mapstructure:"forwardAuth"`
 	Hauth       string   `mapstructure:"hauth"`
+	Httpauth    []string `mapstructure:"httpauth"`
+
 }
 
 type nsp struct {
@@ -364,6 +366,11 @@ func (cfg *Configuration) ForwardAuthURL() string {
 // get Hauth code
 func (cfg *Configuration) Get_Hauth() string {
 	return cfg.Security.Hauth
+}
+
+// get Httpauth list
+func (cfg *Configuration) Get_Httpauth() []string {
+	return cfg.Security.Httpauth
 }
 
 // IsBlacklisted tells if the uid is blacklisted or not

@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ajmandourah/tinshop-ng/api"
@@ -20,7 +21,9 @@ import (
 	"github.com/ajmandourah/tinshop-ng/sources"
 	"github.com/ajmandourah/tinshop-ng/stats"
 	"github.com/ajmandourah/tinshop-ng/utils"
+	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 //go:embed assets/*
@@ -31,6 +34,7 @@ type TinShop struct {
 	Server *http.Server
 }
 
+var creds []string
 func main() {
 
 	// this is dirty. will leave it for now untill implemented correctly as there are some conflicts around the shop init
@@ -83,6 +87,12 @@ func createShop() TinShop {
 	var shop = &TinShop{}
 
 	shop.Shop = initShop()
+	creds = shop.Shop.Config.Get_Httpauth()
+
+	authOpts := httpauth.AuthOptions{
+		Realm: "Tinfoil",
+		AuthFunc: HttpAuthCheck,
+	}
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", shop.HomeHandler)
@@ -93,6 +103,8 @@ func createShop() TinShop {
 	r.NotFoundHandler = http.HandlerFunc(notFound)
 	r.MethodNotAllowedHandler = http.HandlerFunc(notAllowed)
 	// r.Use(shop.StatsMiddleware)
+
+	r.Use(httpauth.BasicAuth(authOpts))
 	r.Use(shop.TinfoilMiddleware)
 	r.Use(shop.CORSMiddleware)
 	http.Handle("/", r)
@@ -248,4 +260,19 @@ func (s *TinShop) StatsMiddleware(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+// HttpAuthCheck function checks for correct credentials
+func HttpAuthCheck(user ,pass string, r *http.Request) bool {
+	for _,cred := range creds {
+		splitted := strings.Split(cred,":")
+		if splitted[0] == user {
+			err := bcrypt.CompareHashAndPassword([]byte(splitted[1]),[]byte(pass))
+			if err == nil {
+				return true
+			}
+		}
+	}
+	return false
+
 }

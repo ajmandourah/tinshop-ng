@@ -51,6 +51,7 @@ type Config interface {
 
 	ForwardAuthURL() string
 	Get_Hauth() string
+	Get_Httpauth() []string
 	IsBlacklisted(string) bool
 	IsWhitelisted(string) bool
 	IsBannedTheme(string) bool
