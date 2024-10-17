@@ -194,7 +194,7 @@ type Collection interface {
 	Games() GameType
 	GetKey(string) (string, error)
 	ResetGamesCollection()
-	GenTitle(string) string
+	GenTitle(string) (string, bool)
 }
 
 // Switch holds all information about the switch
