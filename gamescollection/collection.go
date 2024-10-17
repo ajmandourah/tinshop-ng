@@ -297,11 +297,10 @@ func (c *collect) getFriendlyName(file repository.FileDesc) string {
 	return strings.Join(reg[:], "")
 }
 
-func (c *collect) GenTitle(gameID string) string {
+func (c *collect) GenTitle(gameID string) (string, bool) {
 	baseID, update, dlc := utils.GetTitleMeta(gameID)
 	baseTitle := c.Library()[baseID]
 	title := c.Library()[gameID]
-
 	// Default extra for Base title
 	var extra = " [BASE]"
 
@@ -329,5 +328,9 @@ func (c *collect) GenTitle(gameID string) string {
 
 	// Build the friendly name for Tinfoil
 	reg := []string{name, region, extra, "[" + gameID + "]", version}
-	return strings.Join(reg[:], "")
+	if name == "" {
+		return strings.Join(reg[:], "") , false
+	}else {
+		return strings.Join(reg[:], "") , true
+	}
 }

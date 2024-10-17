@@ -49,9 +49,16 @@ func (src *directorySource) addDirectoryGame(gameFiles []repository.FileDesc, ex
 		//Rename the file if decrypted and option is enabled
 		if decrypted {
 			if collection.Rename {
-				title := src.collection.GenTitle(names.ShortID())
-				newName := filepath.Join(filepath.Dir(path), title+extension)
-
+				var newName string
+				title, found := src.collection.GenTitle(names.ShortID())
+				if found {
+					newName = filepath.Join(filepath.Dir(path), title+extension)
+					log.Println(newName)
+				}else {
+					origname := strings.Split(filepath.Base(path),".")	
+					newName = filepath.Join(filepath.Dir(path), origname[0]+title+extension)
+				}
+					
 				os.Rename(path, newName)
 				log.Println("renamed: ", filepath.Base(path), " to ", filepath.Base(newName))
 			}
