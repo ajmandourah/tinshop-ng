@@ -220,8 +220,6 @@ customTitledb:
 
 # 🐋 Docker
 
-_WIP_ not ready yet.
-
 To run with [Docker](https://docs.docker.com/engine/install/), you can use this as a starting `cli` example:
 
 `docker run -d --restart=always -e TINSHOP_SOURCES_DIRECTORIES=/games -e TINSHOP_WELCOMEMESSAGE="Welcome to my Tinshop!" -v /local/game/backups:/games -p 3000:3000 ghcr.io/ajmandourah/tinshop-ng:latest`
