@@ -64,13 +64,15 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
+			
+			// Disable check for Agent check as checking for other tinfoil headers are sufficient and with Hauth its kind of unnessecery
 
 			// No User-Agent for tinfoil app
-			if headers["User-Agent"] != nil {
-				log.Println("[Security] User-Agent detected...")
-				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
-				return
-			}
+			// if headers["User-Agent"] != nil {
+			// 	log.Println("[Security] User-Agent detected...")
+			// 	_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
+			// 	return
+			// }
 
 			// Be sure all tinfoil headers are present
 			if headers["Theme"] == nil || headers["Uid"] == nil || headers["Version"] == nil || headers["Language"] == nil || headers["Hauth"] == nil || headers["Uauth"] == nil {
