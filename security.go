@@ -76,7 +76,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 
 			// Be sure all tinfoil headers are present
 			if headers["Theme"] == nil || headers["Uid"] == nil || headers["Version"] == nil || headers["Language"] == nil || headers["Hauth"] == nil || headers["Uauth"] == nil {
-				log.Println("[Security] Missing some expected headers...")
+				log.Println("[Security] Missing some expected headers...an access attempted from a client other than tinfoil")
 				_ = shopTemplate.Execute(w, s.Shop.Config.ShopTemplateData())
 				return
 			}
