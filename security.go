@@ -45,7 +45,7 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
 			return
 		}
-		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) || strings.Contains(r.RequestURI,"/games/") {
+		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 	
 			// Check for blacklist/whitelist
 			var uid = strings.Join(headers["Uid"], "")
