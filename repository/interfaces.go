@@ -97,6 +97,7 @@ type GameType struct {
 	ThemeBlackList []string       `json:"themeBlackList,omitempty"`
 	// Removing the titledb for the resulted json.
 	Titledb map[string]TitleDBEntry `json:"-"`
+	Headers []string		`json:"headers"`
 }
 
 // GameFileType stores the fields needed for game files

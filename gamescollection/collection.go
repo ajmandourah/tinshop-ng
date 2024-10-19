@@ -29,9 +29,11 @@ type collect struct {
 
 // New create a new collection
 func New(config repository.Config) repository.Collection {
-	return &collect{
+	c := &collect{
 		config: config,
 	}
+	c.games.Headers = append(c.games.Headers, "Tinshop-ng: " + "*")
+	return c
 }
 
 // Load ensure that necessary data is loaded

@@ -33,10 +33,26 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Verify all headers
 		headers := r.Header
-
+		
+		//Skip security checks if Nosecurity is true
 		if s.Shop.Config.DebugNoSecurity() {
 			next.ServeHTTP(w, r)
 			return
+		}
+		
+		// Checks for download links
+		if strings.Contains(r.RequestURI, "/games") {
+			//insuring basic headers available while downloading a game
+			if headers["Hauth"] == nil || headers["Uauth"] == nil || headers["Tinshop-Ng"] == nil {
+				log.Println("An attempt to download one of your content from non-Tinfoil Client was Blocked.", r.RemoteAddr)
+				return
+			}
+
+			//Hauth check
+			if s.Shop.Config.Get_Hauth() != "" && r.Header.Get("Hauth") != s.Shop.Config.Get_Hauth(){
+				log.Println("Hauth header mismatch. Possible attempt to access shop from a possible forged request. ", r.RemoteAddr)
+				return
+			}
 		}
 
 		//Show Hauth for the specefied host
@@ -45,6 +61,8 @@ func (s *TinShop) TinfoilMiddleware(next http.Handler) http.Handler {
 			log.Println("HAUTH for ", s.Shop.Config.Host(), " is: ", headers["Hauth"])
 			return
 		}
+
+		//Root path checks
 		if r.RequestURI == "/" || utils.IsValidFilter(cleanPath(r.RequestURI)) {
 	
 			// Check for blacklist/whitelist
