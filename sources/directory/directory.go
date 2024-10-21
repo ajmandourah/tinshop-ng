@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/ajmandourah/tinshop-ng/repository"
@@ -16,6 +17,7 @@ type directorySource struct {
 	collection         repository.Collection
 	config             repository.Config
 	watcherDirectories *fsnotify.Watcher
+	mutex		   sync.Mutex
 }
 
 // New create a directory source

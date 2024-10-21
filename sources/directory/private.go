@@ -108,8 +108,10 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 				if err != nil {
 					return err
 				}
-
-				newGameFiles = src.addDirectoryGame(newGameFiles, extension, fileInfo.Size(), path)
+				//make it thread safe
+				src.mutex.Lock()
+				newGameFiles = src.addDirectoryGame(newGameFiles, extension, fileInfo.Size(), path)	
+				src.mutex.Unlock()
 
 			} else if info.IsDir() {
 				if path != directory {
@@ -125,12 +127,10 @@ func (src *directorySource) loadGamesDirectory(directory string) error {
 		return err
 	}
 	src.gameFiles = append(src.gameFiles, newGameFiles...)
-
 	// Add all files
 	if len(newGameFiles) > 0 {
 		src.collection.AddNewGames(newGameFiles)
 	}
-
 	return nil
 }
 
